@@ -1,0 +1,67 @@
+================================================================================
+Class definitions
+================================================================================
+
+class A:
+  a: String
+  b: Int
+
+class B<S, T>:
+  a: S
+  b: T
+
+class A(B, C):
+  a: String
+  b: Float
+
+class A<S, T>(B, C):
+  a: S
+  b: T
+
+--------------------------------------------------------------------------------
+
+(module
+  (class_definition
+    (identifier)
+    (type_pair
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier)))
+  (class_definition
+    (identifier)
+    (generic_list
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier)))
+  (class_definition
+    (identifier)
+    (trait_list
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier)))
+  (class_definition
+    (identifier)
+    (generic_list
+      (identifier)
+      (identifier))
+    (trait_list
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier))
+    (type_pair
+      (identifier)
+      (identifier))))

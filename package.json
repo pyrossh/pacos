@@ -1,0 +1,34 @@
+{
+  "name": "tree-sitter-pine",
+  "version": "1.0.0",
+  "main": "bindings/node",
+  "description": "Pine grammar for tree-sitter",
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "tree-sitter test && script/parse-examples",
+    "parse": "tree-sitter parse",
+    "test-windows": "tree-sitter test"
+  },
+  "author": "pyrossh",
+  "license": "MIT",
+  "keywords": [
+    "parser",
+    "lexer",
+    "pine"
+  ],
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.7"
+  },
+  "repository": "https://github.com/pyrossh/tree-sitter-pine",
+  "tree-sitter": [
+    {
+      "scope": "source.pine",
+      "file-types": [
+        "pi"
+      ]
+    }
+  ]
+}
