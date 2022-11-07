@@ -2,6 +2,8 @@
 Class definitions
 ================================================================================
 
+package definitions
+
 class A:
   a: String
   b: Int
@@ -20,13 +22,15 @@ class A<S, T>(B, C):
 
 --------------------------------------------------------------------------------
 
-(module
+(source_file
+  (package 
+    (identifier))
   (class_definition
     (identifier)
-    (type_pair
+    (class_field
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier)))
   (class_definition
@@ -34,10 +38,10 @@ class A<S, T>(B, C):
     (generic_list
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier)))
   (class_definition
@@ -45,10 +49,10 @@ class A<S, T>(B, C):
     (trait_list
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier)))
   (class_definition
@@ -59,9 +63,9 @@ class A<S, T>(B, C):
     (trait_list
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier))
-    (type_pair
+    (class_field
       (identifier)
       (identifier))))

@@ -2,12 +2,14 @@
 Import statements
 ================================================================================
 
+package imports
+
 import github/pyros2097/std
 
 --------------------------------------------------------------------------------
 
-(module
+(source_file
+  (package 
+    (identifier))
   (import_statement
-    (identifier)
-    (identifier)
-    (identifier)))
+    (url)))
