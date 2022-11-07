@@ -78,7 +78,7 @@
           "name": "name",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "definition_name"
           }
         },
         {
@@ -160,7 +160,7 @@
           "name": "name",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "definition_name"
           }
         },
         {
@@ -203,6 +203,27 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "definition_name"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "?"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -325,10 +346,10 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "key",
+          "name": "name",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "variable_name"
           }
         },
         {
@@ -337,10 +358,10 @@
         },
         {
           "type": "FIELD",
-          "name": "value",
+          "name": "type",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "type"
           }
         }
       ]
@@ -350,7 +371,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "enum_identifier"
+          "name": "enum_field_name"
         },
         {
           "type": "STRING",
@@ -433,7 +454,15 @@
       "type": "PATTERN",
       "value": "[a-zA-Z_][a-zA-Z_0-9]*"
     },
-    "enum_identifier": {
+    "definition_name": {
+      "type": "PATTERN",
+      "value": "[A-Z](([a-z]+[A-Z]?)*)"
+    },
+    "variable_name": {
+      "type": "PATTERN",
+      "value": "[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])"
+    },
+    "enum_field_name": {
       "type": "PATTERN",
       "value": "[A-Z_][A-Z_0-9]*"
     },

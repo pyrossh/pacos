@@ -53,7 +53,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "definition_name",
             "named": true
           }
         ]
@@ -74,22 +74,22 @@
     "type": "class_field",
     "named": true,
     "fields": {
-      "key": {
+      "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "variable_name",
             "named": true
           }
         ]
       },
-      "value": {
+      "type": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "type",
             "named": true
           }
         ]
@@ -115,7 +115,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "definition_name",
             "named": true
           }
         ]
@@ -153,7 +153,7 @@
           "named": true
         },
         {
-          "type": "enum_identifier",
+          "type": "enum_field_name",
           "named": true
         },
         {
@@ -311,6 +311,21 @@
     }
   },
   {
+    "type": "type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "definition_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type_list",
     "named": true,
     "fields": {},
@@ -371,6 +386,10 @@
     "named": false
   },
   {
+    "type": "?",
+    "named": false
+  },
+  {
     "type": "\\u",
     "named": false
   },
@@ -387,11 +406,15 @@
     "named": false
   },
   {
+    "type": "definition_name",
+    "named": true
+  },
+  {
     "type": "enum",
     "named": false
   },
   {
-    "type": "enum_identifier",
+    "type": "enum_field_name",
     "named": true
   },
   {
@@ -425,5 +448,9 @@
   {
     "type": "true",
     "named": false
+  },
+  {
+    "type": "variable_name",
+    "named": true
   }
 ]

@@ -42,7 +42,7 @@ module.exports = grammar({
 
     class_definition: $ => seq(
       'class',
-      field('name', $.identifier),
+      field('name', $.definition_name),
       field('generics', optional($.generic_list)),
       field('traits', optional($.trait_list)),
       ':',
@@ -54,7 +54,7 @@ module.exports = grammar({
 
     enum_definition: $ => seq(
       'enum',
-      field('name', $.identifier),
+      field('name', $.definition_name),
       field('types', $.type_list),
       ':',
       field('fields', seq($._indent, seq(
@@ -62,6 +62,8 @@ module.exports = grammar({
         $._dedent
       ))),
     ),
+
+    type: $ => seq($.definition_name, optional('?')),
 
     type_list: $ => seq(
       '(',
@@ -82,12 +84,12 @@ module.exports = grammar({
     ),
 
     class_field: $ => seq(
-      field('key', $.identifier),
+      field('name', $.variable_name),
       ':',
-      field('value', $.identifier)
+      field('type', $.type)
     ),
 
-    enum_field: $ => seq($.enum_identifier, '(', commaSep1($._primary_expression), ')'),
+    enum_field: $ => seq($.enum_field_name, '(', commaSep1($._primary_expression), ')'),
 
     _primary_expression: $ => choice(
       $._literal_constant,
@@ -97,7 +99,9 @@ module.exports = grammar({
     url: $ => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, '/'),
     package: $ => $.identifier,
     identifier: $ => /[a-zA-Z_][a-zA-Z_0-9]*/,
-    enum_identifier: $ => /[A-Z_][A-Z_0-9]*/,
+    definition_name: $ => /[A-Z](([a-z]+[A-Z]?)*)/, // Pascal Case - no digits allowed
+    variable_name: $ => /[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])/, // Lower Camel Case - no digits allowed
+    enum_field_name: $ => /[A-Z_][A-Z_0-9]*/,
 
     // Literals
     boolean_literal: $ => choice("true", "false"),
@@ -148,7 +152,7 @@ module.exports = grammar({
     ),
 
     _multi_line_string_content: $ => choice($._multi_line_str_text, '"'),
-    
+
     _line_str_text: $ => /[^\\"$]+/,
 
     _multi_line_str_text: $ => /[^"$]+/,

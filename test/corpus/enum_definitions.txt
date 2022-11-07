@@ -15,17 +15,17 @@ enum Colors(Int):
   (package 
     (identifier))
   (enum_definition
-    (identifier)
+    (definition_name)
     (type_list
       (identifier))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (hex_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (hex_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (hex_literal))))
 
 ================================================================================
@@ -45,20 +45,20 @@ enum ColorsAlpha(Int, Float):
   (package 
     (identifier))
   (enum_definition
-    (identifier)
+    (definition_name)
     (type_list
       (identifier)
       (identifier))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (float_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (float_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (float_literal))))
 
@@ -79,19 +79,19 @@ enum ColorsAlpha(Int, String):
   (package 
     (identifier))
   (enum_definition
-    (identifier)
+    (definition_name)
     (type_list
       (identifier)
       (identifier))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (line_string_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (line_string_literal))
     (enum_field
-      (enum_identifier)
+      (enum_field_name)
       (integer_literal)
       (line_string_literal))))

@@ -4,15 +4,16 @@ Class definitions
 
 package definitions
 
-class A:
-  a: String
-  b: Int
+class AnimalStrong:
+  count: String
+  userName: Int
+  currentAddress: Address
 
-class B<S, T>:
+class Bat<S, T>:
   a: S
   b: T
 
-class A(B, C):
+class AnimalSubSpecies(B, C):
   a: String
   b: Float
 
@@ -26,37 +27,47 @@ class A<S, T>(B, C):
   (package 
     (identifier))
   (class_definition
-    (identifier)
+    (definition_name)
     (class_field
-      (identifier)
-      (identifier))
+      (variable_name)
+      (type
+        (definition_name)))
     (class_field
-      (identifier)
-      (identifier)))
+      (variable_name)
+      (type
+        (definition_name)))
+    (class_field
+      (variable_name)
+      (type
+        (definition_name))))
   (class_definition
-    (identifier)
+    (definition_name)
     (generic_list
       (identifier)
       (identifier))
     (class_field
-      (identifier)
-      (identifier))
+      (variable_name)
+      (type
+        (definition_name)))
     (class_field
-      (identifier)
-      (identifier)))
+      (variable_name)
+      (type
+        (definition_name))))
   (class_definition
-    (identifier)
+    (definition_name)
     (trait_list
       (identifier)
       (identifier))
     (class_field
-      (identifier)
-      (identifier))
+      (variable_name)
+      (type
+        (definition_name)))
     (class_field
-      (identifier)
-      (identifier)))
+      (variable_name)
+      (type
+        (definition_name))))
   (class_definition
-    (identifier)
+    (definition_name)
     (generic_list
       (identifier)
       (identifier))
@@ -64,8 +75,10 @@ class A<S, T>(B, C):
       (identifier)
       (identifier))
     (class_field
-      (identifier)
-      (identifier))
+      (variable_name)
+      (type
+        (definition_name)))
     (class_field
-      (identifier)
-      (identifier))))
+      (variable_name)
+      (type
+        (definition_name)))))
