@@ -4,30 +4,32 @@ Class definitions - Simple
 
 package definitions
 
-class AnimalStrong:
-  count: String
-  userName: Int
-  currentAddress: Address
+class AnimalStrong(
+  val count: String,
+  val userName: Int,
+  val currentAddress: Address
+)
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package
     (identifier))
-  (class_definition
-    (definition_name)
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))))
+  (definitions
+    (class_definition
+      (definition_name)
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name))))))
 
 ================================================================================
 Class definitions - Generic
@@ -35,28 +37,30 @@ Class definitions - Generic
 
 package definitions
 
-class Bat<S, T>:
-  a: S
-  b: T
+class Bat<S, T>(
+  val a: S,
+  val b: T
+)
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package
     (identifier))
-  (class_definition
-    (definition_name)
-    (generic_list
-      (identifier)
-      (identifier))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))))
+  (definitions
+    (class_definition
+      (definition_name)
+      (generic_list
+        (identifier)
+        (identifier))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name))))))
 
 ================================================================================
 Class definitions - Traits
@@ -64,28 +68,32 @@ Class definitions - Traits
 
 package definitions
 
-class AnimalSubSpecies(B, C):
-  a: String
-  b: Float
+@B @C
+class AnimalSubSpecies (
+  val a: String,
+  val b: Float
+)
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package
     (identifier))
-  (class_definition
-    (definition_name)
-    (trait_list
-      (identifier)
-      (identifier))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))))
+  (definitions
+    (class_definition
+      (trait_name
+        (definition_name))
+      (trait_name
+        (definition_name))
+      (definition_name)
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name))))))
 
 ================================================================================
 Class definitions - Genrics + Traits
@@ -93,28 +101,32 @@ Class definitions - Genrics + Traits
 
 package definitions
 
-class A<S, T>(B, C):
-  a: S
-  b: T
+@B @C
+class A<S, T>(
+  val a: S,
+  val b: T
+)
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package
     (identifier))
-  (class_definition
-    (definition_name)
-    (generic_list
-      (identifier)
-      (identifier))
-    (trait_list
-      (identifier)
-      (identifier))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))
-    (class_field
-      (variable_name)
-      (type
-        (definition_name)))))
+  (definitions
+    (class_definition
+      (trait_name
+        (definition_name))
+      (trait_name
+        (definition_name))
+      (definition_name)
+      (generic_list
+        (identifier)
+        (identifier))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name))))))

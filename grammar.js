@@ -4,72 +4,57 @@ const BIN_DIGITS = token(sep1(/[01]/, /_+/));
 
 module.exports = grammar({
   name: 'pine',
-  externals: $ => [
-    $._newline,
-    $._indent,
-    $._dedent,
-    $._string_start,
-    $._string_content,
-    $._string_end,
-
-    // Mark comments as external tokens so that the external scanner is always
-    // invoked, even if no external token is expected. This allows for better
-    // error recovery, because the external scanner can maintain the overall
-    // structure by returning dedent tokens whenever a dedent occurs, even
-    // if no dedent is expected.
-    $.comment,
-
-    // Allow the external scanner to check for the validity of closing brackets
-    // so that it can avoid returning dedent tokens between brackets.
-    ']',
-    ')',
-    '}',
+  conflicts: $ => [
+    [$.fun_field],
   ],
   rules: {
     source_file: $ => seq(
       seq("package", $.package),
       repeat($.import_statement),
-      repeat($.class_definition),
-      repeat($.enum_definition),
+      repeat($.definitions),
     ),
 
     import_statement: $ => seq('import', $.url),
 
     definitions: $ => choice(
       $.class_definition,
+      $.trait_definition,
       $.enum_definition,
+      $.fun_definition,
     ),
 
     class_definition: $ => seq(
+      field('traits', optional(repeat($.trait_name))),
       'class',
       field('name', $.definition_name),
       field('generics', optional($.generic_list)),
-      field('traits', optional($.trait_list)),
-      ':',
-      field('fields', seq($._indent, seq(
-        repeat($.class_field),
-        $._dedent
-      ))),
+      field('fields', seq('(', commaSep1($.type_field), ')')),
+    ),
+
+    trait_definition: $ => seq(
+      'trait',
+      field('name', $.definition_name),
+      field('generics', optional($.generic_list)),
+      field('fields', seq('(', commaSep1($.trait_field), ')')),
     ),
 
     enum_definition: $ => seq(
       'enum',
       field('name', $.definition_name),
-      field('types', $.type_list),
-      ':',
-      field('fields', seq($._indent, seq(
-        repeat($.enum_field),
-        $._dedent
-      ))),
+      field('types', seq('(', commaSep1($.type_field), ')')),
+      field('fields', seq('{', commaSep1($.enum_field), '}')),
     ),
 
-    type: $ => seq($.definition_name, optional('?')),
-
-    type_list: $ => seq(
-      '(',
-      commaSep1($.identifier),
-      ')'
+    fun_definition: $ => seq(
+      'fun',
+      field('name', choice($.identifier, $._extension)),
+      field('params', seq('(', optional(commaSep1($.param)), ')')),
+      '=>',
+      field('returns', optional(commaSep1($.type))),
+      '{', '}',
     ),
+
+    trait_name: $ => seq("@", $.definition_name),
 
     trait_list: $ => seq(
       '(',
@@ -83,10 +68,32 @@ module.exports = grammar({
       '>'
     ),
 
-    class_field: $ => seq(
+    type: $ => seq($.definition_name, optional('?')),
+
+    param: $ => seq(
       field('name', $.variable_name),
       ':',
       field('type', $.type)
+    ),
+
+    type_field: $ => seq(
+      'val',
+      field('name', $.variable_name),
+      ':',
+      field('type', $.type)
+    ),
+
+    fun_field: $ => seq(
+      'fun',
+      field('name', $.identifier),
+      field('params', seq('(', optional(commaSep1($.param)), ')')),
+      '=>',
+      field('returns', optional(commaSep1($.type))),
+    ),
+
+    trait_field: $ => choice(
+      $.type_field,
+      $.fun_field,
     ),
 
     enum_field: $ => seq($.enum_field_name, '(', commaSep1($._primary_expression), ')'),
@@ -95,6 +102,8 @@ module.exports = grammar({
       $._literal_constant,
       $._string_literal,
     ),
+
+    _extension: $ => seq($.identifier, '.', $.identifier),
 
     url: $ => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, '/'),
     package: $ => $.identifier,

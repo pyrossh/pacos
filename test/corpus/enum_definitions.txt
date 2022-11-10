@@ -4,29 +4,33 @@ Enum definitions - Int
 
 package definitions
 
-enum Colors(Int):
-  RED(0xFF0000)
-  GREEN(0x00FF00)
+enum Colors(val rgb: Int) {
+  RED(0xFF0000),
+  GREEN(0x00FF00),
   BLUE(0x0000FF)
+}
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package 
     (identifier))
-  (enum_definition
-    (definition_name)
-    (type_list
-      (identifier))
-    (enum_field
-      (enum_field_name)
-      (hex_literal))
-    (enum_field
-      (enum_field_name)
-      (hex_literal))
-    (enum_field
-      (enum_field_name)
-      (hex_literal))))
+  (definitions
+    (enum_definition
+      (definition_name)
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (enum_field
+        (enum_field_name)
+        (hex_literal))
+      (enum_field
+        (enum_field_name)
+        (hex_literal))
+      (enum_field
+        (enum_field_name)
+        (hex_literal)))))
 
 ================================================================================
 Enum definitions - Float
@@ -34,33 +38,40 @@ Enum definitions - Float
 
 package definitions
 
-enum ColorsAlpha(Int, Float):
-  RED(1, 0.1)
-  GREEN(2, 0.2)
+enum ColorsAlpha(val a: Int, val b: Float) {
+  RED(1, 0.1),
+  GREEN(2, 0.2),
   BLUE(3, 0.3)
+}
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package 
     (identifier))
-  (enum_definition
-    (definition_name)
-    (type_list
-      (identifier)
-      (identifier))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (float_literal))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (float_literal))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (float_literal))))
+  (definitions
+    (enum_definition
+      (definition_name)
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (float_literal))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (float_literal))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (float_literal)))))
 
 ================================================================================
 Enum definitions - String
@@ -68,30 +79,37 @@ Enum definitions - String
 
 package definitions
 
-enum ColorsAlpha(Int, String):
-  RED(1, "1")
-  GREEN(2, "2")
+enum ColorsAlpha(val a: Int, val b: String) {
+  RED(1, "1"),
+  GREEN(2, "2"),
   BLUE(3, "3")
+}
 
 --------------------------------------------------------------------------------
 
 (source_file
   (package 
     (identifier))
-  (enum_definition
-    (definition_name)
-    (type_list
-      (identifier)
-      (identifier))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (line_string_literal))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (line_string_literal))
-    (enum_field
-      (enum_field_name)
-      (integer_literal)
-      (line_string_literal))))
+  (definitions
+    (enum_definition
+      (definition_name)
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (type_field
+        (variable_name)
+        (type
+          (definition_name)))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (line_string_literal))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (line_string_literal))
+      (enum_field
+        (enum_field_name)
+        (integer_literal)
+        (line_string_literal)))))

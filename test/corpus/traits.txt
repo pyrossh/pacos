@@ -1,0 +1,65 @@
+================================================================================
+Traits - Simple
+================================================================================
+
+package definitions
+
+trait Animal(
+  val name: String,
+  fun legs() => Int
+)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (package
+    (identifier))
+  (definitions
+    (trait_definition
+      (definition_name)
+      (trait_field
+        (type_field
+          (variable_name)
+          (type
+            (definition_name))))
+      (trait_field
+        (fun_field
+          (identifier)
+          (type
+            (definition_name)))))))
+
+
+================================================================================
+Traits - Generics
+================================================================================
+
+package definitions
+
+trait Shape<T>(
+  val name: T,
+  fun area(size: Float) => T
+)
+--------------------------------------------------------------------------------
+
+(source_file
+  (package
+    (identifier))
+  (definitions
+    (trait_definition
+      (definition_name)
+      (generic_list
+        (identifier))
+      (trait_field
+        (type_field
+          (variable_name)
+          (type
+            (definition_name))))
+      (trait_field
+        (fun_field
+          (identifier)
+          (param
+            (variable_name)
+            (type
+              (definition_name)))
+          (type
+            (definition_name)))))))
