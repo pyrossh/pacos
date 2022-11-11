@@ -22,7 +22,7 @@ Functions - Extension
 
 package definitions
 
-fun User.main() => {
+fun User.fullName() => {
 }
 
 --------------------------------------------------------------------------------
@@ -63,6 +63,73 @@ fun add(a: Int, b: Int) => Int {
           (definition_name)))
       (type
         (definition_name)))))
+
+================================================================================
+Functions - Generics
+================================================================================
+
+package definitions
+
+fun add<S, T>(a: S, b: T) => S {
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (package
+    (identifier))
+  (definitions
+    (fun_definition
+      (identifier)
+      (generic_list
+        (identifier)
+        (identifier))
+      (param
+        (variable_name)
+        (type
+          (definition_name)))
+      (param
+        (variable_name)
+        (type
+          (definition_name)))
+      (type
+        (definition_name)))))
+
+================================================================================
+Functions - Decorators
+================================================================================
+
+package definitions
+
+@cache(1000)
+@get()
+fun add(a: Int, b: Int) => Int {
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (package
+    (identifier))
+  (definitions
+    (fun_definition
+      (decorator_name
+        (identifier)
+        (integer_literal))
+      (decorator_name
+        (identifier))
+      (identifier)
+      (param
+        (variable_name)
+        (type
+          (definition_name)))
+      (param
+        (variable_name)
+        (type
+          (definition_name)))
+      (type
+        (definition_name)))))
+
 
 ================================================================================
 Functions - High Order 1

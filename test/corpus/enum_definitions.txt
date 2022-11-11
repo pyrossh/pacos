@@ -4,9 +4,9 @@ Enum definitions - Int
 
 package definitions
 
-enum Colors(val rgb: Int) {
+enum Colors(val rgb: Int) { # define colors here
   RED(0xFF0000),
-  GREEN(0x00FF00),
+  GREEN(0x00FF00), # this needs to sorted
   BLUE(0x0000FF)
 }
 
@@ -22,12 +22,14 @@ enum Colors(val rgb: Int) {
         (variable_name)
         (type
           (definition_name)))
+      (comment)
       (enum_field
         (enum_field_name)
         (hex_literal))
       (enum_field
         (enum_field_name)
         (hex_literal))
+      (comment)
       (enum_field
         (enum_field_name)
         (hex_literal)))))

@@ -28,6 +28,16 @@
     "type": "class_definition",
     "named": true,
     "fields": {
+      "decorators": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "decorator_name",
+            "named": true
+          }
+        ]
+      },
       "fields": {
         "multiple": true,
         "required": true,
@@ -71,15 +81,62 @@
         ]
       },
       "traits": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "trait_name",
+            "type": "trait_list",
             "named": true
           }
         ]
       }
+    }
+  },
+  {
+    "type": "decorator_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bin_literal",
+          "named": true
+        },
+        {
+          "type": "boolean_literal",
+          "named": true
+        },
+        {
+          "type": "character_literal",
+          "named": true
+        },
+        {
+          "type": "float_literal",
+          "named": true
+        },
+        {
+          "type": "hex_literal",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "integer_literal",
+          "named": true
+        },
+        {
+          "type": "line_string_literal",
+          "named": true
+        },
+        {
+          "type": "multi_line_string_literal",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -220,6 +277,40 @@
     "type": "fun_definition",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
+          }
+        ]
+      },
+      "decorators": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "decorator_name",
+            "named": true
+          }
+        ]
+      },
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_list",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": true,
         "required": true,
@@ -530,11 +621,11 @@
     }
   },
   {
-    "type": "trait_name",
+    "type": "trait_list",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -661,6 +752,10 @@
   {
     "type": "class",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
   },
   {
     "type": "definition_name",

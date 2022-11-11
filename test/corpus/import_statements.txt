@@ -4,7 +4,7 @@ Import statements
 
 package imports
 
-import github/pyros2097/std
+import github/pine/std  # importing std library here
 
 --------------------------------------------------------------------------------
 
@@ -12,4 +12,5 @@ import github/pyros2097/std
   (package 
     (identifier))
   (import_statement
-    (url)))
+    (url))
+    (comment))

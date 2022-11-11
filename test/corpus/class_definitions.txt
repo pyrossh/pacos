@@ -68,8 +68,7 @@ Class definitions - Traits
 
 package definitions
 
-@B @C
-class AnimalSubSpecies (
+class AnimalSubSpecies : B, C (
   val a: String,
   val b: Float
 )
@@ -81,11 +80,10 @@ class AnimalSubSpecies (
     (identifier))
   (definitions
     (class_definition
-      (trait_name
-        (definition_name))
-      (trait_name
-        (definition_name))
       (definition_name)
+      (trait_list
+        (definition_name)
+        (definition_name))
       (type_field
         (variable_name)
         (type
@@ -101,8 +99,7 @@ Class definitions - Genrics + Traits
 
 package definitions
 
-@B @C
-class A<S, T>(
+class A<S, T>: B, C (
   val a: S,
   val b: T
 )
@@ -114,14 +111,13 @@ class A<S, T>(
     (identifier))
   (definitions
     (class_definition
-      (trait_name
-        (definition_name))
-      (trait_name
-        (definition_name))
       (definition_name)
       (generic_list
         (identifier)
         (identifier))
+      (trait_list
+        (definition_name)
+        (definition_name))
       (type_field
         (variable_name)
         (type
