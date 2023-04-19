@@ -1,0 +1,77 @@
+================================================================================
+Type - Simple
+================================================================================
+
+module palm
+
+type User = Guest | LoggedIn(name: String, session_id: String)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    (module_name))
+  (type
+    (type_identifier)
+    (type_name
+      (type_identifier))
+    (type_name
+      (type_identifier)
+      (type_field
+        (identifier)
+        (identifier))
+      (type_field
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Type - Generic
+================================================================================
+
+module palm
+
+type User(a) = Guest | LoggedIn(name: a, age: Int)
+
+type Option(a) = Some(a) | None
+
+type Result(a, b) = Ok(a) | Error(b)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    (module_name))
+  (type
+    (type_identifier)
+    (generic_list
+      (identifier))
+    (type_name
+      (type_identifier))
+    (type_name
+      (type_identifier)
+      (type_field
+        (identifier)
+        (identifier))
+      (type_field
+        (identifier)
+        (identifier))))
+  (type
+    (type_identifier)
+    (generic_list
+      (identifier))
+    (type_name
+      (type_identifier)
+      (identifier))
+    (type_name
+      (type_identifier)))
+  (type
+    (type_identifier)
+    (generic_list
+      (identifier)
+      (identifier))
+    (type_name
+      (type_identifier)
+      (identifier))
+    (type_name
+      (type_identifier)
+      (identifier))))

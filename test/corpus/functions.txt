@@ -4,8 +4,8 @@ Functions - Simple
 
 package definitions
 
-fun main() => {
-}
+main() =
+  todo("Not done")
 
 --------------------------------------------------------------------------------
 

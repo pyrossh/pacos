@@ -1,421 +1,5 @@
 [
   {
-    "type": "boolean_literal",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "character_escape_seq",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "character_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "character_escape_seq",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "class_definition",
-    "named": true,
-    "fields": {
-      "decorators": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "decorator_name",
-            "named": true
-          }
-        ]
-      },
-      "fields": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "type_field",
-            "named": true
-          }
-        ]
-      },
-      "generics": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "generic_list",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "definition_name",
-            "named": true
-          }
-        ]
-      },
-      "traits": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "trait_list",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "decorator_name",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "bin_literal",
-          "named": true
-        },
-        {
-          "type": "boolean_literal",
-          "named": true
-        },
-        {
-          "type": "character_literal",
-          "named": true
-        },
-        {
-          "type": "float_literal",
-          "named": true
-        },
-        {
-          "type": "hex_literal",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "integer_literal",
-          "named": true
-        },
-        {
-          "type": "line_string_literal",
-          "named": true
-        },
-        {
-          "type": "multi_line_string_literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "definitions",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "class_definition",
-          "named": true
-        },
-        {
-          "type": "enum_definition",
-          "named": true
-        },
-        {
-          "type": "fun_definition",
-          "named": true
-        },
-        {
-          "type": "trait_definition",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "enum_definition",
-    "named": true,
-    "fields": {
-      "fields": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "enum_field",
-            "named": true
-          },
-          {
-            "type": "{",
-            "named": false
-          },
-          {
-            "type": "}",
-            "named": false
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "definition_name",
-            "named": true
-          }
-        ]
-      },
-      "types": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "type_field",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "enum_field",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "bin_literal",
-          "named": true
-        },
-        {
-          "type": "boolean_literal",
-          "named": true
-        },
-        {
-          "type": "character_literal",
-          "named": true
-        },
-        {
-          "type": "enum_field_name",
-          "named": true
-        },
-        {
-          "type": "float_literal",
-          "named": true
-        },
-        {
-          "type": "hex_literal",
-          "named": true
-        },
-        {
-          "type": "integer_literal",
-          "named": true
-        },
-        {
-          "type": "line_string_literal",
-          "named": true
-        },
-        {
-          "type": "multi_line_string_literal",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "fun_definition",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "{",
-            "named": false
-          },
-          {
-            "type": "}",
-            "named": false
-          }
-        ]
-      },
-      "decorators": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "decorator_name",
-            "named": true
-          }
-        ]
-      },
-      "generics": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "generic_list",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": ".",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "params": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "param",
-            "named": true
-          }
-        ]
-      },
-      "returns": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "fun_field",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "params": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "param",
-            "named": true
-          }
-        ]
-      },
-      "returns": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "generic_list",
     "named": true,
     "fields": {},
@@ -436,94 +20,35 @@
     "fields": {}
   },
   {
-    "type": "import_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "url",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "interpolated_identifier",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "line_string_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "character_escape_seq",
-          "named": true
-        },
-        {
-          "type": "interpolated_identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "multi_line_string_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "interpolated_identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "package",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "param",
+    "type": "import",
     "named": true,
     "fields": {
-      "name": {
+      "alias": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "variable_name",
+            "type": "identifier",
             "named": true
           }
         ]
       },
-      "type": {
+      "imports": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "unqualified_imports",
+            "named": true
+          }
+        ]
+      },
+      "module": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "type",
+            "type": "module_name",
             "named": true
           }
         ]
@@ -531,50 +56,36 @@
     }
   },
   {
-    "type": "source_file",
+    "type": "module",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "definitions",
-          "named": true
-        },
-        {
-          "type": "import_statement",
-          "named": true
-        },
-        {
-          "type": "package",
-          "named": true
-        }
-      ]
+    "fields": {
+      "module": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "module_name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
-    "type": "trait_definition",
+    "type": "module_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "record",
     "named": true,
     "fields": {
       "fields": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "trait_field",
+            "type": "type_field",
             "named": true
           }
         ]
@@ -594,7 +105,7 @@
         "required": true,
         "types": [
           {
-            "type": "definition_name",
+            "type": "type_identifier",
             "named": true
           }
         ]
@@ -602,26 +113,7 @@
     }
   },
   {
-    "type": "trait_field",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "fun_field",
-          "named": true
-        },
-        {
-          "type": "type_field",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "trait_list",
+    "type": "source_file",
     "named": true,
     "fields": {},
     "children": {
@@ -629,7 +121,19 @@
       "required": true,
       "types": [
         {
-          "type": "definition_name",
+          "type": "import",
+          "named": true
+        },
+        {
+          "type": "module",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
@@ -638,16 +142,41 @@
   {
     "type": "type",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "definition_name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "generics": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "generic_list",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "types": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "type_name",
+            "named": true
+          },
+          {
+            "type": "|",
+            "named": false
+          }
+        ]
+      }
     }
   },
   {
@@ -659,7 +188,7 @@
         "required": true,
         "types": [
           {
-            "type": "variable_name",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -669,7 +198,7 @@
         "required": true,
         "types": [
           {
-            "type": "type",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -677,21 +206,88 @@
     }
   },
   {
-    "type": "url",
+    "type": "type_identifier",
     "named": true,
     "fields": {}
   },
   {
-    "type": "\"",
-    "named": false
+    "type": "type_name",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type_field",
+          "named": true
+        }
+      ]
+    }
   },
   {
-    "type": "$",
-    "named": false
+    "type": "unqualified_import",
+    "named": true,
+    "fields": {
+      "alias": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
-    "type": "'",
-    "named": false
+    "type": "unqualified_imports",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "unqualified_import",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "(",
@@ -718,107 +314,35 @@
     "named": false
   },
   {
-    "type": "<",
+    "type": "=",
     "named": false
   },
   {
-    "type": "=>",
+    "type": "as",
     "named": false
-  },
-  {
-    "type": ">",
-    "named": false
-  },
-  {
-    "type": "?",
-    "named": false
-  },
-  {
-    "type": "@",
-    "named": false
-  },
-  {
-    "type": "\\u",
-    "named": false
-  },
-  {
-    "type": "`",
-    "named": false
-  },
-  {
-    "type": "bin_literal",
-    "named": true
-  },
-  {
-    "type": "class",
-    "named": false
-  },
-  {
-    "type": "comment",
-    "named": true
-  },
-  {
-    "type": "definition_name",
-    "named": true
-  },
-  {
-    "type": "enum",
-    "named": false
-  },
-  {
-    "type": "enum_field_name",
-    "named": true
-  },
-  {
-    "type": "false",
-    "named": false
-  },
-  {
-    "type": "float_literal",
-    "named": true
-  },
-  {
-    "type": "fun",
-    "named": false
-  },
-  {
-    "type": "hex_literal",
-    "named": true
   },
   {
     "type": "import",
     "named": false
   },
   {
-    "type": "integer_literal",
-    "named": true
-  },
-  {
-    "type": "null",
+    "type": "module",
     "named": false
   },
   {
-    "type": "package",
+    "type": "record",
     "named": false
   },
   {
-    "type": "trait",
+    "type": "type",
     "named": false
-  },
-  {
-    "type": "true",
-    "named": false
-  },
-  {
-    "type": "val",
-    "named": false
-  },
-  {
-    "type": "variable_name",
-    "named": true
   },
   {
     "type": "{",
+    "named": false
+  },
+  {
+    "type": "|",
     "named": false
   },
   {

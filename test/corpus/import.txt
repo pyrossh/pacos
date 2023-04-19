@@ -1,0 +1,40 @@
+================================================================================
+Module Statement
+================================================================================
+
+module palm
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    (module_name)))
+
+
+================================================================================
+Import statements
+================================================================================
+
+module palm/std
+
+import palm/std/list
+import palm/std/list.{List, contains}
+import palm/std/bool as boolean
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (module
+    (module_name))
+  (import
+    (module_name))
+  (import
+    (module_name)
+    (unqualified_imports
+      (unqualified_import
+        (identifier))
+      (unqualified_import
+        (identifier))))
+  (import
+    (module_name)
+    (identifier)))

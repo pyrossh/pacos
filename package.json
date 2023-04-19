@@ -1,5 +1,5 @@
 {
-  "name": "tree-sitter-pine",
+  "name": "tree-sitter-palm",
   "version": "0.1.0",
   "main": "bindings/node",
   "description": "Tree-Sitter grammar for pine",
