@@ -6,6 +6,13 @@ module palm
 
 type User = Guest | LoggedIn(name: String, session_id: String)
 
+type Cat(
+  firstName: String,
+  middleName: String,
+  lastName: String,
+  age: Int
+)
+
 --------------------------------------------------------------------------------
 
 (source_file
@@ -13,10 +20,25 @@ type User = Guest | LoggedIn(name: String, session_id: String)
     (module_name))
   (type
     (type_identifier)
-    (type_name
+    (union
       (type_identifier))
-    (type_name
+    (union
       (type_identifier)
+      (type_field
+        (identifier)
+        (identifier))
+      (type_field
+        (identifier)
+        (identifier))))
+  (type
+    (type_identifier)
+    (record
+      (type_field
+        (identifier)
+        (identifier))
+      (type_field
+        (identifier)
+        (identifier))
       (type_field
         (identifier)
         (identifier))
@@ -36,6 +58,11 @@ type Option(a) = Some(a) | None
 
 type Result(a, b) = Ok(a) | Error(b)
 
+type Cat(a)(
+  name: a,
+  age: Int
+)
+
 --------------------------------------------------------------------------------
 
 (source_file
@@ -45,9 +72,9 @@ type Result(a, b) = Ok(a) | Error(b)
     (type_identifier)
     (generic_list
       (identifier))
-    (type_name
+    (union
       (type_identifier))
-    (type_name
+    (union
       (type_identifier)
       (type_field
         (identifier)
@@ -59,19 +86,30 @@ type Result(a, b) = Ok(a) | Error(b)
     (type_identifier)
     (generic_list
       (identifier))
-    (type_name
+    (union
       (type_identifier)
       (identifier))
-    (type_name
+    (union
       (type_identifier)))
   (type
     (type_identifier)
     (generic_list
       (identifier)
       (identifier))
-    (type_name
+    (union
       (type_identifier)
       (identifier))
-    (type_name
+    (union
       (type_identifier)
-      (identifier))))
+      (identifier)))
+  (type
+    (type_identifier)
+    (generic_list
+      (identifier))
+    (record
+      (type_field
+        (identifier)
+        (identifier))
+      (type_field
+        (identifier)
+        (identifier)))))

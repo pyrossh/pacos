@@ -4,16 +4,35 @@ Function - Simple
 
 module palm
 
-main() =
+fn main() {
   let a = "123"
+}
+
+fn add(a: Int, b: Int) -> Int {
+  let a = "123"
+}
 
 --------------------------------------------------------------------------------
 
 (source_file
   (module
     (module_name))
-  (proc
+  (function
     (identifier)
+    (let
+      (identifier)
+      (string
+        (quoted_content))))
+  (function
+    (identifier)
+    (type_field
+      (identifier)
+      (identifier))
+    (type_field
+      (identifier)
+      (identifier))
+    (return_type
+      (type_identifier))
     (let
       (identifier)
       (string

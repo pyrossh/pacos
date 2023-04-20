@@ -36,10 +36,6 @@
             "named": true
           },
           {
-            "type": "record",
-            "named": true
-          },
-          {
             "type": "string",
             "named": true
           },
@@ -148,10 +144,6 @@
             "named": true
           },
           {
-            "type": "record",
-            "named": true
-          },
-          {
             "type": "string",
             "named": true
           },
@@ -204,10 +196,6 @@
           "named": true
         },
         {
-          "type": "record",
-          "named": true
-        },
-        {
           "type": "string",
           "named": true
         },
@@ -216,6 +204,108 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "function",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "expression_group",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "let",
+            "named": true
+          },
+          {
+            "type": "negation",
+            "named": true
+          },
+          {
+            "type": "panic",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "todo",
+            "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "type_field",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "return_type",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -361,10 +451,6 @@
             "named": true
           },
           {
-            "type": "record",
-            "named": true
-          },
-          {
             "type": "string",
             "named": true
           },
@@ -430,10 +516,6 @@
           "named": true
         },
         {
-          "type": "record",
-          "named": true
-        },
-        {
           "type": "string",
           "named": true
         },
@@ -450,137 +532,18 @@
     "fields": {}
   },
   {
-    "type": "proc",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "binary_expression",
-            "named": true
-          },
-          {
-            "type": "expression_group",
-            "named": true
-          },
-          {
-            "type": "float",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "integer",
-            "named": true
-          },
-          {
-            "type": "let",
-            "named": true
-          },
-          {
-            "type": "negation",
-            "named": true
-          },
-          {
-            "type": "panic",
-            "named": true
-          },
-          {
-            "type": "record",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "todo",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "params": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "type_field",
-            "named": true
-          }
-        ]
-      },
-      "return_type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "return_type",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "record",
     "named": true,
-    "fields": {
-      "fields": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "type_field",
-            "named": true
-          }
-        ]
-      },
-      "generics": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "generic_list",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_identifier",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_field",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -630,19 +593,15 @@
       "required": true,
       "types": [
         {
+          "type": "function",
+          "named": true
+        },
+        {
           "type": "import",
           "named": true
         },
         {
           "type": "module",
-          "named": true
-        },
-        {
-          "type": "proc",
-          "named": true
-        },
-        {
-          "type": "record",
           "named": true
         },
         {
@@ -711,12 +670,26 @@
           }
         ]
       },
-      "types": {
-        "multiple": true,
-        "required": true,
+      "record": {
+        "multiple": false,
+        "required": false,
         "types": [
           {
-            "type": "type_name",
+            "type": "record",
+            "named": true
+          }
+        ]
+      },
+      "union": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "union",
             "named": true
           },
           {
@@ -759,7 +732,7 @@
     "fields": {}
   },
   {
-    "type": "type_name",
+    "type": "union",
     "named": true,
     "fields": {
       "name": {
@@ -938,6 +911,10 @@
     "named": true
   },
   {
+    "type": "fn",
+    "named": false
+  },
+  {
     "type": "identifier",
     "named": true
   },
@@ -960,10 +937,6 @@
   {
     "type": "quoted_content",
     "named": true
-  },
-  {
-    "type": "record",
-    "named": false
   },
   {
     "type": "todo",
