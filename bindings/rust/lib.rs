@@ -1,27 +1,13 @@
-// -*- coding: utf-8 -*-
-// ------------------------------------------------------------------------------------------------
-// Copyright © 2020, tree-sitter-python authors.
-// See the LICENSE file in this repo for license details.
-// ------------------------------------------------------------------------------------------------
-
-//! This crate provides a Python grammar for the [tree-sitter][] parsing library.
+//! This crate provides palm language support for the [tree-sitter][] parsing library.
 //!
-//! Typically, you will use the [language][language func] function to add this grammar to a
+//! Typically, you will use the [language][language func] function to add this language to a
 //! tree-sitter [Parser][], and then use the parser to parse some code:
 //!
 //! ```
-//! use tree_sitter::Parser;
-//!
-//! let code = r#"
-//!     def double(x):
-//!         return x * 2
-//! "#;
-//! let mut parser = Parser::new();
-//! parser.set_language(tree_sitter_python::language()).expect("Error loading Python grammar");
-//! let parsed = parser.parse(code, None);
-//! # let parsed = parsed.unwrap();
-//! # let root = parsed.root_node();
-//! # assert!(!root.has_error());
+//! let code = "";
+//! let mut parser = tree_sitter::Parser::new();
+//! parser.set_language(tree_sitter_palm::language()).expect("Error loading palm grammar");
+//! let tree = parser.parse(code, None).unwrap();
 //! ```
 //!
 //! [Language]: https://docs.rs/tree-sitter/*/tree_sitter/struct.Language.html
@@ -32,17 +18,17 @@
 use tree_sitter::Language;
 
 extern "C" {
-    fn tree_sitter_python() -> Language;
+    fn tree_sitter_palm() -> Language;
 }
 
 /// Returns the tree-sitter [Language][] for this grammar.
 ///
 /// [Language]: https://docs.rs/tree-sitter/*/tree_sitter/struct.Language.html
 pub fn language() -> Language {
-    unsafe { tree_sitter_python() }
+    unsafe { tree_sitter_palm() }
 }
 
-/// The source of the Python tree-sitter grammar description.
+/// The source of the palm tree-sitter grammar description.
 pub const GRAMMAR: &'static str = include_str!("../../grammar.js");
 
 /// The syntax highlighting query for this language.
@@ -63,6 +49,6 @@ mod tests {
         let mut parser = tree_sitter::Parser::new();
         parser
             .set_language(super::language())
-            .expect("Error loading Python grammar");
+            .expect("Error loading palm grammar");
     }
 }
