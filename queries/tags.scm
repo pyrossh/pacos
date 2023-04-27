@@ -1,11 +1,11 @@
 ; Modules
 (module) @name @reference.module
 (import alias: (identifier) @name) @reference.module
-(remote_type_identifier
-  module: (identifier) @name) @reference.module
-((field_access
-  record: (identifier) @name)
- (#is-not? local)) @reference.module
+; (remote_type_identifier
+;   module: (identifier) @name) @reference.module
+; ((field_access
+;   record: (identifier) @name)
+;  (#is-not? local)) @reference.module
 
 ; Functions
 (function

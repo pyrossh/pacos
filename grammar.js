@@ -9,7 +9,7 @@ module.exports = grammar({
   externals: ($) => [$.quoted_content],
   rules: {
     source_file: ($) =>
-      seq($.module, repeat($.import), repeat(choice($.type, $.function))),
+      seq($.module, repeat($.import), repeat(choice($.struct, $.enum, $.function))),
 
     module: ($) => seq("module", field("module", $.module_name)),
 
@@ -41,33 +41,46 @@ module.exports = grammar({
 
     /* Declarations */
 
-    type: ($) =>
+    struct: ($) =>
       seq(
         "type",
         field("name", $.type_identifier),
-        field("generics", optional($.generic_list)),
-        choice(
-          field("record", $.record),
-          field("union", seq("=", optional("|"), sep1($.union, "|")))
-        )
+        field("generics", optional($.generics)),
+        field("fields", seq("(", repeat($.field), ")")),
+      ),
+
+    enum: ($) =>
+      seq(
+        "type",
+        field("name", $.type_identifier),
+        field("generics", optional($.generics)),
+        field("fields", seq(
+          "{",
+          repeat(
+            seq(
+              field("name", $.type_identifier),
+              optional(seq(
+                "(",
+                choice(
+                  series_of($.identifier, ","),
+                  series_of($.field, ","),
+                ),
+                ")"),
+              ),
+            ),
+          ),
+          "}"
+        ))
       ),
 
     function: ($) =>
       seq(
         "fn",
         field("name", $.identifier),
-        field("params", seq("(", optional(commaSep1($.type_field)), ")")),
-        optional(seq("->", field("return_type", optional($.return_type)))),
+        field("params", seq("(", optional(series_of($.field, ",")), ")")),
+        field("return", $.return_type),
         field("body", seq("{", $._statement_seq, "}"))
       ),
-
-    /* Shared AST nodes */
-
-    // param: $ => seq(
-    //   field('name', $.variable_name),
-    //   ':',
-    //   field('type', $.type)
-    // ),
 
     /* Expressions */
 
@@ -98,8 +111,6 @@ module.exports = grammar({
         $.integer,
         $.float,
         $.identifier,
-        $.todo,
-        $.panic,
         // $.anonymous_function,
         $.expression_group,
         // $.case,
@@ -136,29 +147,32 @@ module.exports = grammar({
     _pattern_binary_expression: ($) =>
       binaryExpr(prec.left, 1, "<>", $._pattern_expression),
 
-    todo: ($) =>
-      seq("todo", optional(seq("(", field("message", $.string), ")"))),
-    panic: (_$) => seq("panic"),
-
     /* Types */
-    return_type: ($) =>
+    field: ($) =>
+      seq(field("name", $.identifier), ":", field("type", $._type)),
+
+    function_type: ($) =>
+      seq(
+        "fn",
+        optional(field("parameter_types", $.function_parameter_types)),
+        optional($.return_type),
+      ),
+    function_parameter_types: ($) =>
+      seq("(", optional(series_of($._type, ",")), ")"),
+
+    type: ($) =>
       seq(
         field("name", $.type_identifier),
-        field("generics", optional(seq("(", commaSep1($.identifier), ")")))
+        optional(field("arguments", $.type_arguments))
       ),
+    type_arguments: ($) =>
+      seq("(", optional(series_of($.type_argument, ",")), ")"),
+    type_argument: ($) => $._type,
 
-    record: ($) => seq(seq("(", commaSep1($.type_field), ")")),
+    return_type: ($) => seq("->", field("return_type", $._type)),
 
-    union: ($) =>
-      seq(
-        field("name", $.type_identifier),
-        optional(seq("(", choice($.identifier, commaSep1($.type_field)), ")"))
-      ),
-
-    type_field: ($) =>
-      seq(field("name", $.identifier), ":", field("type", $.identifier)),
-
-    generic_list: ($) => seq("(", commaSep1($.identifier), ")"),
+    generics: ($) => seq("(", series_of($.generic, ","), ")"),
+    generic: ($) => /[a-z][a-z]*/,
 
     /* Literals */
     float: ($) => /-?[0-9_]+\.[0-9_]*(e-?[0-9_]+)?/,
@@ -179,31 +193,21 @@ module.exports = grammar({
     // identifier: ($) => $._name,
     identifier: ($) => /[a-zA-Z_][a-zA-Z_0-9]*/,
     type_identifier: ($) => $._upname,
-    _type_annotation: ($) => seq(":", field("type", $.identifier)),
+    remote_type_identifier: ($) =>
+      seq(field("module", $.identifier), ".", field("name", $.type_identifier)),
+    _type_annotation: ($) => seq(":", field("type", $._type)),
+    _type: ($) =>
+      choice($.type, $.generic, $.function_type),
     _discard_name: ($) => /_[_0-9a-z]*/,
     _name: ($) => /[_a-z][_0-9a-z]*/,
     _upname: ($) => /[A-Z][0-9a-zA-Z]*/,
   },
 });
 
-function commaSep1(rule) {
-  return sep1(rule, ",");
-}
-
-function pipeSep1(rule) {
-  return sep1(rule, "|");
-}
-
-function sep1(rule, separator) {
-  return seq(rule, repeat(seq(separator, rule)));
-}
-
 function series_of(rule, separator) {
   return seq(rule, repeat(seq(separator, rule)), optional(separator));
 }
 
-// A binary expression with a left-hand side, infix operator, and then right-hand-side
-// https://github.com/elixir-lang/tree-sitter-elixir/blob/de20391afe5cb03ef1e8a8e43167e7b58cc52869/grammar.js#L850-L859
 function binaryExpr(assoc, precedence, operator, expr) {
   return assoc(
     precedence,

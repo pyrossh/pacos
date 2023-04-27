@@ -1,0 +1,168 @@
+module palm
+
+pub type Cat = struct(
+  firstName: String,
+  middleName: String,
+  lastName: String,
+  age: Int
+  cb: |Int| -> Int
+)
+
+pub decrement = |c: Cat| -> Cat {
+  println("decrementing")
+  Cat(...c, age: c.age + 1)
+}
+
+pub fn have_birthday(person: Person) -> Person {
+  Person(..person, age: person.age + 1, is_happy: True)
+}
+
+pub have_birthday = |person: Person| -> Person {
+  Person(..person, age: person.age + 1, is_happy: True)
+}
+
+pub fn main {
+  const cat = Cat(name: "Felix", cuteness: 9001, age: 5)
+  cat
+  |> increment()
+  |> increment()
+  |> increment()
+}
+
+
+isSingleton(b : Bool) -> Type =
+  | True = Int
+  | False = List(Int)
+
+-- module palm/list
+
+type List(a)(
+  items: []a
+)
+
+pub fn new(l: ...a) -> List(a) {
+  List(items: l, size: l.size)
+}
+
+pub fn head(l: List(a)) -> a {
+  when {
+    l.size == 0 -> panic("accessing head of empty list")
+    _ -> l[0]
+  }
+}
+
+pub fn tail(l: List(a)) -> a {
+  when {
+    l.size == 0 -> []
+    l.size == 1 -> []
+    _ -> new(l[1:l.size])
+  }
+}
+
+pub fn is_empty(l: List(a)) -> Bool {
+  l.size == 0
+}
+
+pub fn contains(l: List(a), elem: a) -> Bool {
+  when l {
+    is_empty(l) -> False
+    head(l) == elem -> True
+    _ -> contains(tail(l), elem)
+  }
+}
+
+pub fn each(l: List(a), f: fn (a)) {
+  if !is_empty(l)  {
+    head(l) |> f()
+    tail(l) |> each(f)
+  }
+}
+
+pub type Iterator(element)(
+  continuation: fn() -> Action(element)
+)
+
+type Action(element) {
+  Stop
+  Continue(element, fn() -> Action(element))
+}
+
+pub type Step(element, accumulator) {
+  Next(element: element, accumulator: accumulator)
+  Done
+}
+
+InfiniteIteror = Iterator(Bool)(
+  continuation: fn () -> Action(Bool) {
+    True
+  }
+)
+
+
+pub fn while(cond: Iterator, cb: fn()) {
+  when cond().next() {
+    cb()
+    while(cond, cb)
+  }
+}
+
+
+items
+  |> list.each(|| println(item.name) })
+  |> list.map(|| Person(...item, name: "123") })
+
+filter(l: List(a), f: (a) -> Bool, acc: List(a) = new()) -> List(a) =
+  | is_empty(l) -> acc
+  | f(head(l)) ->
+    acc |> add(head(l))
+    filter(tail(l), f, acc)
+  | _ -> 
+    filter(tail(l), f, acc)
+
+fn map_res(res: Response) -> Result(String, String) {
+  case (x = res.status()) {
+    x >= 500 -> Error("failed")
+    _ -> Ok("success")
+  }
+}
+
+handler(request: Request(t)) -> Response(String) =
+  body = bit_builder.from_string("Hello, world!")
+  response.new(200)
+    |> response.prepend_header("made-with", "Gleam")
+    |> response.set_body(body)
+
+fn main(args: List(String)) -> Result(Int, String) {
+  println "Sum of x + y = "
+  println addMe(10 25)
+
+  list.new(1, 2, 3, 4, 5)
+    |> list.filter(|x| -> x > 5)
+    |> list.map(|x| -> x * 2)
+    |> list.each(|x| -> prinln(x))
+    |> list.is_empty()
+
+  let res = request.new()
+    |> request.set_method(Get)
+    |> request.set_host("test-api.service.hmrc.gov.uk")
+    |> request.set_path("/hello/world")
+    |> request.prepend_header("accept", "application/vnd.hmrc.1.0+json")
+    |> request.fetch()
+
+  res
+    |> map_res
+}
+
+
+fn add(x: Int, y: Int) -> Int {
+  x + y
+}
+
+multiply(x: Int, y: Int) -> Int =
+  x * y
+
+twice(f: (t) -> t, x: t) -> t =
+  f(f(x))
+
+add_one(x: Int) -> Int =
+  x + 1

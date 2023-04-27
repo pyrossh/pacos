@@ -4,13 +4,9 @@
   "description": "A tree-sitter grammar for the Palm programming language",
   "main": "bindings/node",
   "scripts": {
-    "test": "tree-sitter test",
     "install": "node-gyp rebuild",
-    "generate": "tree-sitter generate",
-    "parse": "tree-sitter parse",
-    "build-wasm": "tree-sitter build-wasm",
-    "playground": "tree-sitter playground",
-    "format": "prettier --write grammar.js"
+    "format": "prettier --write grammar.js",
+    "test": "tree-sitter generate && tree-sitter test"
   },
   "author": "pyrossh",
   "license": "MIT",
