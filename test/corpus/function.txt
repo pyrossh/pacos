@@ -4,12 +4,18 @@ Function - Simple
 
 module palm
 
-fn main() {
+pub fn main() {
   let a = "123"
+  let b = 5
+  let c = 5.1
+  when b {
+    1 -> "Hello"
+    _ -> "World"
+  }
 }
 
-fn add(a: Int, b: Int) -> Int {
-  let a = "123"
+pub fn add(a: Int, b: Int) -> Int {
+  a + b
 }
 
 --------------------------------------------------------------------------------
@@ -18,22 +24,41 @@ fn add(a: Int, b: Int) -> Int {
   (module
     (module_name))
   (function
+    (visibility_modifier)
     (identifier)
     (let
       (identifier)
       (string
-        (quoted_content))))
+        (quoted_content)))
+    (let
+      (identifier)
+      (integer))
+    (let
+      (identifier)
+      (float))
+    (when
+      (identifier)
+      (when_entry
+        (integer)
+        (string
+          (quoted_content)))
+      (when_entry
+        (string
+          (quoted_content)))))
   (function
+    (visibility_modifier)
     (identifier)
-    (type_field
+    (field
       (identifier)
-      (identifier))
-    (type_field
+      (type
+        (type_identifier)))
+    (field
       (identifier)
-      (identifier))
+      (type
+        (type_identifier)))
     (return_type
-      (type_identifier))
-    (let
+      (type
+        (type_identifier)))
+    (binary_expression
       (identifier)
-      (string
-        (quoted_content)))))
+      (identifier))))

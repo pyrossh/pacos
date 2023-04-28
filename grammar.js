@@ -43,6 +43,7 @@ module.exports = grammar({
 
     struct: ($) =>
       seq(
+        optional($.visibility_modifier),
         "type",
         field("name", $.type_identifier),
         field("generics", optional($.generics)),
@@ -51,6 +52,7 @@ module.exports = grammar({
 
     enum: ($) =>
       seq(
+        optional($.visibility_modifier),
         "type",
         field("name", $.type_identifier),
         field("generics", optional($.generics)),
@@ -75,15 +77,17 @@ module.exports = grammar({
 
     function: ($) =>
       seq(
+        optional($.visibility_modifier),
         "fn",
         field("name", $.identifier),
         field("params", seq("(", optional(series_of($.field, ",")), ")")),
-        field("return", $.return_type),
+        field("return", optional($.return_type)),
         field("body", seq("{", $._statement_seq, "}"))
       ),
 
     /* Expressions */
 
+    _name_param: ($) => field("name", $.identifier),
     _statement_seq: ($) => repeat1($._statement),
     _statement: ($) => choice($._expression, $.let),
     _expression: ($) => choice($._expression_unit, $.binary_expression),
@@ -111,15 +115,124 @@ module.exports = grammar({
         $.integer,
         $.float,
         $.identifier,
-        // $.anonymous_function,
+        $.anonymous_function,
         $.expression_group,
-        // $.case,
-        $.negation
+        $.when,
+        $.negation,
         // $.record_update,
-        // $.field_access,
-        // $.function_call
+        $.field_access,
+        $.function_call
+      ),
+    record: ($) =>
+      seq(
+        field("name", $.constructor_name),
+        optional(field("arguments", $.arguments))
+      ),
+    list: ($) =>
+      seq(
+        "[",
+        optional(
+          seq(
+            $._expression,
+            optional(repeat(seq(",", $._expression))),
+            optional(","),
+            optional(seq("..", field("spread", $._expression)))
+          )
+        ),
+        "]"
+      ),
+    anonymous_function: ($) =>
+      seq(
+        "fn",
+        field(
+          "parameters",
+          alias($.anonymous_function_parameters, $.function_parameters)
+        ),
+        optional(seq("->", field("return_type", $._type))),
+        "{",
+        field("body", alias($._statement_seq, $.function_body)),
+        "}"
+      ),
+    anonymous_function_parameters: ($) =>
+      seq(
+        "(",
+        optional(
+          series_of(
+            alias($.anonymous_function_parameter, $.function_parameter),
+            ","
+          )
+        ),
+        ")"
+      ),
+
+    _discard_param: ($) => field("name", $.discard),
+    anonymous_function_parameter: ($) =>
+      seq(
+        choice($._discard_param, $._name_param),
+        optional($._type_annotation)
       ),
     expression_group: ($) => seq("{", $._statement_seq, "}"),
+
+    when: $ => seq(
+      "when",
+      optional($._expression),
+      "{",
+      repeat($.when_entry),
+      "}"
+    ),
+
+    when_entry: $ => seq(
+      choice(
+        seq($._expression, repeat(seq(",", $._expression))),
+        "_"
+      ),
+      "->",
+      $._expression,
+    ),
+
+    _maybe_record_expression: ($) =>
+      choice(
+        $.record,
+        $.identifier,
+        $.function_call,
+        $.expression_group,
+        $.when,
+        // $.record_update,
+        $.field_access,
+      ),
+    field_access: ($) =>
+      prec.left(
+        seq(
+          field("record", $._maybe_record_expression),
+          ".",
+          field("field", $.label)
+        )
+      ),
+
+    arguments: ($) => seq("(", optional(series_of($.argument, ",")), ")"),
+    argument: ($) =>
+      seq(
+        optional(seq(field("label", $.label), ":")),
+        field("value", choice($.hole, $._expression))
+      ),
+    hole: ($) => $._discard_name,
+
+    function_call: ($) =>
+      seq(
+        field("function", $._maybe_function_expression),
+        field("arguments", $.arguments)
+      ),
+
+    _maybe_function_expression: ($) =>
+      choice(
+        $.identifier,
+        $.anonymous_function,
+        $.expression_group,
+        $.when,
+        $.field_access,
+        $.function_call
+      ),
+
     negation: ($) => seq("!", $._expression_unit),
     let: ($) => seq("let", $._assignment),
     _assignment: ($) =>
@@ -129,6 +242,23 @@ module.exports = grammar({
         "=",
         field("value", $._expression)
       ),
+
+    record_update: ($) =>
+      seq(
+        field(
+          "constructor", $.constructor_name
+        ),
+        "(",
+        "..",
+        field("spread", $._expression),
+        ",",
+        field("arguments", $.record_update_arguments),
+        ")"
+      ),
+    record_update_arguments: ($) => series_of($.record_update_argument, ","),
+    record_update_argument: ($) =>
+      seq(field("label", $.label), ":", field("value", $._expression)),
+
     _pattern: ($) =>
       seq(
         $._pattern_expression,
@@ -137,15 +267,34 @@ module.exports = grammar({
     _pattern_expression: ($) =>
       choice(
         $.identifier,
-        // $.discard,
-        // $.record_pattern,
-        // $.string,
+        $.discard,
+        $.record_pattern,
+        $.string,
         $.integer,
         $.float,
         alias($._pattern_binary_expression, $.binary_expression)
       ),
     _pattern_binary_expression: ($) =>
       binaryExpr(prec.left, 1, "<>", $._pattern_expression),
+
+    record_pattern: ($) =>
+      seq(
+        field("name", $.constructor_name),
+        optional(field("arguments", $.record_pattern_arguments))
+      ),
+    record_pattern_arguments: ($) =>
+      seq(
+        "(",
+        optional(series_of($.record_pattern_argument, ",")),
+        optional($.pattern_spread),
+        ")"
+      ),
+    record_pattern_argument: ($) =>
+      seq(
+        optional(seq(field("label", $.label), ":")),
+        field("pattern", $._pattern)
+      ),
+    pattern_spread: ($) => seq("..", optional(",")),
 
     /* Types */
     field: ($) =>
@@ -173,6 +322,7 @@ module.exports = grammar({
 
     generics: ($) => seq("(", series_of($.generic, ","), ")"),
     generic: ($) => /[a-z][a-z]*/,
+    visibility_modifier: ($) => "pub",
 
     /* Literals */
     float: ($) => /-?[0-9_]+\.[0-9_]*(e-?[0-9_]+)?/,
@@ -180,9 +330,9 @@ module.exports = grammar({
       seq(optional("-"), choice($._hex, $._decimal, $._octal, $._binary)),
     string: ($) =>
       seq(
-        '"',
+        `"`,
         repeat(choice($.escape_sequence, $.quoted_content)),
-        token.immediate('"')
+        token.immediate(`"`)
       ),
     _hex: ($) => /0[xX][0-9a-fA-F_]+/,
     _decimal: ($) => /[0-9][0-9_]*/,
@@ -192,12 +342,17 @@ module.exports = grammar({
     escape_sequence: ($) => token.immediate(/\\[efnrt\"\\]/),
     // identifier: ($) => $._name,
     identifier: ($) => /[a-zA-Z_][a-zA-Z_0-9]*/,
+    label: ($) => $._name,
+    discard: ($) => $._discard_name,
     type_identifier: ($) => $._upname,
+    constructor_name: ($) => $._upname,
     remote_type_identifier: ($) =>
       seq(field("module", $.identifier), ".", field("name", $.type_identifier)),
     _type_annotation: ($) => seq(":", field("type", $._type)),
     _type: ($) =>
       choice($.type, $.generic, $.function_type),
+
+
     _discard_name: ($) => /_[_0-9a-z]*/,
     _name: ($) => /[_a-z][_0-9a-z]*/,
     _upname: ($) => /[A-Z][0-9a-zA-Z]*/,
