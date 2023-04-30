@@ -56,14 +56,17 @@ type Cat(a)(
       (generic))
     (field
       (identifier)
+      (ERROR)
       (type
         (type_identifier)))
     (field
       (identifier)
+      (ERROR)
       (type
         (type_identifier)))
     (field
       (identifier)
+      (ERROR)
       (type
         (type_identifier)))
     (field
@@ -82,4 +85,3 @@ type Cat(a)(
         (return_type
           (type
             (type_identifier)))))))
-  

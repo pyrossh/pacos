@@ -74,15 +74,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -161,15 +153,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -289,15 +273,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -340,12 +316,68 @@
     "type": "const",
     "named": true,
     "fields": {
-      "pattern": {
-        "multiple": false,
-        "required": true,
+      "left": {
+        "multiple": true,
+        "required": false,
         "types": [
           {
-            "type": "discard",
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
+            "named": true
+          },
+          {
+            "type": "const_record",
             "named": true
           },
           {
@@ -353,7 +385,155 @@
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "operator": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "right": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
+            "named": true
+          },
+          {
+            "type": "const_record",
+            "named": true
+          },
+          {
+            "type": "float",
             "named": true
           },
           {
@@ -361,51 +541,81 @@
             "named": true
           },
           {
-            "type": "record_pattern",
-            "named": true
-          },
-          {
             "type": "string",
             "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "function_type",
-            "named": true
           },
           {
-            "type": "generic",
-            "named": true
+            "type": "|>",
+            "named": false
           },
           {
-            "type": "type",
-            "named": true
+            "type": "||",
+            "named": false
           }
         ]
       },
       "value": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
-            "type": "anonymous_function",
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
             "named": true
           },
           {
-            "type": "binary_expression",
-            "named": true
-          },
-          {
-            "type": "expression_group",
-            "named": true
-          },
-          {
-            "type": "field_access",
+            "type": "const_record",
             "named": true
           },
           {
@@ -413,31 +623,7 @@
             "named": true
           },
           {
-            "type": "function_call",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "if",
-            "named": true
-          },
-          {
             "type": "integer",
-            "named": true
-          },
-          {
-            "type": "negation",
-            "named": true
-          },
-          {
-            "type": "record",
-            "named": true
-          },
-          {
-            "type": "record_update",
             "named": true
           },
           {
@@ -445,7 +631,436 @@
             "named": true
           },
           {
-            "type": "when",
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "const_argument",
+    "named": true,
+    "fields": {
+      "label": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
+      "left": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
+            "named": true
+          },
+          {
+            "type": "const_record",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "operator": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "right": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
+            "named": true
+          },
+          {
+            "type": "const_record",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "%",
+            "named": false
+          },
+          {
+            "type": "&&",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
+            "type": "-",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "const_function_call",
+            "named": true
+          },
+          {
+            "type": "const_record",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "|>",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "const_arguments",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "const_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "const_function_call",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "const_arguments",
+            "named": true
+          }
+        ]
+      },
+      "function": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_name",
+            "named": true
+          },
+          {
+            "type": "remote_function_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "const_record",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "arguments",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constructor_name",
+            "named": true
+          },
+          {
+            "type": "remote_constructor_name",
             "named": true
           }
         ]
@@ -557,15 +1172,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -712,15 +1319,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -844,15 +1443,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -943,6 +1534,11 @@
         ]
       }
     }
+  },
+  {
+    "type": "function_name",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "function_parameter",
@@ -1067,6 +1663,11 @@
     "fields": {}
   },
   {
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "if",
     "named": true,
     "fields": {},
@@ -1087,15 +1688,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -1213,24 +1806,6 @@
           }
         ]
       },
-      "type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "function_type",
-            "named": true
-          },
-          {
-            "type": "generic",
-            "named": true
-          },
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      },
       "value": {
         "multiple": false,
         "required": true,
@@ -1248,15 +1823,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -1333,15 +1900,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -1542,15 +2101,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -1620,15 +2171,7 @@
             "named": true
           },
           {
-            "type": "field_access",
-            "named": true
-          },
-          {
             "type": "float",
-            "named": true
-          },
-          {
-            "type": "function_call",
             "named": true
           },
           {
@@ -1680,6 +2223,58 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "remote_constructor_name",
+    "named": true,
+    "fields": {
+      "module": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "remote_function_identifier",
+    "named": true,
+    "fields": {
+      "module": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1953,15 +2548,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -2024,15 +2611,7 @@
           "named": true
         },
         {
-          "type": "field_access",
-          "named": true
-        },
-        {
           "type": "float",
-          "named": true
-        },
-        {
-          "type": "function_call",
           "named": true
         },
         {
@@ -2200,10 +2779,6 @@
   },
   {
     "type": "generic",
-    "named": true
-  },
-  {
-    "type": "identifier",
     "named": true
   },
   {

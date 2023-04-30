@@ -3,7 +3,6 @@ const NEWLINE = /\r?\n/;
 module.exports = grammar({
   name: "palm",
   extras: ($) => [
-    ";",
     NEWLINE,
     /\s/,
     $.module_comment,
@@ -22,7 +21,7 @@ module.exports = grammar({
     statement_comment: ($) => token(seq("///", /.*/)),
     comment: ($) => token(seq("//", /.*/)),
 
-    /* Import statements */
+    /* Import _statement_seq */
     import: ($) =>
       seq(
         "import",
@@ -45,7 +44,7 @@ module.exports = grammar({
         )
       ),
 
-    /* Constant statements */
+    /* Constant _statement_seq */
     // _constant_type_annotation: ($) => seq(":", field("type", $._constant_type)),
 
     /* Declarations */
@@ -94,30 +93,48 @@ module.exports = grammar({
         field("body", seq("{", $._statement_seq, "}"))
       ),
 
+    const: ($) => seq(
+      "const",
+      $.identifier,
+      "=",
+      field("value", $._const_expression)
+    ),
+    _const_expression: ($) => choice($._const_expression_unit, $._const_binary_expression),
+    _const_binary_expression: ($) => arithmeticExpression($._const_expression),
+    _const_expression_unit: ($) =>
+      choice(
+        $.string,
+        $.integer,
+        $.float,
+        $.const_record,
+        $.const_function_call,
+      ),
+
+    const_record: ($) =>
+      seq(
+        field("name", choice($.constructor_name, $.remote_constructor_name)),
+        optional(field("arguments", $.arguments))
+      ),
+
+    const_function_call: ($) =>
+      seq(
+        field("function", choice($.function_name, $.remote_function_identifier)),
+        field("arguments", $.const_arguments)
+      ),
+
+    const_arguments: ($) => seq("(", optional(series_of($.const_argument, ",")), ")"),
+    const_argument: ($) =>
+      seq(
+        optional(seq(field("label", $.label), ":")),
+        field("value", $._const_expression)),
+
     /* Expressions */
 
     _name_param: ($) => field("name", $.identifier),
     _statement_seq: ($) => repeat1($._statement),
     _statement: ($) => choice($._expression, $.let),
     _expression: ($) => choice($._expression_unit, $.binary_expression),
-    binary_expression: ($) =>
-      choice(
-        binaryExpr(prec.left, 1, "||", $._expression),
-        binaryExpr(prec.left, 2, "&&", $._expression),
-        binaryExpr(prec.left, 3, "==", $._expression),
-        binaryExpr(prec.left, 3, "!=", $._expression),
-        binaryExpr(prec.left, 4, "<", $._expression),
-        binaryExpr(prec.left, 4, "<=", $._expression),
-        binaryExpr(prec.left, 4, ">", $._expression),
-        binaryExpr(prec.left, 4, ">=", $._expression),
-        binaryExpr(prec.left, 5, "|>", $._expression),
-        binaryExpr(prec.left, 6, "+", $._expression),
-        binaryExpr(prec.left, 6, "-", $._expression),
-        binaryExpr(prec.left, 7, "*", $._expression),
-        binaryExpr(prec.left, 7, "/", $._expression),
-        binaryExpr(prec.left, 7, "%", $._expression),
-        binaryExpr(prec.left, 7, "<>", $._expression)
-      ),
+    binary_expression: ($) => arithmeticExpression($._expression),
     _expression_unit: ($) =>
       choice(
         $.string,
@@ -135,8 +152,8 @@ module.exports = grammar({
         // $.assert,
         $.negation,
         $.record_update,
-        $.field_access,
-        $.function_call
+        // $.field_access,
+        // $.function_call
       ),
     record: ($) =>
       seq(
@@ -225,7 +242,7 @@ module.exports = grammar({
         $.field_access,
       ),
 
-    
+
     _maybe_function_expression: ($) =>
       choice(
         $.identifier,
@@ -261,12 +278,10 @@ module.exports = grammar({
       ),
 
     negation: ($) => seq("!", $._expression_unit),
-    const: ($) => seq("const", $._assignment),
     let: ($) => seq("let", $._assignment),
     _assignment: ($) =>
       seq(
         field("pattern", $._pattern_expression),
-        optional($._type_annotation),
         "=",
         field("value", $._expression)
       ),
@@ -361,12 +376,15 @@ module.exports = grammar({
     _interpolation: ($) => choice(seq("{", $.identifier, "}")),
     escape_sequence: ($) => token.immediate(/\\[efnrt\"\\]/),
     // identifier: ($) => $._name,
-    identifier: ($) => /[a-zA-Z_][a-zA-Z_0-9]*/,
+    identifier: ($) => /[_a-z][_0-9a-z]*/,
     label: ($) => $._name,
     discard: ($) => $._discard_name,
     type_identifier: ($) => $._upname,
     constructor_name: ($) => $._upname,
-    remote_type_identifier: ($) =>
+    function_name: ($) => $._name,
+    remote_function_identifier: ($) =>
+      seq(field("module", $.identifier), ".", field("name", $.identifier)),
+    remote_constructor_name: ($) =>
       seq(field("module", $.identifier), ".", field("name", $.type_identifier)),
     _type_annotation: ($) => seq(":", field("type", $._type)),
     _type: ($) =>
@@ -381,6 +399,26 @@ module.exports = grammar({
 
 function series_of(rule, separator) {
   return seq(rule, repeat(seq(separator, rule)), optional(separator));
+}
+
+function arithmeticExpression(exprType) {
+  return choice(
+    binaryExpr(prec.left, 1, "||", exprType),
+    binaryExpr(prec.left, 2, "&&", exprType),
+    binaryExpr(prec.left, 3, "==", exprType),
+    binaryExpr(prec.left, 3, "!=", exprType),
+    binaryExpr(prec.left, 4, "<", exprType),
+    binaryExpr(prec.left, 4, "<=", exprType),
+    binaryExpr(prec.left, 4, ">", exprType),
+    binaryExpr(prec.left, 4, ">=", exprType),
+    binaryExpr(prec.left, 5, "|>", exprType),
+    binaryExpr(prec.left, 6, "+", exprType),
+    binaryExpr(prec.left, 6, "-", exprType),
+    binaryExpr(prec.left, 7, "*", exprType),
+    binaryExpr(prec.left, 7, "/", exprType),
+    binaryExpr(prec.left, 7, "%", exprType),
+    binaryExpr(prec.left, 7, "<>", exprType)
+  )
 }
 
 function binaryExpr(assoc, precedence, operator, expr) {
