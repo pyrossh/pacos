@@ -8,9 +8,13 @@ pub fn main() {
   let a = "123"
   let b = 5
   let c = 5.1
+  dog.bark()
   when b {
     1 -> "Hello"
     _ -> "World"
+  }
+  if c > b {
+    io.println("Greater")
   }
 }
 
@@ -36,6 +40,11 @@ pub fn add(a: Int, b: Int) -> Int {
     (let
       (identifier)
       (float))
+    (function_call
+      (field_access
+        (identifier)
+        (label))
+      (arguments))
     (when
       (identifier)
       (when_entry
@@ -44,7 +53,19 @@ pub fn add(a: Int, b: Int) -> Int {
           (quoted_content)))
       (when_entry
         (string
-          (quoted_content)))))
+          (quoted_content))))
+    (if
+      (binary_expression
+        (identifier)
+        (identifier))
+      (function_call
+        (field_access
+          (identifier)
+          (label))
+        (arguments
+          (argument
+            (string
+              (quoted_content)))))))
   (function
     (visibility_modifier)
     (identifier)

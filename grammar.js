@@ -2,16 +2,25 @@ const NEWLINE = /\r?\n/;
 
 module.exports = grammar({
   name: "palm",
-  // extras: $ => [
-  //   $.comment,
-  //   /\s+/ // Whitespace
-  // ],
+  extras: ($) => [
+    ";",
+    NEWLINE,
+    /\s/,
+    $.module_comment,
+    $.statement_comment,
+    $.comment,
+  ],
   externals: ($) => [$.quoted_content],
   rules: {
     source_file: ($) =>
-      seq($.module, repeat($.import), repeat(choice($.struct, $.enum, $.function))),
+      seq($.module, repeat($.import), repeat(choice($.struct, $.enum, $.function, $.const))),
 
     module: ($) => seq("module", field("module", $.module_name)),
+
+    /* Comments */
+    module_comment: ($) => token(seq("////", /.*/)),
+    statement_comment: ($) => token(seq("///", /.*/)),
+    comment: ($) => token(seq("//", /.*/)),
 
     /* Import statements */
     import: ($) =>
@@ -114,12 +123,18 @@ module.exports = grammar({
         $.string,
         $.integer,
         $.float,
+        $.record,
+        // $.todo,
+        // $.panic,
+        // $.list,
         $.identifier,
         $.anonymous_function,
         $.expression_group,
+        $.if,
         $.when,
+        // $.assert,
         $.negation,
-        // $.record_update,
+        $.record_update,
         $.field_access,
         $.function_call
       ),
@@ -181,6 +196,14 @@ module.exports = grammar({
       "}"
     ),
 
+    if: $ => seq(
+      "if",
+      $._expression,
+      "{",
+      repeat($._expression),
+      "}"
+    ),
+
     when_entry: $ => seq(
       choice(
         seq($._expression, repeat(seq(",", $._expression))),
@@ -196,10 +219,24 @@ module.exports = grammar({
         $.identifier,
         $.function_call,
         $.expression_group,
+        $.if,
         $.when,
         // $.record_update,
         $.field_access,
       ),
+
+    
+    _maybe_function_expression: ($) =>
+      choice(
+        $.identifier,
+        $.anonymous_function,
+        $.expression_group,
+        $.if,
+        $.when,
+        $.field_access,
+        $.function_call
+      ),
+
     field_access: ($) =>
       prec.left(
         seq(
@@ -223,21 +260,12 @@ module.exports = grammar({
         field("arguments", $.arguments)
       ),
 
-    _maybe_function_expression: ($) =>
-      choice(
-        $.identifier,
-        $.anonymous_function,
-        $.expression_group,
-        $.when,
-        $.field_access,
-        $.function_call
-      ),
-
     negation: ($) => seq("!", $._expression_unit),
+    const: ($) => seq("const", $._assignment),
     let: ($) => seq("let", $._assignment),
     _assignment: ($) =>
       seq(
-        field("pattern", $._pattern),
+        field("pattern", $._pattern_expression),
         optional($._type_annotation),
         "=",
         field("value", $._expression)
@@ -259,11 +287,6 @@ module.exports = grammar({
     record_update_argument: ($) =>
       seq(field("label", $.label), ":", field("value", $._expression)),
 
-    _pattern: ($) =>
-      seq(
-        $._pattern_expression,
-        optional(field("assign", seq("as", $.identifier)))
-      ),
     _pattern_expression: ($) =>
       choice(
         $.identifier,
@@ -272,10 +295,7 @@ module.exports = grammar({
         $.string,
         $.integer,
         $.float,
-        alias($._pattern_binary_expression, $.binary_expression)
       ),
-    _pattern_binary_expression: ($) =>
-      binaryExpr(prec.left, 1, "<>", $._pattern_expression),
 
     record_pattern: ($) =>
       seq(
@@ -292,7 +312,7 @@ module.exports = grammar({
     record_pattern_argument: ($) =>
       seq(
         optional(seq(field("label", $.label), ":")),
-        field("pattern", $._pattern)
+        field("pattern", $._pattern_expression)
       ),
     pattern_spread: ($) => seq("..", optional(",")),
 
@@ -325,7 +345,7 @@ module.exports = grammar({
     visibility_modifier: ($) => "pub",
 
     /* Literals */
-    float: ($) => /-?[0-9_]+\.[0-9_]*(e-?[0-9_]+)?/,
+    float: ($) => /-?[0-9]+\.[0-9]*/,
     integer: ($) =>
       seq(optional("-"), choice($._hex, $._decimal, $._octal, $._binary)),
     string: ($) =>

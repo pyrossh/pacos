@@ -94,11 +94,23 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
           {
             "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -145,10 +157,6 @@
             "named": true
           },
           {
-            "type": "discard",
-            "named": true
-          },
-          {
             "type": "expression_group",
             "named": true
           },
@@ -169,6 +177,10 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
@@ -177,7 +189,11 @@
             "named": true
           },
           {
-            "type": "record_pattern",
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -269,7 +285,119 @@
             "named": true
           },
           {
+            "type": "expression_group",
+            "named": true
+          },
+          {
+            "type": "field_access",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "if",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "when",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "const",
+    "named": true,
+    "fields": {
+      "pattern": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
             "type": "discard",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "record_pattern",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "function_type",
+            "named": true
+          },
+          {
+            "type": "generic",
+            "named": true
+          },
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anonymous_function",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
             "named": true
           },
           {
@@ -293,6 +421,10 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
@@ -301,7 +433,11 @@
             "named": true
           },
           {
-            "type": "record_pattern",
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -437,6 +573,10 @@
           "named": true
         },
         {
+          "type": "if",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
@@ -446,6 +586,14 @@
         },
         {
           "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
           "named": true
         },
         {
@@ -528,6 +676,10 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "record",
             "named": true
           },
@@ -576,6 +728,10 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
@@ -585,6 +741,14 @@
           },
           {
             "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -696,6 +860,10 @@
           "named": true
         },
         {
+          "type": "if",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
@@ -705,6 +873,14 @@
         },
         {
           "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
           "named": true
         },
         {
@@ -754,6 +930,10 @@
           },
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "if",
             "named": true
           },
           {
@@ -887,6 +1067,73 @@
     "fields": {}
   },
   {
+    "type": "if",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "anonymous_function",
+          "named": true
+        },
+        {
+          "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "expression_group",
+          "named": true
+        },
+        {
+          "type": "field_access",
+          "named": true
+        },
+        {
+          "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "if",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        },
+        {
+          "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        },
+        {
+          "type": "when",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "import",
     "named": true,
     "fields": {
@@ -936,32 +1183,10 @@
     "type": "let",
     "named": true,
     "fields": {
-      "assign": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "as",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "pattern": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
-          {
-            "type": "as",
-            "named": false
-          },
-          {
-            "type": "binary_expression",
-            "named": true
-          },
           {
             "type": "discard",
             "named": true
@@ -1039,11 +1264,23 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
           {
             "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -1112,11 +1349,23 @@
           "named": true
         },
         {
+          "type": "if",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
         {
           "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
           "named": true
         },
         {
@@ -1191,20 +1440,6 @@
     "type": "record_pattern_argument",
     "named": true,
     "fields": {
-      "assign": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "as",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "label": {
         "multiple": false,
         "required": false,
@@ -1216,17 +1451,9 @@
         ]
       },
       "pattern": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
-          {
-            "type": "as",
-            "named": false
-          },
-          {
-            "type": "binary_expression",
-            "named": true
-          },
           {
             "type": "discard",
             "named": true
@@ -1272,6 +1499,94 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "record_update",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "record_update_arguments",
+            "named": true
+          }
+        ]
+      },
+      "constructor": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constructor_name",
+            "named": true
+          }
+        ]
+      },
+      "spread": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "anonymous_function",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "expression_group",
+            "named": true
+          },
+          {
+            "type": "field_access",
+            "named": true
+          },
+          {
+            "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "if",
+            "named": true
+          },
+          {
+            "type": "integer",
+            "named": true
+          },
+          {
+            "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "when",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1321,11 +1636,23 @@
             "named": true
           },
           {
+            "type": "if",
+            "named": true
+          },
+          {
             "type": "integer",
             "named": true
           },
           {
             "type": "negation",
+            "named": true
+          },
+          {
+            "type": "record",
+            "named": true
+          },
+          {
+            "type": "record_update",
             "named": true
           },
           {
@@ -1387,6 +1714,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "const",
+          "named": true
+        },
         {
           "type": "enum",
           "named": true
@@ -1638,11 +1969,23 @@
           "named": true
         },
         {
+          "type": "if",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
         {
           "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
           "named": true
         },
         {
@@ -1697,11 +2040,23 @@
           "named": true
         },
         {
+          "type": "if",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
         {
           "type": "negation",
+          "named": true
+        },
+        {
+          "type": "record",
+          "named": true
+        },
+        {
+          "type": "record_update",
           "named": true
         },
         {
@@ -1824,6 +2179,14 @@
     "named": false
   },
   {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "const",
+    "named": false
+  },
+  {
     "type": "escape_sequence",
     "named": true
   },
@@ -1844,6 +2207,10 @@
     "named": true
   },
   {
+    "type": "if",
+    "named": false
+  },
+  {
     "type": "import",
     "named": false
   },
@@ -1856,7 +2223,15 @@
     "named": false
   },
   {
+    "type": "module_comment",
+    "named": true
+  },
+  {
     "type": "quoted_content",
+    "named": true
+  },
+  {
+    "type": "statement_comment",
     "named": true
   },
   {
