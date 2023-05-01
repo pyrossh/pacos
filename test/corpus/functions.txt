@@ -40,15 +40,32 @@ pub fn add(a: Int, b: Int) -> Int {
     (let
       (identifier)
       (float))
-    (identifier)
-    (ERROR
-      (quoted_content)
-      (quoted_content)
-      (quoted_content)
-      (quoted_content)
-      (quoted_content)
-      (quoted_content)))
-  (ERROR)
+    (function_call
+      (field_access
+        (identifier)
+        (label))
+      (arguments))
+    (when
+      (identifier)
+      (when_entry
+        (integer)
+        (string
+          (quoted_content)))
+      (when_entry
+        (string
+          (quoted_content))))
+    (if
+      (binary_expression
+        (identifier)
+        (identifier))
+      (function_call
+        (field_access
+          (identifier)
+          (label))
+        (arguments
+          (argument
+            (string
+              (quoted_content)))))))
   (function
     (visibility_modifier)
     (identifier)

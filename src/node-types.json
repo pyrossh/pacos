@@ -74,7 +74,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -153,7 +161,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -273,7 +289,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -1172,7 +1196,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -1319,7 +1351,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -1443,7 +1483,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -1688,7 +1736,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -1823,7 +1879,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -1900,7 +1964,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -2101,7 +2173,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -2171,7 +2251,15 @@
             "named": true
           },
           {
+            "type": "field_access",
+            "named": true
+          },
+          {
             "type": "float",
+            "named": true
+          },
+          {
+            "type": "function_call",
             "named": true
           },
           {
@@ -2548,7 +2636,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {
@@ -2611,7 +2707,15 @@
           "named": true
         },
         {
+          "type": "field_access",
+          "named": true
+        },
+        {
           "type": "float",
+          "named": true
+        },
+        {
+          "type": "function_call",
           "named": true
         },
         {

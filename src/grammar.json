@@ -2026,6 +2026,14 @@
         {
           "type": "SYMBOL",
           "name": "record_update"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "field_access"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "function_call"
         }
       ]
     },

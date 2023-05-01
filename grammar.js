@@ -152,8 +152,8 @@ module.exports = grammar({
         // $.assert,
         $.negation,
         $.record_update,
-        // $.field_access,
-        // $.function_call
+        $.field_access,
+        $.function_call
       ),
     record: ($) =>
       seq(
