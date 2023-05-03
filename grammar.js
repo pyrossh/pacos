@@ -99,8 +99,8 @@ module.exports = grammar({
       "=",
       field("value", $._const_expression)
     ),
-    _const_expression: ($) => choice($._const_expression_unit, $._const_binary_expression),
-    _const_binary_expression: ($) => arithmeticExpression($._const_expression),
+    _const_expression: ($) => choice($._const_expression_unit, $.const_binary_expression),
+    const_binary_expression: ($) => arithmeticExpression($._const_expression),
     _const_expression_unit: ($) =>
       choice(
         $.string,
@@ -134,7 +134,23 @@ module.exports = grammar({
     _statement_seq: ($) => repeat1($._statement),
     _statement: ($) => choice($._expression, $.let),
     _expression: ($) => choice($._expression_unit, $.binary_expression),
-    binary_expression: ($) => arithmeticExpression($._expression),
+    binary_expression: ($) => choice(
+      binaryExpr(prec.left, 1, "||", $._expression),
+      binaryExpr(prec.left, 2, "&&", $._expression),
+      binaryExpr(prec.left, 3, "==", $._expression),
+      binaryExpr(prec.left, 3, "!=", $._expression),
+      binaryExpr(prec.left, 4, "<", $._expression),
+      binaryExpr(prec.left, 4, "<=", $._expression),
+      binaryExpr(prec.left, 4, ">", $._expression),
+      binaryExpr(prec.left, 4, ">=", $._expression),
+      binaryExpr(prec.left, 5, "|>", $._expression),
+      binaryExpr(prec.left, 6, "+", $._expression),
+      binaryExpr(prec.left, 6, "-", $._expression),
+      binaryExpr(prec.left, 7, "*", $._expression),
+      binaryExpr(prec.left, 7, "/", $._expression),
+      binaryExpr(prec.left, 7, "%", $._expression),
+      binaryExpr(prec.left, 7, "<>", $._expression)
+    ),
     _expression_unit: ($) =>
       choice(
         $.string,
@@ -223,7 +239,7 @@ module.exports = grammar({
 
     when_entry: $ => seq(
       choice(
-        seq($._expression, repeat(seq(",", $._expression))),
+        $._expression,
         "_"
       ),
       "->",

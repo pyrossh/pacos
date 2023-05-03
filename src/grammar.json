@@ -746,11 +746,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_const_binary_expression"
+          "name": "const_binary_expression"
         }
       ]
     },
-    "_const_binary_expression": {
+    "const_binary_expression": {
       "type": "CHOICE",
       "members": [
         {
@@ -2419,29 +2419,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "_expression"
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SEQ",
-                    "members": [
-                      {
-                        "type": "STRING",
-                        "value": ","
-                      },
-                      {
-                        "type": "SYMBOL",
-                        "name": "_expression"
-                      }
-                    ]
-                  }
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "_expression"
             },
             {
               "type": "STRING",

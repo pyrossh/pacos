@@ -143,9 +143,11 @@ const a = option.Some("Hello, World!")
             (quoted_content))))))
   (const
     (identifier)
-    (integer)
-    (integer)
-    (integer))
+    (const_binary_expression
+      (const_binary_expression
+        (integer)
+        (integer))
+      (integer)))
   (const
     (identifier)
     (integer))
