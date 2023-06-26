@@ -1,10 +1,9 @@
-![palm](https://user-images.githubusercontent.com/1687946/232222925-76a1d42d-fac9-4e6c-a24a-e622c4360871.svg)
-JEYMESSOUSA
-
 # Palm Programming Language
 
-A programming language with a syntax mostly similar to [gleam](https://github.com/gleam-lang/gleam).  
-Aims to be compiled to AMD64 and ARM64 using [QBE](https://github.com/8l/qbe) a small and fast compiler backend and also support the C ABI.
+- A programming language with a syntax inspired by [gleam](https://github.com/gleam-lang/gleam).
+- Aims to be compiled to [WASM](https://webassembly.org/) with [WASI](https://wasi.dev/) support.
+- No memory management as the script/program is meant to run only once and exit.
+- Targetting to run only in Edge environments like [wasmedge](https://wasmedge.org/), [fermyon](https://www.fermyon.com/)
 
 ## Quick start
 
