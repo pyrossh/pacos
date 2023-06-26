@@ -1,6 +1,7 @@
 # Palm Programming Language
 
-- A programming language with a syntax inspired by [gleam](https://github.com/gleam-lang/gleam).
+🌴 A statically typed programming language 🌴
+
 - Aims to be compiled to [WASM](https://webassembly.org/) with [WASI](https://wasi.dev/) support.
 - No memory management as the script/program is meant to run only once and exit.
 - Targetting to run only in Edge environments like [wasmedge](https://wasmedge.org/), [fermyon](https://www.fermyon.com/)
