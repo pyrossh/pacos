@@ -14,7 +14,7 @@ type Result(a, b) {
   Error(b)
 }
 
-type Cat(a)(
+struct Cat[a](
   firstName: String
   middleName: String
   lastName: String
@@ -22,6 +22,48 @@ type Cat(a)(
   shape: a
   call: fn (String) -> String
 )
+
+fn is_before(year: Int) -> Bool
+  year < start_year
+
+fn is_during(year: Int) -> Bool:
+  start_year <= year && year <= end_year
+
+var a = arr
+  .map { it * 2 }
+  .filter { it > 10 }
+  .reduce { acc, n -> acc + n}, 0
+
+Row(
+  alignment: 1,
+  Container(
+    H1("123")
+      .color(Yellow)
+  )
+)
+
+<row align={1}>
+  <h1 color={Yellow}>
+    123
+  </h1>
+</row>
+
+struct Cat[a] {
+  var firstName: str
+  var middleName: str
+  var lastName: str
+  var age: Int
+  var shape: a
+  var call: fn (String) -> String
+
+  fn talk() {
+    puts("meow")
+  }
+
+  fn walk() {
+    puts("walking")
+  }
+}
 
 --------------------------------------------------------------------------------
 

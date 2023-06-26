@@ -93,13 +93,18 @@ pub fn is_during(year: Int) -> Bool {
   start_year <= year && year <= end_year
 }
 
-pub fn describe(year: Int) -> String {
-  case year {
+struct Int:
+  fn is_before(year: Int) -> Bool:
+    year < start_year
+
+  fn is_during(year: Int) -> Bool:
+    start_year <= year && year <= end_year
+
+fn describe(year: Int) -> String:
+  case year:
     year if year < start_year -> "Before"
     year if year > end_year -> "After"
     _ -> "During"
-  }
-}
 
 pub const name: String = "Gleam"
 
@@ -181,7 +186,7 @@ pub fn map(res: Response) -> Result(String, String) {
   | _ -> Ok("success")
 }
 
-pub fn getColorHex(c: String) -> Int {
+pub fn get_hex(c: String) -> Int {
   when c {
     "red" -> 0xff0000
     "blue" -> 0xff0123
