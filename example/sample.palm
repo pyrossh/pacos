@@ -1,0 +1,184 @@
+module palm
+
+// [] for arrays     []int []string
+// {} for maps       {int}int {string}string
+// ? for optional    int? string?
+// ! for error types int!, string!
+// nil
+
+// match a {
+//   1, 2, 3 => 0,
+//   5...100 => 1,
+//   else => 9,
+//   _ => 10
+// }
+
+primitive str {
+}
+
+primitive int {
+  fn add() {
+  }
+  fn sub() {
+  }
+  fn minus() {
+  }
+}
+
+primitive float {
+  fn add() {
+  }
+  fn sub() {
+  }
+  fn minus() {
+  }
+}
+
+entity decimal {
+  mantissa: int
+  exponent: float
+}
+
+fn println() -> bool? {
+}
+
+// value Email(str) {
+//   fn parse() {
+
+//   }
+// }
+
+entity Cat<a> {
+  first_name: str
+  middle_name: str
+  last_name: str
+
+  fn is_equal(other: bool) -> bool {
+    const dest = "123"
+    println("123")
+    // return this == other
+  }
+}
+
+extension CatExtn on Cat<a> {
+  fn fullname() {
+    // return "first_name $middle_name $lastname"
+  }
+}
+
+trait IO {
+  fn read()
+  fn write()
+}
+
+// entity EdgeInsets {
+//   top, left, bottom, right: float
+
+// //   static fn symmetric(horizontal: double = 0, vertical: double = 0) {
+// //     return EdgeInsets(left = horizontal, right = horizontal, top = vertical, bottom = vertical)
+// //   }
+
+// //   static fn only(top: double = 0, left: double = 0, bottom: double = 0, right: double = 0) {
+// //     return EdgeInsets(top, left, bottom, right)
+// //   }
+// }
+
+enum bool {
+  false
+  true
+  
+  fn is_equal(other: bool) -> bool {
+    // return this == other
+  }
+
+  fn to_string() -> str {
+    println("123")
+    println(1 + 2 + 4 + 5.33 + 7.8km)
+  }
+}
+
+enum Color {
+  red
+  green
+  blue
+
+  fn log() {
+    println("log")
+  }
+
+  fn to_string() -> str {
+    println("ToString")
+  }
+
+  fn where_is() -> int {
+    // match a {
+    //   1, 2, 3 => 0,
+    //   5...100 => 1,
+    //   else => 9,
+    //   _ => 10
+    // }
+  }
+}
+
+
+// repeat(10) |i| {
+//   println(i)
+// }
+
+// range(10, 20) |i| {
+//   println(i)
+// }
+
+// fn decrement() {
+//   println("decrementing")
+//   Cat(...c, age: c.age + 1)
+// }
+
+// fn add(x: Int, y: Int) -> Int {
+//   x + y
+// }
+
+// list
+//   .map(|it| it + 1)
+//   .each(|_| println("it", it))
+
+// test "enum ordinal value" {
+//   expect(Value.zero).to_equal(0);
+//   expect(Value.one).to_equal(1);
+//   expect(Value.two).to_equal(2);
+// }
+
+// test("enum ordinal value") |t| {
+//   expect(Value.zero).to_equal(0);
+//   expect(Value.one).to_equal(1);
+//   expect(Value.two).to_equal(2);
+// }
+
+// group("Group 1") |g| {
+//   test("Test 1") |t| {
+
+//   }
+// }
+
+// bench("1231") |t, n| {
+// }
+
+// tree = {
+//   value: "Fred",
+//   left: {
+//     value: "Jim",
+//   },
+//   right: {
+//     value: "Shiela",
+//     left: {
+//       value: "Alice",
+//     },
+//     right: {
+//       value: "Bob"
+//     },
+//   },
+// }
+
+// Node "Fred" (Node "Jim" Leaf Leaf)
+//                 (Node "Sheila" (Node "Alice" Leaf Leaf)
+//                       (Node "Bob" Leaf  Leaf))
