@@ -1,0 +1,83 @@
+bool = (true | false)
+  op_eq(x: bool, y: bool) = x == y
+  op_ne(x: bool, y: bool) = x != y
+  op_and(x: bool, y: bool) = x && y
+  op_or(x: bool, y: bool) = x || y
+  op_xor(x: bool, y: bool) = x <> y
+  op_not(x: bool,): bool = !x
+  str(x: bool) = x.str()
+
+list = (first | link(v: a, rest: list))
+  each(l: list, cb: (v: a)) =
+    match l
+      first => first
+      link(v, rest) =>
+        cb(v)
+        each(rest, cb)
+
+  map(l: list, cb: (v: a): v) =
+    match l
+      first => first
+      link(v, rest) => link(cb(v), map(rest, cb))
+
+enum List<a>
+  first
+  link(v: a, rest: List)
+
+  fn each(l: list, cb: fn(v: a)) =
+    match l
+      first => first
+      link(v, rest) =>
+        cb(v)
+        each(rest, cb)
+
+  fn map(l: list, cb: fn(v: a): v) =
+    match l
+      first => first
+      link(v, rest) => link(cb(v), map(rest, cb))
+
+Cat = (name: str, age: int)
+  fullname(c: Cat) =
+    c.name + c.age.str()
+  talk(c: Cat) =
+    println("cat ${c.name} says meow")
+
+struct Cat(a, b)
+  name: str
+  age: int
+  fullname(c: Cat) =
+    c.name + c.age.str()
+  talk(c: Cat) =
+    println("cat ${c.name} says meow")
+
+c = Cat(name = "123", age = 1)
+c |> Cat.talk()
+[1, 2, 3] |> list.each(println)
+
+fib(n: int = 0) = 0
+fib(n: int = 1) = 1
+fib(n: int) = fib(n - 1) + fib(n - 2)
+
+factorial(n: int) = 1
+factorial(n: int) = n * factorial(n - 1)
+
+to-celsius(f: float) = (f - 32) * (5 / 9)
+
+repeat(n: int, cb: fn(int)) =
+  if n != 0:
+    cb(n)
+    repeat(n-1, cb)
+
+range(start: int, e: int, cb: fn(int)) =
+  if (start < end):
+    cb(start)
+    range(start + 1, end, cb)
+  elif (start > end):
+    cb(start)
+    range(start - 1, end, cb)
+
+main() =
+  repeat(10) |i|:
+    println(i)
+  range(10, 20) |i|:
+    println(i)

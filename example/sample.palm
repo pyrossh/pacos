@@ -1,9 +1,10 @@
 module palm
 
-// [] for arrays     []int []string
-// {} for maps       {int}int {string}string
-// ? for optional    int? string?
-// ! for error types int!, string!
+// byte, *byte, bool, int, float, str, decimal, time
+// [] for slices     []int []str
+// {} for maps       [int]int [str]str
+// ? for optional    int? str?
+// ! for error types int!, str!
 // nil
 
 // match a {
@@ -13,25 +14,151 @@ module palm
 //   _ => 10
 // }
 
-primitive str {
+trait Comparable<a>:
+  fn compare(left: a, right: a): bool
+
+trait Stringable:
+  fn str() str
+
+entity arr<A>:
+  val data: *A
+  val length: int
+
+  fn map(cb: fn(v: A) A):
+    return cb(a)
+
+  fn each():
+    pass
+
+entity number is Comparable, Stringable {
+  fn sqrt() {
+  }
+  fn abs() {
+  }
+  fn acos() {
+  }
+  fn acosh() {
+  }
+  fn asin() {
+  }
+  fn asinh() {
+  }
 }
 
-primitive int {
+alias list<a, n : int> = {
+  data : a[n],
+  length : uint32
+}
+
+
+primitive math {
+  fn sqrt() {
+  }
+
+  fn log() {
+  }
+
+  fn round() {
+  }
+}
+
+2.0
+  |> math.sqrt()
+  |> math.log()
+  |> math.round()
+
+var nn = 2.0
+
+entity str is Comparable, Stringable {
+  val data: *u16
+  val length: int
+
+  // fn reverse() {
+  //   let start = 0
+  //   let end = this.length - 1
+  //   let result = []
+  //   while (start < end) {
+  //     const temp = this[start]
+  //     this[start] = this[end]
+  //     this[end] = temp
+  //     end = end - 1
+  //     start = start + 1
+  //   }
+  // }
+
+  fn to_int() int! {
+    if (fail) {
+      throw errors.int_parse;
+    }
+    return 0
+  }
+
+  fn to_float() float! {
+    if (fail) {
+      throw errors.float_parse;
+    }
+    return 0.0
+  }
+}
+
+primitive int is Stringable {
+  fn add(y: int) {
+    @"llvm.uadd.with.overflow.i32"(this, y)
+  }
+  fn sub() {
+  }
+
+  fn minus() {
+  }
+
+  fn str() {
+    if (this == 0) {
+      return "0";
+    }
+    let result = str(31)
+    let i = 0
+    let num = this
+    while (num != 0) {
+        const rem = num % 10
+        result.push((rem > 9) ? (rem - 10) + 'a' : rem + '0')
+        num = num / 10
+    }
+    if (this < 0) {
+      result.push("-")
+    }
+    return result.reverse()
+  }
+
+  fn str() {
+  }
+}
+
+primitive float is Stringable {
   fn add() {
   }
   fn sub() {
   }
   fn minus() {
   }
-}
 
-primitive float {
-  fn add() {
-  }
-  fn sub() {
-  }
-  fn minus() {
-  }
+  // fn str() {
+  //   ipart = (int)n
+  //   fpart = n - (float)ipart
+  //      // convert integer part to string 
+  //   int i = intToStr(ipart, res, 0)
+ 
+  //   // check for display option after point 
+  //   if (afterpoint != 0) { 
+  //       res[i] = '.'; // add dot 
+ 
+  //       // Get the value of fraction part upto given no. 
+  //       // of points after dot. The third parameter 
+  //       // is needed to handle cases like 233.007 
+  //       fpart = fpart * pow(10, afterpoint); 
+ 
+  //       intToStr((int)fpart, res + i + 1, afterpoint); 
+  //   }
+  // }
 }
 
 entity decimal {
@@ -39,7 +166,7 @@ entity decimal {
   exponent: float
 }
 
-fn println() -> bool? {
+fn println() bool? {
 }
 
 // value Email(str) {
@@ -80,20 +207,35 @@ trait IO {
 
 // //   static fn only(top: double = 0, left: double = 0, bottom: double = 0, right: double = 0) {
 // //     return EdgeInsets(top, left, bottom, right)
-// //   }
+// //   } 
 // }
 
 enum bool {
   false
   true
-  
-  fn is_equal(other: bool) -> bool {
-    // return this == other
-  }
 
-  fn to_string() -> str {
+  fn op_eq(y: bool) bool {
+    this == y;
+  }
+  fn op_ne(y: bool) bool {
+    this != y
+  }
+  fn op_and(y: bool) bool {
+     this and y
+  }
+  fn op_or(y: bool) bool {
+     this or y
+  }
+  fn op_xor(y: bool) bool {
+     this xor y
+  }
+  fn op_not() bool {
+    !this
+  }
+  
+  fn str() str {
     println("123")
-    println(1 + 2 + 4 + 5.33 + 7.8km)
+    // println(1 + 2 + 4 + 5.33 + 7.8km)
   }
 }
 
@@ -106,11 +248,11 @@ enum Color {
     println("log")
   }
 
-  fn to_string() -> str {
-    println("ToString")
+  fn str() str {
+    println("Str")
   }
 
-  fn where_is() -> int {
+  fn where_is() int {
     // match a {
     //   1, 2, 3 => 0,
     //   5...100 => 1,
@@ -120,14 +262,76 @@ enum Color {
   }
 }
 
+enum List
+  | first
+  | link(first: a, rest: List<a>)
 
-// repeat(10) |i| {
-//   println(i)
-// }
+  fn sum():
+    case this:
+      | first => 0
+      | link(a, res) => a + sum(res)
+    end
+  end
+end
 
-// range(10, 20) |i| {
-//   println(i)
-// }
+enitity List<a> {
+  data: Pointer
+  length: int
+
+  fn construct(items ...a) {
+    repeat(items) |item| {
+      data.alloc(item)
+    }
+  }
+}
+
+enum List<a> {
+  first
+  link(first: a, rest: List<a>)
+
+  fn op_brackets(items ...a) {
+    l = link(items[0])
+    range(items.length-2) |i| {
+      l.rest = link(items[i+1])
+    }
+    return l
+  }
+
+  fn sum() {
+    match this {
+      first => 0
+      link(a, res) => a + sum(res)
+    }
+  }
+}
+
+test("List") |t| {
+  fn sum(l: List<int>) int {
+    return l.reduce(|it| it.value, 0)
+  }
+
+  sum(empty) is 0
+  sum(link(1, link(2, link(3, empty)))) is 6
+  sum([1, 2, 3]) is 6
+}
+
+enum Tree<a> {
+  leaf
+  node(value: a, left: Tree<a>, right: Tree<a>)
+}
+
+fn main() int {
+  repeat(10) |i| {
+    println(i)
+  }
+  range(10, 20) |i| {
+    println(i)
+  }
+}
+
+
+
+
 
 // fn decrement() {
 //   println("decrementing")
@@ -182,3 +386,34 @@ enum Color {
 // Node "Fred" (Node "Jim" Leaf Leaf)
 //                 (Node "Sheila" (Node "Alice" Leaf Leaf)
 //                       (Node "Bob" Leaf  Leaf))
+
+
+
+
+
+class Cat(let name: String, let lives: Int64)
+class Dog(let name: String, let years: Int64)
+union Pet of Cat, Dog
+
+
+class Person(
+  let firstName: String,
+  let lastName: String,
+  var age: Int64
+) {
+  fun fullName(): String = "${self.firstName} ${self.lastName}"
+}
+
+fun sum(a: Int64, b: Int64): Int64 = a + b
+
+2.0.sqrt()
+
+fun describe(pet: Pet): String = if pet
+  ... is Cat(let name, let lives) { "cat $name has $lives lives" }
+  ... is Dog(let name, let years) { "dog $name is $years of age" }
+
+List(Cat("Molly", 9), Dog("Fenton", 6))
+  .retain(|p| p.name.size > 5)
+  .map   (|p| describe(p))
+  .each  (|d| println(d))
+// → dog Fenton is 6 years of age

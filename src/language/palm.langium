@@ -21,7 +21,7 @@ Enum:
   '}';
 
 EnumField:
-    name=ID;
+    name=ID ('(' (params+=Param (',' params+=Param)*)? ')')?;
 
 Trait:
   'trait' name=ID  Generics '{'
@@ -51,8 +51,8 @@ QualifiedName returns string:
 type AbstractDefinition = FunctionDefinition | Param;
 
 FunctionDefinition<isMethod, isTrait>: 
-  (<isMethod> static?='static')? 
-  'fn' name=ID '(' (params+=Param (',' params+=Param)*)? ')' ('->' returns+=ReturnType (',' returns+=ReturnType)*)? (<!isTrait> Block);
+  (<isMethod> static?='static')?
+  'fn' name=ID '(' (params+=Param (',' params+=Param)*)? ')' (returns+=ReturnType (',' returns+=ReturnType)*)? (<!isTrait> Block);
 
 ParamType:
   type=[Type] (nilable?='?')?;
