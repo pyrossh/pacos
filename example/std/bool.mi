@@ -1,0 +1,10 @@
+module std
+
+enum bool is (true | false) =
+  fn op_eq(x: bool, y: bool) = x == y
+  fn op_ne(x: bool, y: bool) = x != y
+  fn op_and(x: bool, y: bool) = x && y
+  fn op_or(x: bool, y: bool) = x || y
+  fn op_xor(x: bool, y: bool) = x <> y
+  fn op_not(x: bool,): bool = !x
+  fn str(x: bool) = x ? "true" : "false"

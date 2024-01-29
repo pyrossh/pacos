@@ -1,0 +1,35 @@
+module std
+
+enum List is (first | link(v: a, rest: List)) = 
+  // where a : Number & Stringable
+
+  fn each(self, cb: fn(v: a)) =
+    match self
+      List::first -> List::first
+      List::link(v, rest) ->
+        cb(v)
+        each(rest, cb)
+
+  fn map(self, cb: fn(v: a): v) =
+    match self
+      List::first -> first
+      List::link(v, rest) -> List::link(cb(v), map(rest, cb))
+
+  fn get(i: int): a? =
+    match self
+      List::first -> List::first
+      List::link(v, rest) ->
+        each(rest, cb)
+
+  fun get<a>(lst :: List<a>, n :: Number) -> a:
+    doc: "Returns the nth element of the given list, or raises an error if n is out of range"
+    fun help(l, cur):
+      if is-empty(l): raise("get: n too large " + tostring(n))
+      else if cur == 0: l.first
+      else: help(l.rest, cur - 1)
+      end
+    end
+    if n < 0: raise("get: invalid argument: " + tostring(n))
+    else: help(lst, n)
+    end
+  end

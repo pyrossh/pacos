@@ -2,36 +2,13 @@ module lambda
 
 alias MapCallback = fn(v: a): v
 
-enum bool(true | false) =
-  fn op_eq(x: bool, y: bool) = x == y
-  fn op_ne(x: bool, y: bool) = x != y
-  fn op_and(x: bool, y: bool) = x && y
-  fn op_or(x: bool, y: bool) = x || y
-  fn op_xor(x: bool, y: bool) = x <> y
-  fn op_not(x: bool,): bool = !x
-  fn str(x: bool) = x ? "true" : "false"
-
-
-enum List<a>(First | Link(v: a, rest: List)) =
-  fn each(self, cb: fn(v: a)) =
-    match self
-      List::First -> List::First
-      List::link(v, rest) ->
-        cb(v)
-        each(rest, cb)
-
-  fn map(self, cb: fn(v: a): v) =
-    match self
-      First -> First
-      Link(v, rest) -> List::Link(cb(v), map(rest, cb))
-
-enum Temperature(Celsius(float) | Fahrenheit(float)) =
+enum Temperature(celsius(float) | fahrenheit(float)) =
   fn str(self) =
     match self
-      Temperature::Celsius(t) && t > 30 -> "${t}C is above 30 Celsius"
-      Temperature::Celsius(t) -> "${t}C is below 30 Celsius"
-      Temperature::Fahrenheit(t) && t > 86 -> "${t}F is above 86 Fahrenheit"
-      Temperature::Fahrenheit(t) -> "${t}F is below 86 Fahrenheit"
+      Temperature::celsius(t) && t > 30 -> "${t}C is above 30 celsius"
+      Temperature::celsius(t) -> "${t}C is below 30 celsius"
+      Temperature::fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
+      Temperature::fahrenheit(t) -> "${t}F is below 86 fahrenheit"
 
 struct Cat(name: str, age: int) =
   fn fullname() =

@@ -7,7 +7,7 @@ Module:
   'module' name=ID;
 
 Type:
-  Primitive | Enum | Trait | Entity | Extension;
+  Primitive | Enum | Struct; //Trait | Entity | Extension;
 
 Primitive:
   'primitive' name=ID '{'
@@ -23,24 +23,24 @@ Enum:
 EnumField:
     name=ID ('(' (params+=Param (',' params+=Param)*)? ')')?;
 
-Trait:
-  'trait' name=ID  Generics '{'
-      (methods+=FunctionDefinition<true, true>)*
-  '}';
+// Trait:
+//   'trait' name=ID  Generics '{'
+//       (methods+=FunctionDefinition<true, true>)*
+//   '}';
 
-Extension:
-  'extension' name=ID 'on' type=[Entity] '{'
-      (methods+=FunctionDefinition<true, false>)*
-  '}';
+// Extension:
+//   'extension' name=ID 'on' type=[Entity] '{'
+//       (methods+=FunctionDefinition<true, false>)*
+//   '}';
 
-Entity:
-  'entity' name=ID  Generics '{'
+Struct:
+  'struct' name=ID  Generics
       (fields+=Field)*
       (methods+=FunctionDefinition<true, false>)*
-  '}';
+  ;
 
 Field:
-  names+=ID ((',' names+=ID)*)? ':' type=[Type:ID];
+  WS WS 'val' names+=ID ':' type=[Type:ID] NL;
 
 fragment Generics:
   ('<' generics+=GENERIC_ID (',' generics+=GENERIC_ID)* '>')?;
@@ -103,7 +103,9 @@ terminal INT returns number: /[0-9]+/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 terminal HEX:    /#(\d|[a-fA-F])+/;
 terminal NUMBER returns number: /[0-9]+(\.[0-9]*)?[a-z]*/;
+terminal WS: /\s/;
+terminal NL: /\n/;
 
-hidden terminal WS: /\s+/;
+// hidden terminal WS: /\s+/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
