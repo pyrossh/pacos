@@ -1,6 +1,24 @@
 module lambda
 
+// binary, bool, int, float, str, decimal, time
+// [] for slices     []int []str
+// {} for maps       [int]int [str]str
+// ? for optional    int? str?
+// ! for error types int!, str!
+// nil for optional assignment
+
+// 2.0
+//  |> math.sqrt()
+//  |> math.log()
+//  |> math.round()
+
 alias MapCallback = fn(v: a): v
+
+trait Comparable<a>:
+  fn compare(left: a, right: a): bool
+
+trait Stringable:
+  fn to_str() str
 
 enum Temperature(celsius(float) | fahrenheit(float)) =
   fn str(self) =
@@ -9,6 +27,25 @@ enum Temperature(celsius(float) | fahrenheit(float)) =
       Temperature::celsius(t) -> "${t}C is below 30 celsius"
       Temperature::fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
       Temperature::fahrenheit(t) -> "${t}F is below 86 fahrenheit"
+
+struct str(data: Pointer<u16>, length: int)
+  // where is Comparable, Stringable
+  fn reverse() =
+    let start = 0
+    let end = this.length - 1
+    let result = []
+    while (start < end) ||
+      const temp = this[start]
+      this[start] = this[end]
+      this[end] = temp
+      end = end - 1
+      start = start + 1
+
+  fn parse_int(): int! =
+    return 0
+
+  fn parse_float(): float! =
+    return 0.0
 
 struct Cat(name: str, age: int) =
   fn fullname() =
@@ -86,3 +123,200 @@ struct CounterController(db: DB)
     counter <- fetch counterId
     updatedCounter <- counter |> decrementField #count |> updateRecord
     respondHtml $ counterView updatedCounter
+
+module palm
+
+primitive int is Stringable {
+  fn add(y: int) {
+    @"llvm.uadd.with.overflow.i32"(this, y)
+  }
+  fn sub() {
+  }
+
+  fn minus() {
+  }
+
+  fn str() {
+    if (this == 0) {
+      return "0";
+    }
+    let result = str(31)
+    let i = 0
+    let num = this
+    while (num != 0) {
+        const rem = num % 10
+        result.push((rem > 9) ? (rem - 10) + 'a' : rem + '0')
+        num = num / 10
+    }
+    if (this < 0) {
+      result.push("-")
+    }
+    return result.reverse()
+  }
+
+
+  // fn str() {
+  //   ipart = (int)n
+  //   fpart = n - (float)ipart
+  //      // convert integer part to string 
+  //   int i = intToStr(ipart, res, 0)
+ 
+  //   // check for display option after point 
+  //   if (afterpoint != 0) { 
+  //       res[i] = '.'; // add dot 
+ 
+  //       // Get the value of fraction part upto given no. 
+  //       // of points after dot. The third parameter 
+  //       // is needed to handle cases like 233.007 
+  //       fpart = fpart * pow(10, afterpoint); 
+ 
+  //       intToStr((int)fpart, res + i + 1, afterpoint); 
+  //   }
+  // }
+}
+
+entity decimal {
+  mantissa: int
+  exponent: float
+}
+
+enum List
+  | first
+  | link(first: a, rest: List<a>)
+
+  fn sum():
+    case this:
+      | first => 0
+      | link(a, res) => a + sum(res)
+    end
+  end
+end
+
+enitity List<a> {
+  data: Pointer
+  length: int
+
+  fn construct(items ...a) {
+    repeat(items) |item| {
+      data.alloc(item)
+    }
+  }
+}
+
+enum List<a> {
+  first
+  link(first: a, rest: List<a>)
+
+  fn op_brackets(items ...a) {
+    l = link(items[0])
+    range(items.length-2) |i| {
+      l.rest = link(items[i+1])
+    }
+    return l
+  }
+
+  fn sum() {
+    match this {
+      first => 0
+      link(a, res) => a + sum(res)
+    }
+  }
+}
+
+test("List") |t| {
+  fn sum(l: List<int>) int {
+    return l.reduce(|it| it.value, 0)
+  }
+
+  sum(empty) is 0
+  sum(link(1, link(2, link(3, empty)))) is 6
+  sum([1, 2, 3]) is 6
+}
+
+enum Tree<a> {
+  leaf
+  node(value: a, left: Tree<a>, right: Tree<a>)
+}
+
+fn main() int {
+  repeat(10) |i| {
+    println(i)
+  }
+  range(10, 20) |i| {
+    println(i)
+  }
+}
+
+
+
+
+
+// fn decrement() {
+//   println("decrementing")
+//   Cat(...c, age: c.age + 1)
+// }
+
+// fn add(x: Int, y: Int) -> Int {
+//   x + y
+// }
+
+// list
+//   .map(|it| it + 1)
+//   .each(|_| println("it", it))
+
+// test "enum ordinal value" {
+//   expect(Value.zero).to_equal(0);
+//   expect(Value.one).to_equal(1);
+//   expect(Value.two).to_equal(2);
+// }
+
+// test("enum ordinal value") |t| {
+//   expect(Value.zero).to_equal(0);
+//   expect(Value.one).to_equal(1);
+//   expect(Value.two).to_equal(2);
+// }
+
+// group("Group 1") |g| {
+//   test("Test 1") |t| {
+
+//   }
+// }
+
+// bench("1231") |t, n| {
+// }
+
+// tree = {
+//   value: "Fred",
+//   left: {
+//     value: "Jim",
+//   },
+//   right: {
+//     value: "Shiela",
+//     left: {
+//       value: "Alice",
+//     },
+//     right: {
+//       value: "Bob"
+//     },
+//   },
+// }
+
+// Node "Fred" (Node "Jim" Leaf Leaf)
+//                 (Node "Sheila" (Node "Alice" Leaf Leaf)
+//                       (Node "Bob" Leaf  Leaf))
+
+
+
+
+
+fun sum(a: Int64, b: Int64): Int64 = a + b
+
+fun describe(pet: Pet): String = if pet
+  ... is Cat(let name, let lives) { "cat $name has $lives lives" }
+  ... is Dog(let name, let years) { "dog $name is $years of age" }
+
+List(Cat("Molly", 9), Dog("Fenton", 6))
+  .retain(|p| p.name.size > 5)
+  .map   (|p| describe(p))
+  .each  (|d| println(d))
+// → dog Fenton is 6 years of age

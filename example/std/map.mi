@@ -1,0 +1,14 @@
+map
+
+entity Map()
+
+fn new() =
+  alloc Map
+
+fn get()
+
+fn set()
+
+fn 
+
+
