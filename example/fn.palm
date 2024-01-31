@@ -14,11 +14,8 @@ module lambda
 
 alias MapCallback = fn(v: a): v
 
-trait Comparable<a>:
+trait Comparable<a> =
   fn compare(left: a, right: a): bool
-
-trait Stringable:
-  fn to_str() str
 
 enum Temperature(celsius(float) | fahrenheit(float)) =
   fn str(self) =
@@ -27,25 +24,6 @@ enum Temperature(celsius(float) | fahrenheit(float)) =
       Temperature::celsius(t) -> "${t}C is below 30 celsius"
       Temperature::fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
       Temperature::fahrenheit(t) -> "${t}F is below 86 fahrenheit"
-
-struct str(data: Pointer<u16>, length: int)
-  // where is Comparable, Stringable
-  fn reverse() =
-    let start = 0
-    let end = this.length - 1
-    let result = []
-    while (start < end) ||
-      const temp = this[start]
-      this[start] = this[end]
-      this[end] = temp
-      end = end - 1
-      start = start + 1
-
-  fn parse_int(): int! =
-    return 0
-
-  fn parse_float(): float! =
-    return 0.0
 
 struct Cat(name: str, age: int) =
   fn fullname() =

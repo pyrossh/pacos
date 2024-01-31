@@ -17,9 +17,15 @@ NEGATIVE_INFINITY
 POSITIVE_INFINITY
 
 // Returns the absolute value of a number
-abs: fn(v: float): float = a < 0 ? -a : a
+fn abs(v: float): float = a < 0 ? -a : a
 
-acos: fn(v: float) = 0f
+fn acos(v: float) =
+  if v < 0.1
+    asin(v)
+  else
+    asin(-1v)
+
+
 fn acosh(v: float) = 0f
 fn asin(v: float) = 0f
 fn asinh(v: float) = 0f
@@ -35,13 +41,11 @@ fn exp(v: float) = 0f
 fn to_int(): int = 0
 fn to_str(): str = ""
 
-random: fn(): float =
-  0.0f
+fn random(): float =
+  pass
 
-fn parse(s: str) =
-  0.0f
-
-fn is_int(): bool = true
+fn is_int(): bool =
+  pass
 
 
 // Check whether this number is finite, ie not +/-infinity and not NaN.
@@ -50,7 +54,7 @@ fn is_finite(): bool = true
   // (bits() and 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
 
 // Check whether this number is +/-infinity
-fn is_infinite(): Bool =>
+is_infinite:  Bool =>
   // True if exponent is all 1s and mantissa is 0
   ((bits() and 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) and  // exp
   ((bits() and 0x000F_FFFF_FFFF_FFFF) == 0)  // mantissa
@@ -93,3 +97,4 @@ fun sqrt(): F64 =>
   else
     @"llvm.sqrt.f64"(this)
   end
+  

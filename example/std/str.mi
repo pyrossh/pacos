@@ -1,0 +1,91 @@
+module std
+
+trait Stringable =
+  fn to_str(): str
+
+struct str(data: Pointer<u16>, length: int) is Comparable, Stringable =
+  fn get(i: int) = data[i]
+
+  fn concat(other: str): str =
+    pass
+
+  fn starts_with(search: str): bool =
+    pass
+
+  fn ends_with(search: str): bool =
+    pass
+
+  fn contains(search: str): bool =
+    pass
+
+  fn index_of(sub: str): int =
+    pass
+
+  fn match(pattern: Regex): []str =
+    pass
+
+  fn match_all(pattern: Regex): []str =
+    pass
+
+  fn pad_start(sub: str, count: int): str =
+    pass
+
+  fn pad_end(sub: str, count: int): str =
+    pass
+
+  fn repeat(count: int): str =
+    pass
+
+  fn replace(pattern: Regex, sub: str): str =
+    pass
+
+  fn replace_all(pattern: Regex, sub: str): str =
+    pass
+
+  fn search(pattern: Regex): str =
+    pass
+  
+  fn slice(start: int, end: int): str =
+    pass
+
+  fn split(separator: str, limit: int): []str =
+    pass
+
+  fn sub(start: int, end: int): str =
+    pass
+
+  fn to_lower(): str =
+    pass
+
+  fn to_upper(): str =
+    pass
+
+  fn to_str(self): str =
+    self
+
+  fn trim(): str =
+    pass
+  
+  fn trim_start(): str =
+    pass
+
+  fn trim_end(): str =
+    pass
+
+  fn reverse(): str =
+    start := 0
+    end := length - 1
+    result := []
+    while start < end
+      const temp = data[start]
+      result[start] = data[end]
+      result[end] = temp
+      end = end - 1
+      start = start + 1
+    result
+
+  fn parse_int(): int! =
+    0
+
+  fn parse_float(): float! =
+    0.0
