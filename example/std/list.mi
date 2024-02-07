@@ -1,35 +1,39 @@
 module std
 
-enum List is (first | link(v: a, rest: List)) = 
-  // where a : Number & Stringable
+// A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+// A list is not an array. A list describes a piece of an array.  A list is immutable.
+record list<V>(_ptr: *V): ToStr
 
-  fn each(self, cb: fn(v: a)) =
-    match self
-      List::first -> List::first
-      List::link(v, rest) ->
-        cb(v)
-        each(rest, cb)
+  new create<V>(ptr: *V)
+    _ptr = ptr
 
-  fn map(self, cb: fn(v: a): v) =
-    match self
-      List::first -> first
-      List::link(v, rest) -> List::link(cb(v), map(rest, cb))
+  fn concat(): slice<V> =
+    pass
 
-  fn get(i: int): a? =
-    match self
-      List::first -> List::first
-      List::link(v, rest) ->
-        each(rest, cb)
+  fn length(): int =
+    len := 0
+    while *_ptr != 0x00
+      len += 1
+      _ptr += 1
+    len
 
-  fun get<a>(lst :: List<a>, n :: Number) -> a:
-    doc: "Returns the nth element of the given list, or raises an error if n is out of range"
-    fun help(l, cur):
-      if is-empty(l): raise("get: n too large " + tostring(n))
-      else if cur == 0: l.first
-      else: help(l.rest, cur - 1)
-      end
-    end
-    if n < 0: raise("get: invalid argument: " + tostring(n))
-    else: help(lst, n)
-    end
-  end
+  fn each(cb: fn(v: V): void): void =
+    while *_ptr != 0x00
+      cb(@CastTo(_ptr, V))
+      _ptr += @SizeOf(V)
+
+  fn map<A>(cb: fn(v: V): A): []A =
+    res := []V
+    while *_ptr != 0x00
+      res.append(cb(@CastTo(_ptr, V)))
+      _ptr += @SizeOf(V)
+    res
+
+  fn to_str() =
+    res := ""
+    each<str>(|v| =
+      if @HasTrait(V, ToStr)
+        res.write(v.to_str())
+      else
+        res.write(@TypeToString(v))
+    )

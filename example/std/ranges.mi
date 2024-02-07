@@ -1,0 +1,18 @@
+fn range(start: int, e: int, cb: fn(int)) =
+  if (start < end):
+    cb(start)
+    range(start + 1, end, cb)
+  elif (start > end):
+    cb(start)
+    range(start - 1, end, cb)
+
+fn repeat(n: int, cb: fn(int)) =
+  if n != 0:
+    cb(n)
+    repeat(n-1, cb)
+
+fn main() =
+  repeat(10) |i|
+    println(i)
+  range(10, 20) |i|
+    println(i)

@@ -1,14 +1,9 @@
-map
+module std
 
-entity Map()
-
-fn new() =
-  alloc Map
-
-fn get()
-
-fn set()
-
-fn 
-
-
+record map<V>(data: Pointer, length: int)
+  """
+  A slice is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+  A slice is not an array. A slice describes a piece of an array.
+  """
+  new init(): Slice
+    pass

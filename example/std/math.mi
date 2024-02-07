@@ -97,4 +97,25 @@ fun sqrt(): F64 =>
   else
     @"llvm.sqrt.f64"(this)
   end
-  
+
+MIN_INT_VALUE = 0
+MAX_INT_VALUE = 0xFFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF
+
+fn min_value() => -0x8000_0000_0000_0000
+fn max_value() => 0x7FFF_FFFF_FFFF_FFFF
+fn abs(a: int): int => a < 0 ? -a : a
+fn to_str(v: int): str = ""
+
+fn op_add(x: int, y: int): int =
+  @"i64.add"(x, y)
+
+
+  sub
+  mul
+  div
+  rem
+
+  min
+  max
+
+  to_float()

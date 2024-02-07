@@ -1,10 +1,11 @@
 module std
 
-enum bool is (true | false) =
+type bool = true | false
   fn op_eq(x: bool, y: bool) = x == y
   fn op_ne(x: bool, y: bool) = x != y
-  fn op_and(x: bool, y: bool) = x && y
-  fn op_or(x: bool, y: bool) = x || y
-  fn op_xor(x: bool, y: bool) = x <> y
-  fn op_not(x: bool,): bool = !x
-  fn str(x: bool) = x ? "true" : "false"
+  fn op_and(x: bool, y: bool) = x == false || y == false ? false : true
+  fn op_or(x: bool, y: bool) = x == true || y == true ? true : false
+  fn op_not(x: bool): bool = x == true ? false : true
+
+  #[ToStr]
+  fn to_str(x: bool) = x ? "true" : "false"

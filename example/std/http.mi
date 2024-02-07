@@ -1,0 +1,83 @@
+import std/path
+import std/os
+import http/content_type
+
+fn file_response(file: str) =
+  ext := path::ext(file)
+  content := content_type::from_ext(ext)
+  data := try os.read_file(file)
+  Response(
+    header("Content-Type", content)
+    header("Content-Length", "2")
+    body(data)
+    status(200)
+  )
+
+  Response(
+    status = 200
+    header = [
+      Content-Type: content,
+      Content-Length: "2"
+    ]
+    body = data
+  )
+
+  Response::build()
+    .header("Content-Type", content)
+    .header("Content-Length", "2")
+    .body(data)
+    .status(200)
+
+  response.new(200)
+  |> response.header("Content-Type", content)
+  |> response.body(data)
+
+#[get("/")]
+fn index(): Response! =
+  file_response("index.html")
+
+#[get("/public/<...>")]
+fn public(file: str): Response! =
+  ext := path::ext(file)
+  content := content_type::from_ext(ext)
+  data := try os.read_file(file)
+  Response(
+    status: 200,
+    headers: [
+      ContentType: content,
+    ],
+    body: data,
+  )
+
+
+/// Http similar to rocket
+/// GET,DELETE Request -> fn params are got from query
+/// POST,PUT,PATCH Request -> fn params got from multi part form body
+/// DI at compiler level
+/// Controller similar to IHP
+
+#[path("/counters")]
+record CounterController(db: DB)
+  static path = "/counters"
+
+  fn all(): HttpResponse =
+    counters := db.query(Counter).fetchAll()
+    render(CounterList(counters))
+
+  fn view() =
+    counter := fetchOne(Counter) ?? createOne(Counter)
+    if counter := fetchOne(Counter)
+      render CounterView(counter)
+    else
+      counter <- newRecord @Counter |> set #count 0 |> createRecord
+      render CounterView(counter)
+
+  fn increment(id: str) =
+    counter <- fetch counterId
+    updatedCounter <- counter |> incrementField #count |> updateRecord
+    respondHtml $ counterView updatedCounter
+
+  fn decrement(id: str) =
+    counter <- fetch counterId
+    updatedCounter <- counter |> decrementField #count |> updateRecord
+    respondHtml $ counterView updatedCounter
