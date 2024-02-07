@@ -74,7 +74,7 @@ fn (s Temperature) to_str() =
 
 
 group("Cat Record") |g|
-  test "talks" |t|
+  test("talks") |t|
     c := Cat(name = "123", age = 1)
     c.talk()
 
@@ -106,7 +106,7 @@ for,while,if,then,else,end,record,enum,fn,assert,when,match
 
 ### Types
 ```
-nil, any, bool, byte, int, float, dec, str, time, duration
+nil, any, bool, byte, int, float, dec, str, time, duration, regex, uuid
 [] for lists      list[int], list[list[int]]
 [] for maps       map[int], map[map[int]]
 ? for optional    int? str?
@@ -114,12 +114,15 @@ nil, any, bool, byte, int, float, dec, str, time, duration
 ```
 
 **nil**
+
 The nil type is used to represent types that are nilable
 
 **any**
+
 The any type is an empty trait and is used to represent all types
 
 **bool**
+
 A bool can be either `true` or `false`. It is used in logical operations and conditional statements.
 
 ```rb
@@ -131,6 +134,7 @@ end
 ```
 
 **byte**
+
 A byte represents an unsigned 8 bit number. It is mainly used to represent strings and binary data.
 ```rs
 let data: []byte?
@@ -138,6 +142,7 @@ data = [104, 101, 197, 130, 197, 130, 111, 0]
 ```
 
 **int**
+
 An int is a signed 64 bit number. It can be represented in various ways,
 0b - Binary (Base 2)
 0x - Hexadecimal (Base 16)
@@ -154,9 +159,11 @@ An int is a signed 64 bit number. It can be represented in various ways,
 ```
 
 **float**
+
 A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binary64
 
 **str**
+
 A str represents a slice of runes or unicode code points. It is encoded to UTF-8 by default.
 It supports interpolation of variables/values that implement the ToStr interface.
 
@@ -172,7 +179,8 @@ println("Name ${name} age ${age}")
 **list**
 
 ```
-a := [1, 2, 3]
+a := [1, 2, 3]                // list[int]
+b := [[1, 2], [3, 4], [5, 6]] // list[list[int]]
 ```
 
 **map**
@@ -197,6 +205,7 @@ tree = [
 
 
 **Assignment statement**
+```
 low, mid, high := 0, 0, n.numItems
 x := 10
 y := 20
@@ -205,8 +214,11 @@ xy_map := [x: x, y: y]
 assoc_list = [a: 1, b: 2]
 assoc_list[:a]
 assoc_list["b"]
+```
 
 **While statement**
+
+```
 while low < high
   mid = (low + high) / 2
   low = cmp > 0 > mid + 1 : low
@@ -218,8 +230,10 @@ while (eventuallyErrorSequence()) |value| {
   sum1 += value;
 else |err|
   try expect(err == error.ReachedZero);
+```
 
 **For statement**
+```
 for players_list |value|
   if value == 0
     continue
@@ -253,6 +267,7 @@ fn range(start: int, end: int, cb: (v: T) -> IterateResult) =
 range(0, 5, |v| =>
   sum3 += v
 )
+```
 
 // Iterate over multiple objects.
 // All lengths must be equal at the start of the loop, otherwise detectable
@@ -261,10 +276,13 @@ for items, items2 |i, j|
   count += i + j
 
 **When expression/statement**
+
+```
 when
   cmp > 0 -> low = mid + 1
   cmp < 0 -> high = mid
   cmp == 0 -> return mid, true
+```
 
 Arithmetic (+, -, /, *, @divFloor, @sqrt, @ceil, @log, etc.)
 Bitwise operators (>>, <<, &, |, ~, etc.)
