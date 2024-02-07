@@ -32,6 +32,9 @@ record Cat(
   age:  int
 )
 
+fn Cat.WithName(name: str) =
+  Cat(name: name, age: 0)
+
 fn (c: Cat) fullname(): str =
   c.name + c.age.to_str()
 
