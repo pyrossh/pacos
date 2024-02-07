@@ -1,8 +1,14 @@
+# 👾 Pacos Programming Language
+
+A simple statically typed imperative programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang and ponylang. It comes packed with linting, formatting, test runner, language server, package management in-built.
+
+The parser is written using tree-sitter syntax so has out of the box syntax highlighting support for helix and zed editor.
+
+Here is some sample syntax, enjoy 👾
+```
 module lambda
 
-Sample syntax
-```
-fun sum(a: int, b: int): int = a + b
+fn sum(a: int, b: int): int = a + b
 
 fn sum_list(series: list[int]): int =
   series.reduce(0, |v| v + 1)
@@ -32,49 +38,28 @@ record Cat(
   age:  int
 )
 
-fn Cat.WithName(name: str) =
+fn Cat.with_name(name: str) =
   Cat(name: name, age: 0)
 
 fn (c: Cat) fullname(): str =
   c.name + c.age.to_str()
 
+fn (c: Cat) talk() =
+  println("cat ${c.name} says meow")
+
 fn (c: Cat) to_str(): str =
-  "Cat<{c.fullname()}>"
+  "Cat<{c.fullname()}, ${c.age}>"
 
-test("Cat", |v|
-  c := Cat(name = "123", age = 1)
-  c.talk()
-  Cat("rabby", 21).fullname() == "rabby21"
-  c2 := Cat(...c, age: c.age + 1)
-
-  [Cat("Molly", 9), Cat("Fenton", 6)]
-    .retain(|p| p.name.size > 5)
-    .map(|p| describe(p))
-    .each(|d| println(d))
-  // → cat Fenton is 6 years of age
-)
 
 type MapCallback = fn(v: a): v
 
-trait Comparable[A](
+trait Comparable(
   fn compare(left: A, right: A): bool
 )
 
 trait ToStr(
   fn to_str(): str
 )
-
-struct Cat(name: str, age: int) =
-  fn fullname() =
-    name + age.str()
-
-  fn talk() =
-    println("cat ${name} says meow")
-
-  #[ToStr]
-  fn to_str(self): str =
-    "Cat<{self.fullname()}>"
-
 
 enum Temperature =
   | celsius(float)
@@ -87,56 +72,67 @@ fn (s Temperature) to_str() =
     fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
     fahrenheit(t) -> "${t}F is below 86 fahrenheit"
 
-test "enum ordinal value" {
-  expect(Value.zero).to_equal(0);
-  expect(Value.one).to_equal(1);
-  expect(Value.two).to_equal(2);
-}
 
-test("enum ordinal value") |t| {
-  expect(Value.zero).to_equal(0);
-  expect(Value.one).to_equal(1);
-  expect(Value.two).to_equal(2);
-}
+group("Cat Record") |g|
+  test "talks" |t|
+    c := Cat(name = "123", age = 1)
+    c.talk()
 
-group("Group 1") |g| {
-}
+  test("fullname") |t|
+    Cat("rabby", 21).fullname() == "rabby21"
+    c2 := Cat(...c, age: c.age + 1)
 
-bench("1231") |t, n| {
-}
+  test("to_str") |t|
+    items := [Cat("Molly", 9), Cat("Fenton", 6)]
+        .retain(|p| p.name.size > 5)
+        .map(|p| describe(p))
+        .each(|d| println(d))
+    assert items[0].to_str() == "Cat<Fenton, 6>"
+
+test("enum ordinal value") |t|
+  expect(Value.zero).to_equal(0)
+  expect(Value.one).to_equal(1)
+  expect(Value.two).to_equal(2)
+
+bench("1231") |t, n|
+  for 0..n |i|
+    println(i)
 ```
 
 ## Language Reference
 
 **Keywords**
-unreachable
+for,while,if,then,else,end,record,enum,fn,assert,when,match
 
-**Types**
-bool, byte, int, float, dec, str, time, duration
+### Types
+```
+nil, any, bool, byte, int, float, dec, str, time, duration
 [] for lists      list[int], list[list[int]]
 [] for maps       map[int], map[map[int]]
 ? for optional    int? str?
 ! for return error types int!, str!
-nil for optional assignment and pointers
-
-## Types
+```
 
 **nil**
-A nil type is used to represent types that are nilable.
+The nil type is used to represent types that are nilable
+
+**any**
+The any type is an empty trait and is used to represent all types
 
 **bool**
 A bool can be either `true` or `false`. It is used in logical operations and conditional statements.
 
-```
+```rb
 assert true != false
 
-if true || false:
+if true || false then
   print("works")
+end
 ```
 
 **byte**
 A byte represents an unsigned 8 bit number. It is mainly used to represent strings and binary data.
-```
+```rs
 let data: []byte?
 data = [104, 101, 197, 130, 197, 130, 111, 0]
 ```
@@ -200,7 +196,7 @@ tree = [
 ```
 
 
-**Assignment operator**
+**Assignment statement**
 low, mid, high := 0, 0, n.numItems
 x := 10
 y := 20
@@ -217,8 +213,6 @@ while low < high
   high = cmp < 0 ? mid : high
   if cmp == 0
     return mid, true
-
-while (i < 10) : (i += 1) {}
 
 while (eventuallyErrorSequence()) |value| {
   sum1 += value;
@@ -284,7 +278,7 @@ if (a) |value| {
     unreachable;
 }
 
-### 5. Conditional operators
+### Conditional operators
 
 **not operator**
 !a
