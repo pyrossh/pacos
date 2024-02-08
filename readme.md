@@ -1,36 +1,49 @@
 # 👾 Pacos Programming Language
 
-A simple statically typed imperative programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang and ponylang. It comes packed with linting, formatting, test runner, language server, package management in-built.
+A simple statically typed imperative programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang, ponylang, and dart. It comes packed with linting, formatting, test runner, language server, and package management in-built.
 
-The parser is written using tree-sitter syntax so has out of the box syntax highlighting support for helix and zed editor.
+The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
-Here is some sample syntax, enjoy 👾
-```
+Here is some sample code, please enjoy.
+```rs
 module lambda
 
 fn sum(a: int, b: int): int = a + b
 
-fn sum_list(series: list[int]): int =
+fn sum_all(series: list[int]): int =
   series.reduce(0, |v| v + 1)
 
 fn fib(n: int): int =
   match n
     0 | 1 -> n
-    else -> fib(n - 1) + fib(n - 2)
+    _ -> fib(n - 1) + fib(n - 2)
 
 fn fib(n: int): int =
-  if n == 0 || n == 1 then
+  if n == 0 || n == 1
     n
   else
     fib(n - 1) + fib(n - 2)
-  end
 
 fn factorial(n: int): int =
   match n
-    1 -> 1
+    a -> 1
     _ -> n * factorial(n - 1)
 
-fn to-celsius(f: float) =
+fn first_item(l: list[int]): int? =
+  l[0]
+
+fn first_item(l: list[int]): int? =
+  match l
+    [] -> nil
+    [head, ...rest] -> head
+
+fn first_item(l: list[int]): int? =
+  if l.size > 0
+    l[0]
+  else
+    nil
+
+fn to-celsius(f: float): float =
   (f - 32) * (5 / 9)
 
 record Cat(
@@ -102,7 +115,10 @@ bench("1231") |t, n|
 ## Language Reference
 
 **Keywords**
-for,while,if,then,else,end,record,enum,fn,assert,when,match
+
+```rs
+for,while,if,else,record,enum,fn,assert,when,match,type
+```
 
 ### Types
 ```
@@ -167,7 +183,7 @@ A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binar
 A str represents a slice of runes or unicode code points. It is encoded to UTF-8 by default.
 It supports interpolation of variables/values that implement the ToStr interface.
 
-```
+```rs
 "Hello World"
 name := "Pacos"
 age := 1
@@ -178,14 +194,14 @@ println("Name ${name} age ${age}")
 
 **list**
 
-```
+```rs
 a := [1, 2, 3]                // list[int]
 b := [[1, 2], [3, 4], [5, 6]] // list[list[int]]
 ```
 
 **map**
 
-```
+```rs
 tree = [
   value: "Fred",
   left: [
@@ -205,7 +221,8 @@ tree = [
 
 
 **Assignment statement**
-```
+
+```rs
 low, mid, high := 0, 0, n.numItems
 x := 10
 y := 20
@@ -218,7 +235,7 @@ assoc_list["b"]
 
 **While statement**
 
-```
+```rs
 while low < high
   mid = (low + high) / 2
   low = cmp > 0 > mid + 1 : low
@@ -233,7 +250,8 @@ else |err|
 ```
 
 **For statement**
-```
+
+```rs
 for players_list |value|
   if value == 0
     continue
@@ -267,17 +285,17 @@ fn range(start: int, end: int, cb: (v: T) -> IterateResult) =
 range(0, 5, |v| =>
   sum3 += v
 )
-```
 
 // Iterate over multiple objects.
 // All lengths must be equal at the start of the loop, otherwise detectable
 // illegal behavior occurs.
 for items, items2 |i, j|
   count += i + j
+```
 
 **When expression/statement**
 
-```
+```rs
 when
   cmp > 0 -> low = mid + 1
   cmp < 0 -> high = mid
@@ -289,33 +307,56 @@ Bitwise operators (>>, <<, &, |, ~, etc.)
 Comparison operators (<, >, ==, etc.)
 
 **if expression/statement**
+
+```rs
 if (a) |value| {
  try expect(value == 0);
 } else |err| {
     _ = err;
     unreachable;
 }
+```
 
 ### Conditional operators
 
 **not operator**
+
+```
 !a
 !true
+```
 
 **ternary operator**
+
+```
 x ? x : y
+```
 
 **safe navigation operator**
+
+```
 a?.b?.c?.d
-
-**elvis operator**
-x ?: y
-
-**elvis assignment operator**
-atomicNumber ?= 2
-
-**Range operator**
-for 5..10 |i|:
+```
 
 **Safe index operator**
+```
 array?[1]
+```
+
+**elvis operator**
+
+```
+x ?: y
+```
+
+**elvis assignment operator**
+
+```
+atomic_number ?= 2
+```
+
+**Range operator**
+```
+for 5..10 |i|
+  println(i)
+```
