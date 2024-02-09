@@ -8,6 +8,15 @@ Here is some sample code, please enjoy.
 ```rs
 module lambda
 
+import pacos/list
+import pacos/math
+import pacos/http
+
+const start_year = 2101
+const end_year = 2111
+const name: String = "Gleam"
+const size: Int = 100
+
 fn sum(a: int, b: int): int = a + b
 
 fn sum_all(series: list[int]): int =
@@ -46,13 +55,41 @@ fn first_item(l: list[int]): int? =
 fn to-celsius(f: float): float =
   (f - 32) * (5 / 9)
 
-record Cat(
+class Cat[A: Comparable & Stringable] is Stringable:
+  name: str
+  age: int
+
+  fn Cat():
+    pass
+
+  fn ~Cat():
+    pass
+
+ fn Cat.with_name(name: str):
+    Cat(name: name, age: 0)
+
+  fn fullname() -> str:
+    name + age.to_str()
+
+  fn talk():
+    println("cat ${name} says meow")
+
+  fn to_str() -> str:
+    "Cat<{fullname()}, ${age}>"
+
+record Cat[A](
   name: str
   age:  int
-)
+) where A is Comparable & Stringable
 
 fn Cat.with_name(name: str) =
   Cat(name: name, age: 0)
+
+fn (c: Cat) init(): str =
+  c.name + c.age.to_str()
+
+fn (c: Cat) deinit(): str =
+  c.name + c.age.to_str()
 
 fn (c: Cat) fullname(): str =
   c.name + c.age.to_str()
@@ -300,6 +337,51 @@ when
   cmp > 0 -> low = mid + 1
   cmp < 0 -> high = mid
   cmp == 0 -> return mid, true
+
+when x, y
+  1, 1 -> "both are 1"
+  1, _ -> "x is 1"
+  _, 1 -> "y is 1"
+  _, _ -> "neither is 1"
+
+when number
+  2 | 4 | 6 | 8 -> "This is an even number"
+  1 | 3 | 5 | 7 -> "This is an odd number"
+  _ -> "I'm not sure"
+
+match xs
+  [] -> "This list is empty"
+  [a] -> "This list has 1 element"
+  [a, b] -> "This list has 2 elements"
+  _ -> "This list has more than 2 elements"
+
+import palm/list
+
+list.new("Krabs")
+|> list.add("Spongebob")
+|> list.length() // ==> 3
+|> list.contains("Krabs") // ==> true
+|> list.get(0) // => Some("Krabs")
+|> list.get(5) // => None
+
+let x = list.new(2, 3)
+let y = list.new(1, ..x)
+
+import palm/map
+
+let nums = map.new(:one => 1, :two => 2) // => Map(k, v)
+nums |> map.get(:one) // => Some(1)
+nums |> map.get(:unknown) // => None
+
+import palm/io.{println}
+import palm/result.{Ok, Error}
+
+let connect_res = Error("Connection failed")
+
+case connect_res {
+  Ok(a) -> println("Connection succeeded")
+  Err(a) -> println("Error occurred: {a}")
+}
 ```
 
 Arithmetic (+, -, /, *, @divFloor, @sqrt, @ceil, @log, etc.)

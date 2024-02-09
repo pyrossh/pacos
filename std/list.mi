@@ -1,39 +1,85 @@
 module std
 
-// A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-// A list is not an array. A list describes a piece of an array.  A list is immutable.
-record list<V>(_ptr: *V): ToStr
+`A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+`It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
+record list<V>(
+  head: node?
+  tail: node?
+  size: int
+)
 
-  new create<V>(ptr: *V)
-    _ptr = ptr
+`A node captures the data value in a list and contains pointers to the previous and next sibling nodes
+record node[V](
+  value: V
+  prev: node[V]?
+  next: node[V]?
+)
 
-  fn concat(): slice<V> =
-    pass
+fn (l: list) get(i: int): A =
+  `gets the element at i'th index of the list
+  pass
 
-  fn length(): int =
-    len := 0
-    while *_ptr != 0x00
-      len += 1
-      _ptr += 1
-    len
+fn (l: list) set(i: int, v: V): A =
+  `sets the element at i'th index of the list
+  pass
 
-  fn each(cb: fn(v: V): void): void =
-    while *_ptr != 0x00
-      cb(@CastTo(_ptr, V))
-      _ptr += @SizeOf(V)
+fn (l: list) add(c: V) =
+  `adds the specified elements to the start of the list
+  l.head = node(value: v, prev: nil, next: l.head)
+  l.head.next.prev = l.head
+  l.size += 1
 
-  fn map<A>(cb: fn(v: V): A): []A =
-    res := []V
-    while *_ptr != 0x00
-      res.append(cb(@CastTo(_ptr, V)))
-      _ptr += @SizeOf(V)
-    res
+fn (l: list) remove(i int) =
+  `removes the element at i'th index of the list
+  l.tail?.prev?.next = nil
+  `old tail node gets deallocated due to zero reference count
+  l.tail = list.tail?.prev
+  l.size -= 1
 
-  fn to_str() =
-    res := ""
-    each<str>(|v| =
-      if @HasTrait(V, ToStr)
-        res.write(v.to_str())
-      else
-        res.write(@TypeToString(v))
-    )
+fn (l: list) some(predicate: fn(v: V): bool) =
+  `returns true if any element in the list satisfies the predicate
+  pass
+
+
+fn (l: list) reversed(v: fn(v: V): true) =
+  `returns a new list with the elements in reverse order.
+  pass
+
+fn (l: list) sort(v: fn(v: V): true) =
+  `returns a new list with the elements sorted in ascending order.
+  pass
+
+fn (l: list) indexOf(v: V): int? =
+  `returns the index of an item in the list if present and comparable otherwise nil
+  pass
+
+fn (l: list) each(cb: fn(v: V)) =
+  current := l.head
+  while current != nil
+    cb(current.value)
+    current = current.next
+
+fn (l: list) map(cb: fn(v: V): A): list[A] =
+  nl := []
+  current := l.head
+  while current != nil
+    item := cb(current.value)
+    nl.push(item)
+  nl
+
+fn (l: list) retain(predicate: fn(v: V): A): list[A] =
+  `returns a new list with the elements that matched the predicate
+  pass
+
+fn (l: list) reduce[B](acc: B, cb: fn(v: V): A): B =
+  `returns the accumulated value of all the elements in the list
+  pass
+
+fn (l: list) to_str() =
+  res := Buffer()
+  l.each() |v|
+    if @HasTrait(V, ToStr)
+      res.write(v.to_str())
+    else
+      res.write(@TypeToString(v))
+  res.to_str()
