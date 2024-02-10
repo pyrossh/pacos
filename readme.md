@@ -8,14 +8,14 @@ Here is some sample code, please enjoy.
 ```rs
 module lambda
 
-import pacos/list
+import ca/list
 import pacos/math
 import pacos/http
 
-const start_year = 2101
-const end_year = 2111
-const name: String = "Gleam"
-const size: Int = 100
+START_YEAR = 2101
+END_YEAR = 2111
+NAME = "Gleam"
+SIZE = 100
 
 fn sum(a: int, b: int): int = a + b
 
@@ -59,13 +59,7 @@ class Cat[A: Comparable & Stringable] is Stringable:
   name: str
   age: int
 
-  fn Cat():
-    pass
-
-  fn ~Cat():
-    pass
-
- fn Cat.with_name(name: str):
+  fn Cat.with_name(name: str):
     Cat(name: name, age: 0)
 
   fn fullname() -> str:
@@ -77,19 +71,13 @@ class Cat[A: Comparable & Stringable] is Stringable:
   fn to_str() -> str:
     "Cat<{fullname()}, ${age}>"
 
-record Cat[A](
+record Cat[A: Comparable & Stringable](
   name: str
   age:  int
-) where A is Comparable & Stringable
+) is Stringable
 
 fn Cat.with_name(name: str) =
   Cat(name: name, age: 0)
-
-fn (c: Cat) init(): str =
-  c.name + c.age.to_str()
-
-fn (c: Cat) deinit(): str =
-  c.name + c.age.to_str()
 
 fn (c: Cat) fullname(): str =
   c.name + c.age.to_str()
@@ -232,28 +220,63 @@ println("Name ${name} age ${age}")
 **list**
 
 ```rs
+import pacos/list
+
 a := [1, 2, 3]                // list[int]
 b := [[1, 2], [3, 4], [5, 6]] // list[list[int]]
+
+actors := List.new("Krabs", "Squidward")
+actors.add("Spongebob")
+actors.length() // ==> 3
+actors.contains("Krabs") // ==> true
+actors.get(0) // => "Krabs"
+actors.get(5) // => nil
 ```
 
 **map**
 
 ```rs
-tree = [
-  value: "Fred",
-  left: [
-    value: "Jim",
+import pacos/map
+
+nums := Map.new(:one => 1, :two => 2)
+map.get(:one) // =>`
+map.get(:unknown) // => nil
+
+friends_tree := [
+  :value => "Fred",
+  :left => [
+    :value => "Jim",
   ],
-  right: [
-    value: "Shiela",
-    left: [
-      value: "Alice",
+  :right => [
+    :value => "Shiela",
+    :left => [
+      :value => "Alice",
     },
-    right: [
-      value: "Bob"
+    :right => [
+      :value => "Bob"
     ],
   ],
 ]
+```
+
+**Constant statement**
+
+Constants can be declared at the top level of a program. They cannot be reassigned.
+* Primitive values like`int, float, str` are directly replaced in code.
+* Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
+
+```rs
+PI = 3.14159f
+ERR_MESSAGE = "An unknown error occured"
+COUNT = count(10)
+COUNTRIES_LIST = ["US", "INDIA", "CANADA"]
+COUNTRY_CODES = [
+  :in => "INDIA",
+  :us => "United States",
+  :ca => "Canada"
+]
+
+fn count(n: int): int = n * 1
 ```
 
 
@@ -265,7 +288,7 @@ x := 10
 y := 20
 xy_list := [x, y]
 xy_map := [x: x, y: y]
-assoc_list = [a: 1, b: 2]
+assoc_list = [:a => 1, :b => 2]
 assoc_list[:a]
 assoc_list["b"]
 ```
@@ -279,11 +302,6 @@ while low < high
   high = cmp < 0 ? mid : high
   if cmp == 0
     return mid, true
-
-while (eventuallyErrorSequence()) |value| {
-  sum1 += value;
-else |err|
-  try expect(err == error.ReachedZero);
 ```
 
 **For statement**
@@ -305,17 +323,7 @@ let list = for filter(players_list) |v|
 items
   .map(|v| v + 1)
   .each(|v| println("v", v))
-
-items
-  .each(v =>
-    if v == 2
-      break
-    if v == 0
-      continue
-    println(v)
-  )
-  .map {v => v * 2}
-  .reduce(0, |v| => v + 1)
+  .reduce(0, |v| v + 1)
 
 fn range(start: int, end: int, cb: (v: T) -> IterateResult) =
 
@@ -323,9 +331,6 @@ range(0, 5, |v| =>
   sum3 += v
 )
 
-// Iterate over multiple objects.
-// All lengths must be equal at the start of the loop, otherwise detectable
-// illegal behavior occurs.
 for items, items2 |i, j|
   count += i + j
 ```
@@ -354,34 +359,6 @@ match xs
   [a] -> "This list has 1 element"
   [a, b] -> "This list has 2 elements"
   _ -> "This list has more than 2 elements"
-
-import palm/list
-
-list.new("Krabs")
-|> list.add("Spongebob")
-|> list.length() // ==> 3
-|> list.contains("Krabs") // ==> true
-|> list.get(0) // => Some("Krabs")
-|> list.get(5) // => None
-
-let x = list.new(2, 3)
-let y = list.new(1, ..x)
-
-import palm/map
-
-let nums = map.new(:one => 1, :two => 2) // => Map(k, v)
-nums |> map.get(:one) // => Some(1)
-nums |> map.get(:unknown) // => None
-
-import palm/io.{println}
-import palm/result.{Ok, Error}
-
-let connect_res = Error("Connection failed")
-
-case connect_res {
-  Ok(a) -> println("Connection succeeded")
-  Err(a) -> println("Error occurred: {a}")
-}
 ```
 
 Arithmetic (+, -, /, *, @divFloor, @sqrt, @ceil, @log, etc.)

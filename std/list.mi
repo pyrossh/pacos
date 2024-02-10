@@ -5,10 +5,10 @@ module std
 record list[V](
   head: node[V]?
   tail: node[V]?
-  size: int
+  _size: int
 )
 
-`A node captures the data value in a list and contains pointers to the previous and next sibling nodes
+`A node stores the data in a list and contains pointers to the previous and next sibling nodes
 record node[V](
   value: V
   prev: node[V]?
@@ -30,18 +30,22 @@ fn (l: list) set(i: int, v: V): A =
   `sets the element at i'th index of the list
   pass
 
+fn (l: list) length(): int =
+  `returns the no of elements in the list
+  _size
+
 fn (l: list) add(c: V) =
   `adds the specified elements to the start of the list
   l.head = node(value: v, prev: nil, next: l.head)
   l.head.next.prev = l.head
-  l.size += 1
+  l._size += 1
 
 fn (l: list) remove(i int) =
   `removes the element at i'th index of the list
   l.tail?.prev?.next = nil
   `old tail node gets deallocated due to zero reference count
   l.tail = list.tail?.prev
-  l.size -= 1
+  l._size -= 1
 
 fn (l: list) reverse(v: fn(v: V): true): list[A] =
   `returns a new list with the elements in reverse order.
@@ -154,3 +158,110 @@ fn (l: list) to_str(): str =
     else
       res.write(@TypeToString(v))
   res.to_str()
+
+
+
+class List[V]:
+  head: node[V]?
+  tail: node[V]?
+  size: int
+
+  fn get(i: int): A =
+    `gets the element at i'th index of the list
+    current := l.head
+    index := 0
+    while current != nil
+      if index == i
+        current.value
+      else
+        current = current.next
+        index += 1
+
+  fn set(i: int, v: V): A =
+    `sets the element at i'th index of the list
+    pass
+
+  fn add(c: V) =
+    `adds the specified elements to the start of the list
+    l.head = node(value: v, prev: nil, next: l.head)
+    l.head.next.prev = l.head
+    l._size += 1
+
+  fn remove(i int) =
+    `removes the element at i'th index of the list
+    l.tail?.prev?.next = nil
+    `old tail node gets deallocated due to zero reference count
+    l.tail = list.tail?.prev
+    l._size -= 1
+
+  fn reverse(v: fn(v: V): true): list[A] =
+    `returns a new list with the elements in reverse order.
+    pass
+
+  fn sort(sorter: fn(v: V): true): list[A] =
+    `returns a new list with the elements sorted by sorter
+    pass
+
+  fn find(search: V): V? =
+    `returns an item in the list if the item is is equal to search item
+    pass
+
+  fn find_index(search: V): int? =
+    `returns the index of an item in the list if present and comparable otherwise nil
+    pass
+
+  fn contains(s: V): bool =
+    `returns whether s is present in the list or not
+    pass
+
+  fn concat(ol: list): list[A] =
+    `returns the index of an item in the list if present and comparable otherwise nil
+    pass
+
+  fn sub_list(start: int, end: int?): list[A] =
+    `returns the index of an item in the list if present and comparable otherwise nil
+    pass
+
+  fn each(cb: fn(v: V)): void =
+    `calls f for each elem in the list
+    current := l.head
+    while current != nil
+      cb(current.value)
+      current = current.next
+
+  fn map[B](cb: fn(v: V): B): list[A] =
+    `returns a list made up of B elements for each elem in the list
+    nl := []
+    current := l.head
+    while current != nil
+      item := cb(current.value)
+      nl.push(item)
+    nl
+
+  fn flat_map() =
+    `returns a new list with all elements shuffled`
+    pass
+
+  fn retain(predicate: fn(v: V): A): list[A] =
+    `returns a new list with the elements that matched the predicate
+    pass
+
+  fn reject(predicate: fn(v: V): A): list[A] =
+    `returns a new list with the elements that matched the predicate removed
+    pass
+
+  fn any(predicate: fn(v: V): bool) =
+    `returns true if any element in the list satisfies the predicate
+    pass
+
+  fn all(predicate: fn(v: V): bool) =
+    `returns true if all of the elements in the list satisfies the predicate
+    pass
+
+  fn reduce[B](acc: B, cb: fn(v: V): A): B =
+    `returns the accumulated value of all the elements in the list
+    pass
+
+  fn first(): A? =
+    `returns the first element in the list
+    l.head?.value
