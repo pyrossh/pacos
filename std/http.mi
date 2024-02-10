@@ -7,30 +7,19 @@ fn file_response(file: str) =
   content := content_type::from_ext(ext)
   data := try os.read_file(file)
   Response(
-    header("Content-Type", content)
-    header("Content-Length", "2")
-    body(data)
-    status(200)
-  )
-
-  Response(
-    status = 200
-    header = [
-      Content-Type: content,
-      Content-Length: "2"
-    ]
+    status = 200,
+    headers = [
+      :Content-Type => content,
+      :Content-Length => "2"
+    ],
     body = data
   )
 
   Response::build()
-    .header("Content-Type", content)
-    .header("Content-Length", "2")
-    .body(data)
-    .status(200)
-
-  response.new(200)
-  |> response.header("Content-Type", content)
-  |> response.body(data)
+    .set_header("Content-Type", content)
+    .set_header("Content-Length", "2")
+    .set_body(data)
+    .set_status(200)
 
 #[get("/")]
 fn index(): Response! =
@@ -44,7 +33,7 @@ fn public(file: str): Response! =
   Response(
     status: 200,
     headers: [
-      ContentType: content,
+      :ContentType => content,
     ],
     body: data,
   )
