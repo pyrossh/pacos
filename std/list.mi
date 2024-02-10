@@ -2,9 +2,9 @@ module std
 
 `A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
 `It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
-record list<V>(
-  head: node?
-  tail: node?
+record list[V](
+  head: node[V]?
+  tail: node[V]?
   size: int
 )
 
@@ -17,7 +17,14 @@ record node[V](
 
 fn (l: list) get(i: int): A =
   `gets the element at i'th index of the list
-  pass
+  current := l.head
+  index := 0
+  while current != nil
+    if index == i
+      current.value
+    else
+      current = current.next
+      index += 1
 
 fn (l: list) set(i: int, v: V): A =
   `sets the element at i'th index of the list
@@ -36,30 +43,43 @@ fn (l: list) remove(i int) =
   l.tail = list.tail?.prev
   l.size -= 1
 
-fn (l: list) some(predicate: fn(v: V): bool) =
-  `returns true if any element in the list satisfies the predicate
-  pass
-
-
-fn (l: list) reversed(v: fn(v: V): true) =
+fn (l: list) reverse(v: fn(v: V): true): list[A] =
   `returns a new list with the elements in reverse order.
   pass
 
-fn (l: list) sort(v: fn(v: V): true) =
-  `returns a new list with the elements sorted in ascending order.
+fn (l: list) sort(sorter: fn(v: V): true): list[A] =
+  `returns a new list with the elements sorted by sorter
   pass
 
-fn (l: list) indexOf(v: V): int? =
+fn (l: list) find(search: V): V? =
+  `returns an item in the list if the item is is equal to search item
+  pass
+
+fn (l: list) find_index(search: V): int? =
   `returns the index of an item in the list if present and comparable otherwise nil
   pass
 
-fn (l: list) each(cb: fn(v: V)) =
+fn (l: list) contains(v: V): int? =
+  `returns the index of an item in the list if present and comparable otherwise nil
+  pass
+
+fn (l: list) concat(ol: list): list[A] =
+  `returns the index of an item in the list if present and comparable otherwise nil
+  pass
+
+fn (l: list) sub_list(start: int, end: int?): list[A] =
+  `returns the index of an item in the list if present and comparable otherwise nil
+  pass
+
+fn (l: list) each(cb: fn(v: V)): void =
+  `calls f for each elem in the list
   current := l.head
   while current != nil
     cb(current.value)
     current = current.next
 
-fn (l: list) map(cb: fn(v: V): A): list[A] =
+fn (l: list) map[B](cb: fn(v: V): B): list[A] =
+  `returns a list made up of B elements for each elem in the list
   nl := []
   current := l.head
   while current != nil
@@ -67,15 +87,66 @@ fn (l: list) map(cb: fn(v: V): A): list[A] =
     nl.push(item)
   nl
 
+fn (l: list) flat_map() =
+  `returns a new list with all elements shuffled`
+  pass
+
 fn (l: list) retain(predicate: fn(v: V): A): list[A] =
   `returns a new list with the elements that matched the predicate
+  pass
+
+fn (l: list) reject(predicate: fn(v: V): A): list[A] =
+  `returns a new list with the elements that matched the predicate removed
+  pass
+
+fn (l: list) any(predicate: fn(v: V): bool) =
+  `returns true if any element in the list satisfies the predicate
+  pass
+
+fn (l: list) all(predicate: fn(v: V): bool) =
+  `returns true if all of the elements in the list satisfies the predicate
   pass
 
 fn (l: list) reduce[B](acc: B, cb: fn(v: V): A): B =
   `returns the accumulated value of all the elements in the list
   pass
 
-fn (l: list) to_str() =
+fn (l: list) first(): A? =
+  `returns the first element in the list
+  l.head?.value
+
+fn (l: list) last(): A? =
+  `returns the last element in the list
+  l.tail?.value
+
+fn (l: list) take(n: int): list[A] =
+  `returns a list containing the first n elements of the given list
+  pass
+
+fn (l: list) drop(n: int): list[A] =
+  `Returns a list containing the first n elements of the given list
+
+fn (l: list) sample() =
+  `returns a new list with all elements shuffled`
+  pass
+
+fn (l: list) shuffle() =
+  `returns a new list with all elements shuffled`
+  pass
+
+fn (l: list) partition() =
+  `returns a new list with all elements shuffled`
+  pass
+
+fn (l: list) chunk() =
+  `returns a new list with all elements shuffled`
+  pass
+
+fn (l: list) group_by() =
+  `returns a new list with all elements shuffled`
+  pass
+
+fn (l: list) to_str(): str =
   res := Buffer()
   l.each() |v|
     if @HasTrait(V, ToStr)
