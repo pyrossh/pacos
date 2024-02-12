@@ -5,7 +5,7 @@ A simple statically typed imperative programming language. Its main aim to be si
 The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
 Here is some sample code, please enjoy.
-```rs
+```rb
 module lambda
 
 import ca/list
@@ -55,28 +55,12 @@ fn first_item(l: list[int]): int? =
 fn to-celsius(f: float): float =
   (f - 32) * (5 / 9)
 
-class Cat[A: Comparable & Stringable] is Stringable:
-  name: str
-  age: int
-
-  fn Cat.with_name(name: str):
-    Cat(name: name, age: 0)
-
-  fn fullname() -> str:
-    name + age.to_str()
-
-  fn talk():
-    println("cat ${name} says meow")
-
-  fn to_str() -> str:
-    "Cat<{fullname()}, ${age}>"
-
 record Cat[A: Comparable & Stringable](
   name: str
   age:  int
-) is Stringable
+)
 
-fn Cat.with_name(name: str) =
+fn Cat.with_name(name: str): Cat =
   Cat(name: name, age: 0)
 
 fn (c: Cat) fullname(): str =
@@ -87,7 +71,6 @@ fn (c: Cat) talk() =
 
 fn (c: Cat) to_str(): str =
   "Cat<{c.fullname()}, ${c.age}>"
-
 
 type MapCallback = fn(v: a): v
 
@@ -103,7 +86,7 @@ enum Temperature =
   | celsius(float)
   | fahrenheit(float)
 
-fn (s Temperature) to_str() =
+fn (s Temperature) to_str(): str =
   match s
     celsius(t) && t > 30 -> "${t}C is above 30 celsius"
     celsius(t) -> "${t}C is below 30 celsius"
@@ -148,8 +131,8 @@ for,while,if,else,record,enum,fn,assert,when,match,type
 ### Types
 ```
 nil, any, bool, byte, int, float, dec, str, time, duration, regex, uuid
-[] for lists      list[int], list[list[int]]
-[] for maps       map[int], map[map[int]]
+[1, 2, 3] for lists      list[int], list[list[int]]
+[:a => 1, :b => 2] for maps       map[int], map[map[int]]
 ? for optional    int? str?
 ! for return error types int!, str!
 ```
@@ -169,15 +152,14 @@ A bool can be either `true` or `false`. It is used in logical operations and con
 ```rb
 assert true != false
 
-if true || false then
+if true || false
   print("works")
-end
 ```
 
 **byte**
 
 A byte represents an unsigned 8 bit number. It is mainly used to represent strings and binary data.
-```rs
+```rb
 let data: []byte?
 data = [104, 101, 197, 130, 197, 130, 111, 0]
 ```
@@ -189,7 +171,7 @@ An int is a signed 64 bit number. It can be represented in various ways,
 0x - Hexadecimal (Base 16)
 13 - Standard (Base 10)
 
-```
+```rb
 0b00101010
 0b1_1111_1
 0xff00ff
@@ -208,18 +190,17 @@ A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binar
 A str represents a slice of runes or unicode code points. It is encoded to UTF-8 by default.
 It supports interpolation of variables/values that implement the ToStr interface.
 
-```rs
+```go
 "Hello World"
 name := "Pacos"
 age := 1
 println("Name ${name} age ${age}")
 ```
-"\u0061" == "a"
 
 
 **list**
 
-```rs
+```py
 import pacos/list
 
 a := [1, 2, 3]                // list[int]
@@ -235,7 +216,7 @@ actors.get(5) // => nil
 
 **map**
 
-```rs
+```rb
 import pacos/map
 
 nums := Map.new(:one => 1, :two => 2)
@@ -259,13 +240,13 @@ friends_tree := [
 ]
 ```
 
-**Constant statement**
+**Constants**
 
 Constants can be declared at the top level of a program. They cannot be reassigned.
 * Primitive values like`int, float, str` are directly replaced in code.
 * Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
 
-```rs
+```rb
 PI = 3.14159f
 ERR_MESSAGE = "An unknown error occured"
 COUNT = count(10)
@@ -282,7 +263,7 @@ fn count(n: int): int = n * 1
 
 **Assignment statement**
 
-```rs
+```rb
 low, mid, high := 0, 0, n.numItems
 x := 10
 y := 20
@@ -295,7 +276,7 @@ assoc_list["b"]
 
 **While statement**
 
-```rs
+```rb
 while low < high
   mid = (low + high) / 2
   low = cmp > 0 > mid + 1 : low
@@ -306,7 +287,7 @@ while low < high
 
 **For statement**
 
-```rs
+```rb
 for players_list |value|
   if value == 0
     continue
@@ -325,7 +306,7 @@ items
   .each(|v| println("v", v))
   .reduce(0, |v| v + 1)
 
-fn range(start: int, end: int, cb: (v: T) -> IterateResult) =
+fn range(start: int, end: int, cb: fn(v: T): IterateResult) =
 
 range(0, 5, |v| =>
   sum3 += v
@@ -337,7 +318,7 @@ for items, items2 |i, j|
 
 **When expression/statement**
 
-```rs
+```rb
 when
   cmp > 0 -> low = mid + 1
   cmp < 0 -> high = mid
@@ -367,55 +348,64 @@ Comparison operators (<, >, ==, etc.)
 
 **if expression/statement**
 
-```rs
-if (a) |value| {
- try expect(value == 0);
-} else |err| {
-    _ = err;
-    unreachable;
-}
+```rb
+if post.valid()
+  RenderNewView()
+else
+  RenderPostView(post: post)
 ```
 
 ### Conditional operators
 
 **not operator**
 
-```
+```rb
 !a
 !true
 ```
 
 **ternary operator**
 
-```
+```rb
 x ? x : y
 ```
 
 **safe navigation operator**
 
-```
+```rb
 a?.b?.c?.d
 ```
 
 **Safe index operator**
-```
+```rb
 array?[1]
 ```
 
 **elvis operator**
 
-```
+```rb
 x ?: y
 ```
 
 **elvis assignment operator**
 
-```
+```rb
 atomic_number ?= 2
 ```
 
 **Range operator**
-```
+```rb
 for 5..10 |i|
   println(i)
+```
+
+```rb
+fn create_post_action(req: Request): Response =
+  post := Post(title = req.params.title, body = req.params.body)
+  if post.valid()
+    RenderNewView()
+  else
+    post := createRecord(post)
+    setSuccessMessage("Post created")
+    redirectTo("/posts")
 ```
