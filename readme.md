@@ -280,6 +280,22 @@ assoc_list[:a]
 assoc_list["b"]
 ```
 
+**Assignment Operators**
+
+```go
+  x := 5
+	y := 3
+	x += y  // 8
+	x -= y  // 5
+	x *= y  // 15
+	x /= y  // 5
+	x %= y  // 2
+	x &= y  // 2
+	x |= y  // 3
+	x <<= y // 24
+	x >>= y // 3
+```
+
 **While statement**
 
 ```rb
@@ -441,6 +457,7 @@ fn add(items ...str) =
 ```
 
 **generics**
+
 ```
 fn add[T: int | float](a: List[T], b: List[T]): List[T] =
   pass
@@ -456,3 +473,19 @@ fn create_post_action(req: Request): Response =
     setSuccessMessage("Post created")
     redirectTo("/posts")
 ```
+
+### General naming convention
+
+| Item                    | Convention               |
+| ----------------------- | ------------------------ |
+| Modules                 | snake_case               |
+| Types                   | UpperCamelCase           |
+| Traits                  | UpperCamelCase           |
+| Enum variants           | UpperCamelCase           |
+| Functions               | snake_case               |
+| Methods                 | snake_case               |
+| General constructors    | new or with_more_details |
+| Conversion constructors | from_some_other_type     |
+| Local variables         | snake_case               |
+| Constants               | SCREAMING_SNAKE_CASE     |
+| Generics                | single uppercase letter  |
