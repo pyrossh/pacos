@@ -1,14 +1,15 @@
 # 👾 Pacos Programming Language
 
-A simple statically typed imperative programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang, ponylang, and dart. It comes packed with linting, formatting, test runner, language server, and package management in-built.
+A simple, statically typed, imperative, minimalistic programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang, ponylang, and dart. It comes packed with linting, formatting, test runner, language server, and package management in-built.
 
 The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
 Here is some sample code, please enjoy.
+
 ```rb
 module lambda
 
-import ca/list
+import pacos/list
 import pacos/math
 import pacos/http
 
@@ -22,12 +23,12 @@ fn sum(a: int, b: int): int = a + b
 fn sum_all(series: list[int]): int =
   series.reduce(0, |v| v + 1)
 
-fn fib(n: int): int =
+fn fib(n: int) -> int
   match n
     0 | 1 -> n
     _ -> fib(n - 1) + fib(n - 2)
 
-fn fib(n: int): int =
+fn fib(n: int) -> int
   if n == 0 || n == 1
     n
   else
@@ -86,7 +87,7 @@ enum Temperature =
   | celsius(float)
   | fahrenheit(float)
 
-fn (s Temperature) to_str(): str =
+fn (s: Temperature) to_str(): str =
   match s
     celsius(t) && t > 30 -> "${t}C is above 30 celsius"
     celsius(t) -> "${t}C is below 30 celsius"
@@ -94,29 +95,23 @@ fn (s Temperature) to_str(): str =
     fahrenheit(t) -> "${t}F is below 86 fahrenheit"
 
 
-group("Cat Record") |g|
-  test("talks") |t|
-    c := Cat(name = "123", age = 1)
-    c.talk()
+test("talks") |t|
+  c := Cat(name: "123", age: 1)
+  c.talk()
 
-  test("fullname") |t|
-    Cat("rabby", 21).fullname() == "rabby21"
-    c2 := Cat(...c, age: c.age + 1)
+test("fullname") |t|
+  Cat("rabby", 21).fullname() == "rabby21"
+  c2 := Cat(...c, age: c.age + 1)
 
-  test("to_str") |t|
-    items := [Cat("Molly", 9), Cat("Fenton", 6)]
-        .retain(|p| p.name.size > 5)
-        .map(|p| describe(p))
-        .each(|d| println(d))
-    assert items[0].to_str() == "Cat<Fenton, 6>"
+test("to_str") |t|
+  items := [Cat("Molly", 9), Cat("Fenton", 6)]
+      .retain(|p| p.name.size > 5)
+      .map(|p| describe(p))
+      .each(|d| println(d))
+  assert items[0].to_str() == "Cat<Fenton, 6>"
 
-test("enum ordinal value") |t|
-  expect(Value.zero).to_equal(0)
-  expect(Value.one).to_equal(1)
-  expect(Value.two).to_equal(2)
-
-bench("1231") |t, n|
-  for 0..n |i|
+bench("1231") |n|
+  for i := range n
     println(i)
 ```
 
@@ -129,6 +124,7 @@ for,while,if,else,record,enum,fn,assert,when,match,type
 ```
 
 ### Types
+
 ```
 nil, any, bool, byte, int, float, dec, str, time, duration, regex, uuid
 [1, 2, 3] for lists      list[int], list[list[int]]
@@ -159,6 +155,7 @@ if true || false
 **byte**
 
 A byte represents an unsigned 8 bit number. It is mainly used to represent strings and binary data.
+
 ```rb
 let data: []byte?
 data = [104, 101, 197, 130, 197, 130, 111, 0]
@@ -169,7 +166,7 @@ data = [104, 101, 197, 130, 197, 130, 111, 0]
 An int is a signed 64 bit number. It can be represented in various ways,
 0b - Binary (Base 2)
 0x - Hexadecimal (Base 16)
-13 - Standard (Base 10)
+27 - Standard (Base 10)
 
 ```rb
 0b00101010
@@ -187,7 +184,7 @@ A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binar
 
 **str**
 
-A str represents a slice of runes or unicode code points. It is encoded to UTF-8 by default.
+A str represents an array of runes or unicode code points. It is encoded to UTF-8 by default.
 It supports interpolation of variables/values that implement the ToStr interface.
 
 ```go
@@ -197,7 +194,6 @@ age := 1
 println("Name ${name} age ${age}")
 ```
 
-
 **list**
 
 ```py
@@ -206,12 +202,17 @@ import pacos/list
 a := [1, 2, 3]                // list[int]
 b := [[1, 2], [3, 4], [5, 6]] // list[list[int]]
 
-actors := List.new("Krabs", "Squidward")
+actors := ["Krabs", "Squidward"]
 actors.add("Spongebob")
 actors.length() // ==> 3
 actors.contains("Krabs") // ==> true
 actors.get(0) // => "Krabs"
 actors.get(5) // => nil
+
+items
+  .map(|v| v + 1)
+  .each(|v| println("v", v))
+  .reduce(0, |v| v + 1)
 ```
 
 **map**
@@ -238,13 +239,19 @@ friends_tree := [
     ],
   ],
 ]
+
+friends_tree
+  .map(|k, v| v)
+  .each(|k, v| println("v", v))
+  .reduce(0, |k, v| v + 1)
 ```
 
 **Constants**
 
 Constants can be declared at the top level of a program. They cannot be reassigned.
-* Primitive values like`int, float, str` are directly replaced in code.
-* Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
+
+- Primitive values like`int, float, str` are directly replaced in code.
+- Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
 
 ```rb
 PI = 3.14159f
@@ -259,7 +266,6 @@ COUNTRY_CODES = [
 
 fn count(n: int): int = n * 1
 ```
-
 
 **Assignment statement**
 
@@ -277,43 +283,55 @@ assoc_list["b"]
 **While statement**
 
 ```rb
+low, mid, high := 0, 0, n.size
 while low < high
   mid = (low + high) / 2
-  low = cmp > 0 > mid + 1 : low
+  low = cmp > 0 ? mid + 1 : low
   high = cmp < 0 ? mid : high
   if cmp == 0
     return mid, true
+
+while a > b
+  a += 1
 ```
 
 **For statement**
 
+type Seq0 = fn(yield: fn(): bool): bool
+type Seq1[V] = fn(yield: fn(V): bool): bool
+type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
+
 ```rb
-for players_list |value|
-  if value == 0
-    continue
-  sum += value
+for i := range 10
+  sum += i
 
-for items[0..1] |v|
-  sum += v
+n := 5
+for i := range n
+  sum += i + 5
 
-for 0..5 |v|
-  sum3 += v
+for k, v := range json_map
+  sum += k + v
 
-let list = for filter(players_list) |v|
+for v := range list
+  sum += k + v
 
-items
-  .map(|v| v + 1)
-  .each(|v| println("v", v))
-  .reduce(0, |v| v + 1)
-
-fn range(start: int, end: int, cb: fn(v: T): IterateResult) =
-
-range(0, 5, |v| =>
-  sum3 += v
+record Tree[E](
+  value E,
+  left: Tree[E]?,
+  right: Tree[E]?,
 )
 
-for items, items2 |i, j|
-  count += i + j
+fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
+  t ? true : t.left.in_order(yld) && yld(t.val) && t.right.in_order(yld)
+
+tt := Tree(
+  value: 10,
+  left: Tree(20, Tree(30), Tree(39)),
+  right: Tree(40),
+)
+
+for t := range tt
+  println(v)
 ```
 
 **When expression/statement**
@@ -342,7 +360,7 @@ match xs
   _ -> "This list has more than 2 elements"
 ```
 
-Arithmetic (+, -, /, *, @divFloor, @sqrt, @ceil, @log, etc.)
+Arithmetic (+, -, /, \*, @divFloor, @sqrt, @ceil, @log, etc.)
 Bitwise operators (>>, <<, &, |, ~, etc.)
 Comparison operators (<, >, ==, etc.)
 
@@ -350,9 +368,9 @@ Comparison operators (<, >, ==, etc.)
 
 ```rb
 if post.valid()
-  RenderNewView()
+  render_create_view()
 else
-  RenderPostView(post: post)
+  render_post(post: post)
 ```
 
 ### Conditional operators
@@ -376,9 +394,10 @@ x ? x : y
 a?.b?.c?.d
 ```
 
-**Safe index operator**
+**double-bang operator/not-null assertion operator**
+
 ```rb
-array?[1]
+a!!.b
 ```
 
 **elvis operator**
@@ -393,13 +412,41 @@ x ?: y
 atomic_number ?= 2
 ```
 
-**Range operator**
-```rb
-for 5..10 |i|
-  println(i)
+**spread operator**
+
+```
+list := [1, 2, 3]
+list2 := [0, ...list]
+assert list2.length == 4
+
+list = nil
+list3 := [0, ...list?];
+assert list2.length == 1
 ```
 
-```rb
+**cascade operator**
+
+```dart
+paint := Paint()
+  ..color = Colors.black
+  ..strokeCap = StrokeCap.round
+  ..strokeWidth = 5.0
+```
+
+**variadic function**
+
+```go
+fn add(items ...str) =
+  list.add(items)
+```
+
+**generics**
+```
+fn add[T: int | float](a: List[T], b: List[T]): List[T] =
+  pass
+```
+
+```
 fn create_post_action(req: Request): Response =
   post := Post(title = req.params.title, body = req.params.body)
   if post.valid()

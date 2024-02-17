@@ -9,17 +9,17 @@ fn file_response(file: str) =
   Response(
     status = 200,
     headers = [
-      :Content-Type => content,
-      :Content-Length => "2"
+      "Content-Type" => content,
+      "Content-Length" => "2"
     ],
     body = data
   )
 
-  Response::build()
-    .set_header("Content-Type", content)
-    .set_header("Content-Length", "2")
-    .set_body(data)
-    .set_status(200)
+  Response()
+    .header("Content-Type", content)
+    .header("Content-Length", "2")
+    .body(data)
+    .status(200)
 
 #[get("/")]
 fn index(): Response! =

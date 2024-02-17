@@ -15,7 +15,10 @@ record node[V](
   next: node[V]?
 )
 
-fn (l: list) get(i: int): A =
+fn List.of[A](values: ...A): list[A] =
+  list[A]().add(values)
+
+fn (l: list) get(i: int) -> A =
   `gets the element at i'th index of the list
   current := l.head
   index := 0
@@ -26,26 +29,42 @@ fn (l: list) get(i: int): A =
       current = current.next
       index += 1
 
-fn (l: list) set(i: int, v: V): A =
+fn (l: list) set(i: int, v: V) -> A =
   `sets the element at i'th index of the list
   pass
 
-fn (l: list) length(): int =
+fn (l: list) length() -> A =
   `returns the no of elements in the list
   _size
 
-fn (l: list) add(c: V) =
+fn (l: list) add(values: ...V) =
   `adds the specified elements to the start of the list
-  l.head = node(value: v, prev: nil, next: l.head)
-  l.head.next.prev = l.head
-  l._size += 1
+  for v := range values
+    l.head = node(value: v, prev: nil, next: l.head)
+    l.head.next.prev = l.head
+    l._size += 1
 
-fn (l: list) remove(i int) =
+fn (l: list) remove_at(i int) =
   `removes the element at i'th index of the list
   l.tail?.prev?.next = nil
   `old tail node gets deallocated due to zero reference count
   l.tail = list.tail?.prev
   l._size -= 1
+
+fn (l: list) remove(v V) =
+  `removes the element v from list
+  l.tail?.prev?.next = nil
+  `old tail node gets deallocated due to zero reference count
+  l.tail = list.tail?.prev
+  l._size -= 1
+
+fn (l: list) clear() =
+  `removes all objects from this list
+  l.tail?.prev?.next = nil
+  `old tail node gets deallocated due to zero reference count
+  l.tail = list.tail?.prev
+  l._size -= 1
+
 
 fn (l: list) reverse(v: fn(v: V): true): list[A] =
   `returns a new list with the elements in reverse order.
@@ -55,24 +74,16 @@ fn (l: list) sort(sorter: fn(v: V): true): list[A] =
   `returns a new list with the elements sorted by sorter
   pass
 
-fn (l: list) find(search: V): V? =
-  `returns an item in the list if the item is is equal to search item
+fn (l: list) find(search: V): V?, int =
+  `returns an item and index in the list if the item is is equal to search item
   pass
 
-fn (l: list) find_index(search: V): int? =
+fn (l: list) contains(v: V): bool =
   `returns the index of an item in the list if present and comparable otherwise nil
   pass
 
-fn (l: list) contains(v: V): int? =
-  `returns the index of an item in the list if present and comparable otherwise nil
-  pass
-
-fn (l: list) concat(ol: list): list[A] =
-  `returns the index of an item in the list if present and comparable otherwise nil
-  pass
-
-fn (l: list) sub_list(start: int, end: int?): list[A] =
-  `returns the index of an item in the list if present and comparable otherwise nil
+fn (l: list) op_spread(other: list): list[A] =
+  `combines this list with other list and returns a new list
   pass
 
 fn (l: list) each(cb: fn(v: V)): void =
@@ -103,11 +114,11 @@ fn (l: list) reject(predicate: fn(v: V): A): list[A] =
   `returns a new list with the elements that matched the predicate removed
   pass
 
-fn (l: list) any(predicate: fn(v: V): bool) =
+fn (l: list) any(predicate: fn(v: V): bool): bool =
   `returns true if any element in the list satisfies the predicate
   pass
 
-fn (l: list) all(predicate: fn(v: V): bool) =
+fn (l: list) every(predicate: fn(v: V): bool): bool =
   `returns true if all of the elements in the list satisfies the predicate
   pass
 
@@ -123,7 +134,15 @@ fn (l: list) last(): A? =
   `returns the last element in the list
   l.tail?.value
 
+fn (l: list) sublist(start: int, end: int): list[A] =
+  `returns a list containing the first n elements of the given list
+  pass
+
 fn (l: list) take(n: int): list[A] =
+  `returns a list containing the first n elements of the given list
+  pass
+
+fn (l: list) skip(n: int): list[A] =
   `returns a list containing the first n elements of the given list
   pass
 
@@ -131,7 +150,7 @@ fn (l: list) drop(n: int): list[A] =
   `Returns a list containing the first n elements of the given list
 
 fn (l: list) sample() =
-  `returns a new list with all elements shuffled`
+  `returns a new list with some of the elements taken randomly`
   pass
 
 fn (l: list) shuffle() =
@@ -147,121 +166,14 @@ fn (l: list) chunk() =
   pass
 
 fn (l: list) group_by() =
-  `returns a new list with all elements shuffled`
+  `returns a new list with all elements grouped`
   pass
 
-fn (l: list) to_str(): str =
+fn (l: list) join(sep: str = ","): str =
   res := Buffer()
   l.each() |v|
     if @HasTrait(V, ToStr)
-      res.write(v.to_str())
+      res.write(v.to_str(), sep)
     else
-      res.write(@TypeToString(v))
+      res.write(@TypeToString(v), sep)
   res.to_str()
-
-
-
-class List[V]:
-  head: node[V]?
-  tail: node[V]?
-  size: int
-
-  fn get(i: int): A =
-    `gets the element at i'th index of the list
-    current := l.head
-    index := 0
-    while current != nil
-      if index == i
-        current.value
-      else
-        current = current.next
-        index += 1
-
-  fn set(i: int, v: V): A =
-    `sets the element at i'th index of the list
-    pass
-
-  fn add(c: V) =
-    `adds the specified elements to the start of the list
-    l.head = node(value: v, prev: nil, next: l.head)
-    l.head.next.prev = l.head
-    l._size += 1
-
-  fn remove(i int) =
-    `removes the element at i'th index of the list
-    l.tail?.prev?.next = nil
-    `old tail node gets deallocated due to zero reference count
-    l.tail = list.tail?.prev
-    l._size -= 1
-
-  fn reverse(v: fn(v: V): true): list[A] =
-    `returns a new list with the elements in reverse order.
-    pass
-
-  fn sort(sorter: fn(v: V): true): list[A] =
-    `returns a new list with the elements sorted by sorter
-    pass
-
-  fn find(search: V): V? =
-    `returns an item in the list if the item is is equal to search item
-    pass
-
-  fn find_index(search: V): int? =
-    `returns the index of an item in the list if present and comparable otherwise nil
-    pass
-
-  fn contains(s: V): bool =
-    `returns whether s is present in the list or not
-    pass
-
-  fn concat(ol: list): list[A] =
-    `returns the index of an item in the list if present and comparable otherwise nil
-    pass
-
-  fn sub_list(start: int, end: int?): list[A] =
-    `returns the index of an item in the list if present and comparable otherwise nil
-    pass
-
-  fn each(cb: fn(v: V)): void =
-    `calls f for each elem in the list
-    current := l.head
-    while current != nil
-      cb(current.value)
-      current = current.next
-
-  fn map[B](cb: fn(v: V): B): list[A] =
-    `returns a list made up of B elements for each elem in the list
-    nl := []
-    current := l.head
-    while current != nil
-      item := cb(current.value)
-      nl.push(item)
-    nl
-
-  fn flat_map() =
-    `returns a new list with all elements shuffled`
-    pass
-
-  fn retain(predicate: fn(v: V): A): list[A] =
-    `returns a new list with the elements that matched the predicate
-    pass
-
-  fn reject(predicate: fn(v: V): A): list[A] =
-    `returns a new list with the elements that matched the predicate removed
-    pass
-
-  fn any(predicate: fn(v: V): bool) =
-    `returns true if any element in the list satisfies the predicate
-    pass
-
-  fn all(predicate: fn(v: V): bool) =
-    `returns true if all of the elements in the list satisfies the predicate
-    pass
-
-  fn reduce[B](acc: B, cb: fn(v: V): A): B =
-    `returns the accumulated value of all the elements in the list
-    pass
-
-  fn first(): A? =
-    `returns the first element in the list
-    l.head?.value
