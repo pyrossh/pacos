@@ -1,34 +1,42 @@
 # 👾 Pacos Programming Language
 
-A simple, statically typed, imperative, minimalistic programming language. Its main aim to be simple and easy to code correct programs. It takes inspiration for golang, ponylang, and dart. It comes packed with linting, formatting, test runner, language server, and package management in-built.
+* A statically typed, functional programming language inspired by rust, koka.
+* The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
-The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
+**Rules**
+* Function parameters are passed by value only. You cannot modify a parameter. The compiler will throw an error if you try to.
+* Strict naming convention
+* Only one way of doing things ex: loops, condition
+
+**Todo**
+linter, formatter, test runner, language server, package manager
+
 
 Here is some sample code, please enjoy.
 
-```rb
+```go
 module lambda
 
 import pacos/list
 import pacos/math
 import pacos/http
 
-START_YEAR = 2101
-END_YEAR = 2111
-NAME = "Gleam"
-SIZE = 100
+const START_YEAR = 2101
+const END_YEAR = 2111
+const NAME = "Gleam"
+const SIZE = 100
 
 fn sum(a: int, b: int): int = a + b
 
 fn sum_all(series: list[int]): int =
   series.reduce(0, |v| v + 1)
 
-fn fib(n: int) -> int
+fn fib(n: int): int =
   match n
     0 | 1 -> n
     _ -> fib(n - 1) + fib(n - 2)
 
-fn fib(n: int) -> int
+fn fib(n: int): int =
   if n == 0 || n == 1
     n
   else
@@ -120,13 +128,13 @@ bench("1231") |n|
 **Keywords**
 
 ```rs
-for,while,if,else,record,enum,fn,assert,when,match,type
+for,while,if,else,record,enum,fn,assert,match,type
 ```
 
 ### Types
 
 ```
-nil, any, bool, byte, int, float, dec, str, time, duration, regex, uuid
+nil, any, err, bool, byte, int, float, dec, str, time, duration, regex, uuid
 [1, 2, 3] for lists      list[int], list[list[int]]
 [:a => 1, :b => 2] for maps       map[int], map[map[int]]
 ? for optional    int? str?
@@ -199,10 +207,11 @@ println("Name ${name} age ${age}")
 ```py
 import pacos/list
 
-a := [1, 2, 3]                // list[int]
-b := [[1, 2], [3, 4], [5, 6]] // list[list[int]]
+a := list.of(1, 2, 3)                             # list[int]
+b := list.of(list.of(1), list.of(2), list.of(3))  # list[list[int]]
+c := list.of(1, 2, 3 * 4, 8, n)
 
-actors := ["Krabs", "Squidward"]
+actors := list.of("Krabs", "Squidward")
 actors.add("Spongebob")
 actors.length() // ==> 3
 actors.contains("Krabs") // ==> true
@@ -374,6 +383,44 @@ match xs
   [a] -> "This list has 1 element"
   [a, b] -> "This list has 2 elements"
   _ -> "This list has more than 2 elements"
+
+enum Option<T> =
+  | None
+  | Some(T)
+
+record Car(wheels: int)
+
+fn getWheels() =
+  returns 4
+
+fn main() =
+  let c1 = some(Car(wheels: 2))
+  let c2: option<Car> = none
+
+  let c1 = Some(Car(wheels: 2))
+  let c2: Option<Car> = None
+
+  match c
+    none -> print("no car")
+    some(car) -> car.getWheels()
+
+  Car c2 = null
+  c2.getWheels() // Null pointer
+
+
+  match c
+    none -> print("no car")
+    some(car) -> car.getWheels()
+
+fn (o option[T]) unwrap(): T =
+  match o
+    some(val) -> val
+    none -> fail("called `option.unwrap()` on a `none` value")
+
+fn (o option[T: ToStr]) display(): T =
+  match o
+    some(v) -> v.to_str()
+    none -> "none"
 ```
 
 Arithmetic (+, -, /, \*, @divFloor, @sqrt, @ceil, @log, etc.)
@@ -464,7 +511,7 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
 ```
 
 ```
-fn create_post_action(req: Request): Response =
+fn create_post_action(req: Request): Result[Response] =
   post := Post(title = req.params.title, body = req.params.body)
   if post.valid()
     RenderNewView()
@@ -472,7 +519,26 @@ fn create_post_action(req: Request): Response =
     post := createRecord(post)
     setSuccessMessage("Post created")
     redirectTo("/posts")
+
+fn divide(dividend: u32, divisor: u32) !u32 =
+  if divisor == 0
+    error.DivideByZero
+  else
+    dividend / divisor
+  dispatch(action, req, res) catch |err|
+    BodyTooBig -> Response(
+      status: 431,
+      body: "Request body is too big",
+    )
+    BrokenPipe, ConnectionResetByPeer -> return false
+    _ -> error_handler(req, res, err)
 ```
+
+### Error handling
+
+> Exceptions are used as both a way to model extra “return values” of functions and as a failure handling mechanism, leading them to be lousy at both. Exceptions suck. Thats why we don't have exceptions. - Sir Whinesalot
+
+We have mutiple return values to solve this similar to golang. And failures/panic need to exit/restart the app.
 
 ### General naming convention
 

@@ -17,3 +17,15 @@ fn (m: map) add(kvs: ...Pair[K, V]) =
 
 fn (m: Map) op_range() =
   yield k, v
+
+fn (m: Map) put() =
+  pass
+
+fn (m: Map) put_if() =
+  pass
+
+fn (m: Map) update() =
+  pass
+
+fn (m: Map) update_if() =
+  pass

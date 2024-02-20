@@ -1,23 +1,41 @@
 module math
 
-E = 2.718f       // Represents Euler's number, the base of natural logarithms, e
-LN10 = 2.302f    // Represents the natural logarithm of 10
-LN2 = 0.693f     // Represents the natural logarithm of 2
-LOG10E = 0.434f  // Represents the base 10 logarithm of e
-LOG2E = 1.442f   // Represents the base 2 logarithm of e
-PI = 3.14159f    // Represents the ratio of the circumference of a circle to its diameter
-SQRT1_2 = 0.707f // Represents the square root of 1/2
-SQRT2 = 1.414f   // Represents the square root of 2
-EPSILON = 2.220446049250313e-16f // Represents the difference between 1 and the smallest floating point number greater than 1
-MAX_SAFE_INTEGER
-MAX_VALUE
-MIN_SAFE_INTEGER
-MIN_VALUE
-NEGATIVE_INFINITY
-POSITIVE_INFINITY
+`Euler's number, the base of natural logarithms, e
+const E = 2.718f
 
-// Returns the absolute value of a number
-fn abs(v: float): float = a < 0 ? -a : a
+`The natural logarithm of 10
+const LN10 = 2.302f
+
+`The natural logarithm of 2
+const LN2 = 0.693f
+
+`The base 10 logarithm of e
+const LOG10E = 0.434f
+
+`The base 2 logarithm of e
+const LOG2E = 1.442f
+
+`The ratio of the circumference of a circle to its diameter
+const PI = 3.14159f
+
+`The square root of 1/2
+const SQRT1_2 = 0.707f
+
+`The square root of 2
+const SQRT2 = 1.414f
+
+`The difference between 1 and the smallest floating point number greater than 1
+const EPSILON = 2.220446049250313e-16f
+
+`Lowest valur of i64
+const MIN_INT_VALUE = -0x8000_0000_0000_0000
+
+`Highest valur of i64
+const MAX_INT_VALUE = 0x7FFF_FFFF_FFFF_FFFF
+
+fn abs(v: float): float =
+  `returns the absolute value of a number v
+  a < 0 ? -a : a
 
 fn acos(v: float) =
   if v < 0.1
@@ -47,11 +65,10 @@ fn random(): float =
 fn is_int(): bool =
   pass
 
-
-// Check whether this number is finite, ie not +/-infinity and not NaN.
 fn is_finite(): bool = true
-  // True if exponent is not all 1s
-  // (bits() and 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
+  ` Check whether this number is finite, ie not +/-infinity and not NaN.
+  ` True if exponent is not all 1s
+  (bits() and 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
 
 // Check whether this number is +/-infinity
 is_infinite:  Bool =>
@@ -98,11 +115,6 @@ fun sqrt(): F64 =>
     @"llvm.sqrt.f64"(this)
   end
 
-MIN_INT_VALUE = 0
-MAX_INT_VALUE = 0xFFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF
-
-fn min_value() => -0x8000_0000_0000_0000
-fn max_value() => 0x7FFF_FFFF_FFFF_FFFF
 fn abs(a: int): int => a < 0 ? -a : a
 fn to_str(v: int): str = ""
 

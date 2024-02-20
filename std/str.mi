@@ -1,18 +1,17 @@
 module std
 
-// Trait ToStr defines any data that can be converted to a str
-trait ToStr
+`ToStr defines any data that can be converted to a str
+trait ToStr(
   fn to_str(): str
+)
 
-// A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
-// It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
-// The previous str is freed if its reference count is 0 within the block.
-struct str(_ptr: *u8) : Comparable, ToStr
+`A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
+`It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
+`The previous str is freed if its reference count is 0 within the block.
+record str(data: list[byte]): Comparable, ToStr
 
-new (s str) create(ptr: *u8) =
-  // TODO: have a check in dev builds to throw an error if not null terminated
-  // to prevent undefined behavior
-  _ptr = ptr
+fn str.of(bs ...byte): str =
+  data.add(bs)
 
 fn (s str) get(i: int) =
   data[i]
@@ -50,9 +49,8 @@ fn (t BTree) delete(key str): bool =
 		return true
 	return false
 
-fn (s str) Comparable::starts_with(search: str): bool =
+fn (s str) starts_with(search: str): bool =
   pass
-
 
 fn (s str) concat(other: str): str =
   s + other
@@ -83,69 +81,69 @@ fn (s str) match_all(pattern: Regex): []str =
 fn (s str) pad_start(sub: str, count: int): str =
   pass
 
-  fn pad_end(sub: str, count: int): str =
-    pass
+fn (s str) pad_end(sub: str, count: int): str =
+  pass
 
-  fn repeat(count: int): str =
-    pass
+fn (s str) repeat(count: int): str =
+  pass
 
-  fn replace(pattern: Regex, sub: str): str =
-    pass
+fn (s str) replace(pattern: Regex, sub: str): str =
+  pass
 
-  fn replace_all(pattern: Regex, sub: str): str =
-    pass
+fn (s str) replace_all(pattern: Regex, sub: str): str =
+  pass
 
-  fn search(pattern: Regex): str =
-    pass
+fn (s str) search(pattern: Regex): str =
+  pass
 
-  fn slice(start: int, end: int): str =
-    pass
+fn slice(start: int, end: int): str =
+  pass
 
-  fn split(separator: str, limit: int): []str =
-    pass
+fn split(separator: str, limit: int): []str =
+  pass
 
-  fn sub(start: int, end: int): str =
-    pass
+fn sub(start: int, end: int): str =
+  pass
 
-  fn to_lower(): str =
-    pass
+fn to_lower(): str =
+  pass
 
-  fn to_upper(): str =
-    pass
+fn to_upper(): str =
+  pass
 
-  fn trim(): str =
-    pass
+fn trim(): str =
+  pass
 
-  fn trim_start(): str =
-    pass
+fn trim_start(): str =
+  pass
 
-  fn trim_end(): str =
-    pass
+fn trim_end(): str =
+  pass
 
-  fn reverse(): str
-    """reverses a str
-    start := 0
-    end := length - 1
-    result := []
-    while start < end
-      const temp = data[start]
-      result[start] = data[end]
-      result[end] = temp
-      end = end - 1
-      start = start + 1
-    result
+fn reverse(): str
+  """reverses a str
+  start := 0
+  end := length - 1
+  result := []
+  while start < end
+    const temp = data[start]
+    result[start] = data[end]
+    result[end] = temp
+    end = end - 1
+    start = start + 1
+  result
 
-  fn parse_int(): int! =
-    0
+fn parse_int(): int! =
+  0
 
-  fn parse_float(): float! =
-    0.0
+fn parse_float(): float! =
+  0.0
 
-  fn parse_bool(): bool! =
-    match to_lower()
-      "true" -> bool::true
-      "false" -> bool::false
-      _ -> error("could not parse bool '${this}'")
+fn parse_bool(): bool! =
+  match to_lower()
+    "true" -> bool::true
+    "false" -> bool::false
+    _ -> error("could not parse bool '${this}'")
 
 
 _.camelCase

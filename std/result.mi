@@ -1,0 +1,123 @@
+module std
+
+`result` is a type that represents either success ([`ok`]) or failure ([`err`]).
+#[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
+enum result[T, E]
+  | ok(T)
+  | err(E)
+
+fn (o result) is_ok(): bool =
+  match o
+    ok(v) -> return true
+    err(e) -> return false
+
+fn (o result) is_err(): bool =
+  !o.is_ok()
+
+fn (o result[T, E]) ok(): option[T] =
+  match o
+    ok(v) -> some(v)
+    err(e) -> none
+
+fn (o result[T, E]) err(): option[E] =
+  match o
+    ok(v) -> none
+    err(e) -> some(v)
+
+fn (o result) get(): T =
+  match o
+    ok(v) -> v
+    err(e) -> panic("called `option.unwrap()` on a `none` value")
+
+fn (o result) default(d: T): T =
+  match o
+    ok(v) -> v
+    err(e) -> d
+
+fn (o result) map(cb: fn(v: T)): result =
+  match o
+    ok(v) -> cb(v)
+    err(e) -> unreachable
+
+fn (o result) map_err(cb: fn(e: E)): result =
+  match o
+    ok(v) -> unreachable
+    err(e) -> cb(v)
+
+
+error FileOpenError
+  | AccessDenied(str)
+  | OutOfMemory(str)
+  | FileNotFound(str)
+
+fn parse_version(header: List[int]): result[Version, error] =
+  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
+
+fn main(): result[unit, unit] =
+  version := parse_version(list.of(1, 2))
+  match pg.connect()
+    ok(c) -> return 0
+    err(e) -> return e
+
+  greeting_file := file.open("hello.txt").unwrap_or_else() |error|
+    match error
+      ErrorKind::NotFound ->
+        File::create("hello.txt").unwrap_or_else() |error|
+          panic!("Problem creating the file: {:?}", error)
+      _ ->
+        panic!("Problem opening the file: {:?}", error)
+
+  conn := match pg.connect()?
+  create_post_action(req)
+    .map(|v| 0)
+    .map_err(|err| 1)
+
+  create_post_action(req)?
+  ok()
+
+  greeting_file := file.open("hello.txt")?
+  ok()
+
+import std/str
+import std/result
+
+fn double_number(s: str): result[i32, unit] =
+  number_str.parse_int().map(|n| 2 * n)
+
+fn main(): result<i32, unit> =
+  double_number("10")?
+
+
+use std::num::ParseIntError;
+
+fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
+    number_str.parse::<i32>().map(|n| 2 * n)
+}
+
+fn main() {
+    match double_number("10") {
+        Ok(n) => assert_eq!(n, 20),
+        Err(err) => println!("Error: {:?}", err),
+    }
+}
+
+trait error: debug + display (
+  fn description(): str
+  fn cause(): option<error>
+)
+
+trait From<T>(
+  fn from(v: T) -> Self;
+)
+
+trait Debug(
+  fn fmt(f: Formateer): result[unit, unit]
+)
+
+trait Display(
+  fn fmt(f: Formateer): result[unit, unit]
+)
+
+data.price?.take_if(|a| a != "")
+
+put_if

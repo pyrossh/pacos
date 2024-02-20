@@ -2,17 +2,17 @@ import std/path
 import std/os
 import http/content_type
 
-fn file_response(file: str) =
+fn file_response(file: str): Response! =
   ext := path::ext(file)
   content := content_type::from_ext(ext)
   data := try os.read_file(file)
   Response(
-    status = 200,
-    headers = [
+    status: 200,
+    headers: map.of(
       "Content-Type" => content,
       "Content-Length" => "2"
-    ],
-    body = data
+    ),
+    body: data
   )
 
   Response()

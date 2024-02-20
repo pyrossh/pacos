@@ -1,11 +1,41 @@
 module std
 
-type bool = true | false
-  fn op_eq(x: bool, y: bool) = x == y
-  fn op_ne(x: bool, y: bool) = x != y
-  fn op_and(x: bool, y: bool) = x == false || y == false ? false : true
-  fn op_or(x: bool, y: bool) = x == true || y == true ? true : false
-  fn op_not(x: bool): bool = x == true ? false : true
+enum bool =
+  | true
+  | false
 
-  #[ToStr]
-  fn to_str(x: bool) = x ? "true" : "false"
+fn (x: bool) op_ne(y: bool) = x != y
+fn (x: bool) op_and(y: bool) = x == false || y == false ? false : true
+fn (x: bool) op_or(y: bool) = x == true || y == true ? true : false
+fn (x: bool) op_not(): bool = x == true ? false : true
+fn (x: bool) to_str() = x ? "true" : "false"
+
+trait Iterator(
+  fun has_next(): Bool
+  fun next(): T?
+)
+
+trait HasEq[A](
+  fn eq(that: a): bool
+)
+
+trait Equatable[A]
+  `A trait that defines equal and not equal operations
+
+  fn eq(b: Equatable[A]): bool
+  fn ne(b: Equatable[A]): bool
+end
+
+enum Compare
+  | Less
+  | Equal
+  | Greater
+end
+
+trait Comparable[A] is Equatable[A]
+  fn lt(that: A): bool
+  fn le(that: A): bool 
+  fn ge(that: A): bool
+  fn gt(that: A): bool
+  fn compare(that: a): Compare
+end

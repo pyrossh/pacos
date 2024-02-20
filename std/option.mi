@@ -1,0 +1,43 @@
+module std
+
+enum option[T] =
+  | none
+  | some(T)
+
+fn (o Option[T]) unwrap(): T =
+  match o
+    some(val) -> val
+    none -> fail("called `option.unwrap()` on a `none` value")
+
+fn (o option[T: ToStr]) display(): T =
+  match o
+    some(v) -> v.to_str()
+    none -> "none"
+
+
+enum list<T> =
+  | empty
+  | link(v: T, rest: list<T>)
+
+fn list.of[A](values: ...A): list[A] =
+  list[A]().add(values)
+
+fn (o list<T>) each(cb: fn(v: T)) =
+  match o
+    empty -> return
+    link(a, rest) ->
+      cb(a)
+      rest.each(cb)
+
+fn (l: list) append(values: ...V) =
+  `adds the specified elements to the start of the list
+  range(values) |v|
+    l.add(v)
+
+fn (l: list) append(v: V) =
+  `adds the specified elements to the start of the list
+  l.last().rest = link(v, empty)
+
+fn (l: list) prepend(v: V) =
+  `adds the specified elements to the start of the list
+  l.first() = link(v, l.first())
