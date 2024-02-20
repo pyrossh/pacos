@@ -133,14 +133,6 @@ for,while,if,else,record,enum,fn,assert,match,type
 
 ### Types
 
-```
-nil, any, err, bool, byte, int, float, dec, str, time, duration, regex, uuid
-[1, 2, 3] for lists      list[int], list[list[int]]
-[:a => 1, :b => 2] for maps       map[int], map[map[int]]
-? for optional    int? str?
-! for return error types int!, str!
-```
-
 **nil**
 
 The nil type is used to represent types that are nilable
@@ -148,6 +140,10 @@ The nil type is used to represent types that are nilable
 **any**
 
 The any type is an empty trait and is used to represent all types
+
+**err**
+
+The err type is an enum of all errors
 
 **bool**
 
@@ -189,6 +185,10 @@ An int is a signed 64 bit number. It can be represented in various ways,
 **float**
 
 A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binary64
+
+**dec**
+
+A decimal type represents BCD number. It has a mantissa and exponent.
 
 **str**
 
@@ -255,6 +255,22 @@ friends_tree
   .reduce(0, |k, v| v + 1)
 ```
 
+**time**
+
+TBD
+
+**duration**
+
+TBD
+
+**regex**
+
+TBD
+
+**uuid**
+
+TBD
+
 **Constants**
 
 Constants can be declared at the top level of a program. They cannot be reassigned.
@@ -263,11 +279,11 @@ Constants can be declared at the top level of a program. They cannot be reassign
 - Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
 
 ```rb
-PI = 3.14159f
-ERR_MESSAGE = "An unknown error occured"
-COUNT = count(10)
-COUNTRIES_LIST = ["US", "INDIA", "CANADA"]
-COUNTRY_CODES = [
+const PI = 3.14159f
+const ERR_MESSAGE = "An unknown error occured"
+const COUNT = count(10)
+const COUNTRIES_LIST = ["US", "INDIA", "CANADA"]
+const COUNTRY_CODES = [
   :in => "INDIA",
   :us => "United States",
   :ca => "Canada"
@@ -383,44 +399,6 @@ match xs
   [a] -> "This list has 1 element"
   [a, b] -> "This list has 2 elements"
   _ -> "This list has more than 2 elements"
-
-enum Option<T> =
-  | None
-  | Some(T)
-
-record Car(wheels: int)
-
-fn getWheels() =
-  returns 4
-
-fn main() =
-  let c1 = some(Car(wheels: 2))
-  let c2: option<Car> = none
-
-  let c1 = Some(Car(wheels: 2))
-  let c2: Option<Car> = None
-
-  match c
-    none -> print("no car")
-    some(car) -> car.getWheels()
-
-  Car c2 = null
-  c2.getWheels() // Null pointer
-
-
-  match c
-    none -> print("no car")
-    some(car) -> car.getWheels()
-
-fn (o option[T]) unwrap(): T =
-  match o
-    some(val) -> val
-    none -> fail("called `option.unwrap()` on a `none` value")
-
-fn (o option[T: ToStr]) display(): T =
-  match o
-    some(v) -> v.to_str()
-    none -> "none"
 ```
 
 Arithmetic (+, -, /, \*, @divFloor, @sqrt, @ceil, @log, etc.)
@@ -532,13 +510,99 @@ fn divide(dividend: u32, divisor: u32) !u32 =
     )
     BrokenPipe, ConnectionResetByPeer -> return false
     _ -> error_handler(req, res, err)
+
+error FileOpenError
+  | AccessDenied(str)
+  | OutOfMemory(str)
+  | FileNotFound(str)
+
+fn parse_version(header: List[int]): result[Version, error] =
+  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
+
+fn main(): result[unit, unit] =
+  version := parse_version(list.of(1, 2))
+  match pg.connect()
+    ok(c) -> return 0
+    err(e) -> return e
+
+  greeting_file := file.open("hello.txt").unwrap_or_else() |error|
+    match error
+      ErrorKind::NotFound ->
+        File::create("hello.txt").unwrap_or_else() |error|
+          panic!("Problem creating the file: {:?}", error)
+      _ ->
+        panic!("Problem opening the file: {:?}", error)
+
+  conn := match pg.connect()?
+  create_post_action(req)
+    .map(|v| 0)
+    .map_err(|err| 1)
+
+  create_post_action(req)?
+  ok()
+
+  greeting_file := file.open("hello.txt")?
+  ok()
+
+import std/str
+import std/result
+
+fn double_number(s: str): result[i32, unit] =
+  number_str.parse_int().map(|n| 2 * n)
+
+fn main(): result<i32, unit> =
+  double_number("10")
+
+
+use std::num::ParseIntError;
+
+fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
+    number_str.parse::<i32>().map(|n| 2 * n)
+}
+
+fn main() {
+    match double_number("10") {
+        Ok(n) => assert_eq!(n, 20),
+        Err(err) => println!("Error: {:?}", err),
+    }
+}
+
+trait error: debug + display (
+  fn description(): str
+  fn cause(): option<error>
+)
+
+trait From<T>(
+  fn from(v: T) -> Self;
+)
+
+trait Debug(
+  fn fmt(f: Formateer): result[unit, unit]
+)
+
+trait Display(
+  fn fmt(f: Formateer): result[unit, unit]
+)
+
+record Car(wheels: int)
+
+fn getWheels() =
+  returns 4
+
+fn main() =
+  let c1 = some(Car(wheels: 2))
+  let c2: option<Car> = none
+
+  let c1 = Some(Car(wheels: 2))
+  let c2: Option<Car> = None
+
+  match c
+    none -> print("no car")
+    some(car) -> car.getWheels()
+
+  Car c2 = null
+  c2.getWheels() // Null pointer
 ```
-
-### Error handling
-
-> Exceptions are used as both a way to model extra “return values” of functions and as a failure handling mechanism, leading them to be lousy at both. Exceptions suck. Thats why we don't have exceptions. - Sir Whinesalot
-
-We have mutiple return values to solve this similar to golang. And failures/panic need to exit/restart the app.
 
 ### General naming convention
 

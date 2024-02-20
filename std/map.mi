@@ -29,3 +29,5 @@ fn (m: Map) update() =
 
 fn (m: Map) update_if() =
   pass
+
+data.price?.take_if(|a| a != "")
