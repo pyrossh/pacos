@@ -1,0 +1,5 @@
+module std
+
+fn printLn(): result[unit, unit] =
+  `Writes the specified data, followed by the current line terminator, to the standard output stream.
+  pass

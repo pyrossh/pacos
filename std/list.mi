@@ -15,7 +15,7 @@ record node[V](
   next: node[V]?
 )
 
-fn List.of[A](values: ...A): list[A] =
+fn listOf[A](values: ...A): list[A] =
   list[A]().add(values)
 
 fn (l: list) get(i: int) -> A =
@@ -44,7 +44,7 @@ fn (l: list) add(values: ...V) =
     l.head.next.prev = l.head
     l._size += 1
 
-fn (l: list) remove_at(i int) =
+fn (l: list) removeAt(i int) =
   `removes the element at i'th index of the list
   l.tail?.prev?.next = nil
   `old tail node gets deallocated due to zero reference count
@@ -102,7 +102,7 @@ fn (l: list) map[B](cb: fn(v: V): B): list[A] =
     nl.push(item)
   nl
 
-fn (l: list) flat_map() =
+fn (l: list) flatMap() =
   `returns a new list with all elements shuffled`
   pass
 
@@ -165,7 +165,7 @@ fn (l: list) chunk() =
   `returns a new list with all elements shuffled`
   pass
 
-fn (l: list) group_by() =
+fn (l: list) groupBy() =
   `returns a new list with all elements grouped`
   pass
 
@@ -177,32 +177,3 @@ fn (l: list) join(sep: str = ","): str =
     else
       res.write(@TypeToString(v), sep)
   res.to_str()
-
-
-
-enum list<T> =
-  | empty
-  | link(v: T, rest: list<T>)
-
-fn list.of[A](values: ...A): list[A] =
-  list[A]().add(values)
-
-fn (o list<T>) each(cb: fn(v: T)) =
-  match o
-    empty -> return
-    link(a, rest) ->
-      cb(a)
-      rest.each(cb)
-
-fn (l: list) append(values: ...V) =
-  `adds the specified elements to the start of the list
-  range(values) |v|
-    l.add(v)
-
-fn (l: list) append(v: V) =
-  `adds the specified elements to the start of the list
-  l.last().rest = link(v, empty)
-
-fn (l: list) prepend(v: V) =
-  `adds the specified elements to the start of the list
-  l.first() = link(v, l.first())

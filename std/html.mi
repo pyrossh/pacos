@@ -1,0 +1,43 @@
+module std
+
+test("HTML DSL") |_|
+  tree := html(class: "123")
+    head() |_|
+      title("Pacos")
+      link(href: "https://pacos.dev")
+    body(class: "bg-white") |_|
+      div(class: "box") |_|
+        text("Hello")
+      div() |_|
+        text("World")
+  assert tree.to_str() == ```
+    <html>
+      <head>
+        <title>Pacos</title>
+        <link href="https://pacos.dev" />
+      </head>
+      <body>
+        <div class="box">
+          Hello
+        </div>
+        <div>
+          World
+        </div>
+      </body>
+    </html>
+  ```
+
+html(class: "123") {
+  head() {
+    title("name")
+    link(href: "123")
+  }
+  body(class: "class") {
+    div(class: "132") {
+      text("Hello")
+    }
+    div() {
+      text("World")
+    }
+  }
+}

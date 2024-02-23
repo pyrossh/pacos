@@ -1,16 +1,16 @@
 # 👾 Pacos Programming Language
 
-* A statically typed, functional programming language inspired by rust, koka.
-* The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
+- A statically typed, imperative programming language inspired by rust, koka.
+- The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
 **Rules**
-* Function parameters are passed by value only. You cannot modify a parameter. The compiler will throw an error if you try to.
-* Strict naming convention
-* Only one way of doing things ex: loops, condition
+
+- Function parameters are passed by value only. You cannot modify a parameter. The compiler will throw an error if you try to.
+- Strict naming convention
+- Only one way of doing things ex: loops, condition
 
 **Todo**
 linter, formatter, test runner, language server, package manager
-
 
 Here is some sample code, please enjoy.
 
@@ -47,21 +47,21 @@ fn factorial(n: int): int =
     a -> 1
     _ -> n * factorial(n - 1)
 
-fn first_item(l: list[int]): int? =
+fn firstItem(l: list[int]): int? =
   l[0]
 
-fn first_item(l: list[int]): int? =
+fn firstItem(l: list[int]): int? =
   match l
     [] -> nil
     [head, ...rest] -> head
 
-fn first_item(l: list[int]): int? =
+fn firstItem(l: list[int]): int? =
   if l.size > 0
     l[0]
   else
     nil
 
-fn to-celsius(f: float): float =
+fn toCelsius(f: float): float =
   (f - 32) * (5 / 9)
 
 record Cat[A: Comparable & Stringable](
@@ -69,16 +69,16 @@ record Cat[A: Comparable & Stringable](
   age:  int
 )
 
-fn Cat.with_name(name: str): Cat =
+fn Cat.withName(name: str): Cat =
   Cat(name: name, age: 0)
 
 fn (c: Cat) fullname(): str =
   c.name + c.age.to_str()
 
 fn (c: Cat) talk() =
-  println("cat ${c.name} says meow")
+  printLn("cat ${c.name} says meow")
 
-fn (c: Cat) to_str(): str =
+fn (c: Cat) toStr(): str =
   "Cat<{c.fullname()}, ${c.age}>"
 
 type MapCallback = fn(v: a): v
@@ -115,12 +115,12 @@ test("to_str") |t|
   items := [Cat("Molly", 9), Cat("Fenton", 6)]
       .retain(|p| p.name.size > 5)
       .map(|p| describe(p))
-      .each(|d| println(d))
+      .each(|d| printLn(d))
   assert items[0].to_str() == "Cat<Fenton, 6>"
 
 bench("1231") |n|
   for i := range n
-    println(i)
+    printLn(i)
 ```
 
 ## Language Reference
@@ -128,7 +128,7 @@ bench("1231") |n|
 **Keywords**
 
 ```rs
-for,while,if,else,record,enum,fn,assert,match,type
+for,while,if,else if,else,record,enum,fn,assert,match,type
 ```
 
 ### Types
@@ -158,7 +158,7 @@ if true || false
 
 **byte**
 
-A byte represents an unsigned 8 bit number. It is mainly used to represent strings and binary data.
+A byte represents an unsigned 8-bit number. It is mainly used to represent strings and binary data.
 
 ```rb
 let data: []byte?
@@ -167,10 +167,13 @@ data = [104, 101, 197, 130, 197, 130, 111, 0]
 
 **int**
 
-An int is a signed 64 bit number. It can be represented in various ways,
+An int is a signed 64-bit number. It can be represented in various ways,
+
+```
 0b - Binary (Base 2)
 0x - Hexadecimal (Base 16)
 27 - Standard (Base 10)
+```
 
 ```rb
 0b00101010
@@ -184,11 +187,25 @@ An int is a signed 64 bit number. It can be represented in various ways,
 
 **float**
 
-A float represents a 64-bit floating point (52-bit mantissa) IEEE-754-2008 binary64
+A float represents a 64-bit floating point [IEEE-754-2008](https://en.wikipedia.org/wiki/Double-precision_floating-point_format).
+
+```java
+1.2
+-0.4
+12.0f
+15.03f
+```
 
 **dec**
 
-A decimal type represents BCD number. It has a mantissa and exponent.
+A dec is a decimal floating-point numbering format which is 64-bit data type.
+It is intended for applications where it is necessary to emulate decimal rounding exactly, such as financial and tax computations.
+It supports 16 decimal digits of significand and an exponent range of −383 to +384.
+
+```java
+2.4d
+-13.3d
+```
 
 **str**
 
@@ -199,7 +216,7 @@ It supports interpolation of variables/values that implement the ToStr interface
 "Hello World"
 name := "Pacos"
 age := 1
-println("Name ${name} age ${age}")
+printLn("Name ${name} age ${age}")
 ```
 
 **list**
@@ -207,11 +224,15 @@ println("Name ${name} age ${age}")
 ```py
 import pacos/list
 
-a := list.of(1, 2, 3)                             # list[int]
-b := list.of(list.of(1), list.of(2), list.of(3))  # list[list[int]]
-c := list.of(1, 2, 3 * 4, 8, n)
+a := List.of(1, 2, 3)   # List[int]
+b := List.of(          # List[List[int]]
+  List.of(1),
+  List.of(2),
+  List.of(3),
+)  
+c := List.of(1, 2, 3 * 4, 8, n)
 
-actors := list.of("Krabs", "Squidward")
+actors := List.of("Krabs", "Squidward")
 actors.add("Spongebob")
 actors.length() // ==> 3
 actors.contains("Krabs") // ==> true
@@ -220,58 +241,41 @@ actors.get(5) // => nil
 
 items
   .map(|v| v + 1)
-  .each(|v| println("v", v))
+  .each(|v| printLn("v", v))
   .reduce(0, |v| v + 1)
 ```
 
 **map**
 
-```rb
+```rs
 import pacos/map
 
-nums := Map.new(:one => 1, :two => 2)
-map.get(:one) // =>`
+nums := Map.of(:one => 1, :two => 2)
+map.get(:one) // => 1
 map.get(:unknown) // => nil
-
-friends_tree := [
+friends_tree := Map.of(
   :value => "Fred",
-  :left => [
+  :left => Map.of(
     :value => "Jim",
-  ],
-  :right => [
+  ),
+  :right => Map.of(
     :value => "Shiela",
-    :left => [
+    :left => Map.of(
       :value => "Alice",
-    },
-    :right => [
+    ),
+    :right => Map.of(
       :value => "Bob"
-    ],
-  ],
-]
+    ),
+  ),
+)
 
 friends_tree
   .map(|k, v| v)
-  .each(|k, v| println("v", v))
+  .each(|k, v| printLn("v", v))
   .reduce(0, |k, v| v + 1)
 ```
 
-**time**
-
-TBD
-
-**duration**
-
-TBD
-
-**regex**
-
-TBD
-
-**uuid**
-
-TBD
-
-**Constants**
+**constants**
 
 Constants can be declared at the top level of a program. They cannot be reassigned.
 
@@ -279,15 +283,17 @@ Constants can be declared at the top level of a program. They cannot be reassign
 - Reference values like `list, map, records` are initialized at program start and passed by reference when used. Their data can be modified.
 
 ```rb
-const PI = 3.14159f
-const ERR_MESSAGE = "An unknown error occured"
+const START_YEAR = 2101
+const PI = 3.14159
+const NAME = "pacos"
+const DEBUG_ENABLED = true
 const COUNT = count(10)
-const COUNTRIES_LIST = ["US", "INDIA", "CANADA"]
-const COUNTRY_CODES = [
-  :in => "INDIA",
-  :us => "United States",
-  :ca => "Canada"
-]
+const COUNTRIES_LIST = ist.of("US", "INDIA", "CANADA")
+const COUNTRY_CODES = map.of(
+  "in" => "INDIA",
+  "us" => "United States",
+  "ca" => "Canada"
+)
 
 fn count(n: int): int = n * 1
 ```
@@ -303,22 +309,6 @@ xy_map := [x: x, y: y]
 assoc_list = [:a => 1, :b => 2]
 assoc_list[:a]
 assoc_list["b"]
-```
-
-**Assignment Operators**
-
-```go
-  x := 5
-	y := 3
-	x += y  // 8
-	x -= y  // 5
-	x *= y  // 15
-	x /= y  // 5
-	x %= y  // 2
-	x &= y  // 2
-	x |= y  // 3
-	x <<= y // 24
-	x >>= y // 3
 ```
 
 **While statement**
@@ -338,10 +328,6 @@ while a > b
 
 **For statement**
 
-type Seq0 = fn(yield: fn(): bool): bool
-type Seq1[V] = fn(yield: fn(V): bool): bool
-type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
-
 ```rb
 for i := range 10
   sum += i
@@ -355,24 +341,45 @@ for k, v := range json_map
 
 for v := range list
   sum += k + v
+```
+
+**For Custom Iterator**
+
+```rb
+type Seq0 = fn(yield: fn(): bool): bool
+type Seq1[V] = fn(yield: fn(V): bool): bool
+type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
 
 record Tree[E](
   value E,
-  left: Tree[E]?,
-  right: Tree[E]?,
+  left: optional[Tree[E]],
+  right: optional[Tree[E]],
 )
 
 fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
-  t ? true : t.left.in_order(yld) && yld(t.val) && t.right.in_order(yld)
+  t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
 
-tt := Tree(
+tree := Tree(
   value: 10,
   left: Tree(20, Tree(30), Tree(39)),
   right: Tree(40),
 )
 
-for t := range tt
-  println(v)
+for t := range tree
+  printLn(v)
+```
+
+**if expression/statement**
+
+```py
+if name == "Andreas"
+  printLn("What a nice name!")
+else if name == "Pacman"
+  printLn("Game from the 80s")
+else if name == ""
+  printLn("Don't you have a name?")
+else
+  printLn("Boring name...")
 ```
 
 **When expression/statement**
@@ -394,24 +401,11 @@ when number
   1 | 3 | 5 | 7 -> "This is an odd number"
   _ -> "I'm not sure"
 
-match xs
+when xs
   [] -> "This list is empty"
   [a] -> "This list has 1 element"
   [a, b] -> "This list has 2 elements"
   _ -> "This list has more than 2 elements"
-```
-
-Arithmetic (+, -, /, \*, @divFloor, @sqrt, @ceil, @log, etc.)
-Bitwise operators (>>, <<, &, |, ~, etc.)
-Comparison operators (<, >, ==, etc.)
-
-**if expression/statement**
-
-```rb
-if post.valid()
-  render_create_view()
-else
-  render_post(post: post)
 ```
 
 ### Conditional operators
@@ -474,11 +468,27 @@ paint := Paint()
   ..strokeWidth = 5.0
 ```
 
-**variadic function**
+**variadic operator**
 
 ```go
 fn add(items ...str) =
   list.add(items)
+```
+
+**assignment operator**
+
+```go
+  x := 5
+	y := 3
+	x += y  // 8
+	x -= y  // 5
+	x *= y  // 15
+	x /= y  // 5
+	x %= y  // 2
+	x &= y  // 2
+	x |= y  // 3
+	x <<= y // 24
+	x >>= y // 3
 ```
 
 **generics**
@@ -488,134 +498,14 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
   pass
 ```
 
-```
-fn create_post_action(req: Request): Result[Response] =
-  post := Post(title = req.params.title, body = req.params.body)
-  if post.valid()
-    RenderNewView()
-  else
-    post := createRecord(post)
-    setSuccessMessage("Post created")
-    redirectTo("/posts")
-
-fn divide(dividend: u32, divisor: u32) !u32 =
-  if divisor == 0
-    error.DivideByZero
-  else
-    dividend / divisor
-  dispatch(action, req, res) catch |err|
-    BodyTooBig -> Response(
-      status: 431,
-      body: "Request body is too big",
-    )
-    BrokenPipe, ConnectionResetByPeer -> return false
-    _ -> error_handler(req, res, err)
-
-error FileOpenError
-  | AccessDenied(str)
-  | OutOfMemory(str)
-  | FileNotFound(str)
-
-fn parse_version(header: List[int]): result[Version, error] =
-  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
-
-fn main(): result[unit, unit] =
-  version := parse_version(list.of(1, 2))
-  match pg.connect()
-    ok(c) -> return 0
-    err(e) -> return e
-
-  greeting_file := file.open("hello.txt").unwrap_or_else() |error|
-    match error
-      ErrorKind::NotFound ->
-        File::create("hello.txt").unwrap_or_else() |error|
-          panic!("Problem creating the file: {:?}", error)
-      _ ->
-        panic!("Problem opening the file: {:?}", error)
-
-  conn := match pg.connect()?
-  create_post_action(req)
-    .map(|v| 0)
-    .map_err(|err| 1)
-
-  create_post_action(req)?
-  ok()
-
-  greeting_file := file.open("hello.txt")?
-  ok()
-
-import std/str
-import std/result
-
-fn double_number(s: str): result[i32, unit] =
-  number_str.parse_int().map(|n| 2 * n)
-
-fn main(): result<i32, unit> =
-  double_number("10")
-
-
-use std::num::ParseIntError;
-
-fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
-    number_str.parse::<i32>().map(|n| 2 * n)
-}
-
-fn main() {
-    match double_number("10") {
-        Ok(n) => assert_eq!(n, 20),
-        Err(err) => println!("Error: {:?}", err),
-    }
-}
-
-trait error: debug + display (
-  fn description(): str
-  fn cause(): option<error>
-)
-
-trait From<T>(
-  fn from(v: T) -> Self;
-)
-
-trait Debug(
-  fn fmt(f: Formateer): result[unit, unit]
-)
-
-trait Display(
-  fn fmt(f: Formateer): result[unit, unit]
-)
-
-record Car(wheels: int)
-
-fn getWheels() =
-  returns 4
-
-fn main() =
-  let c1 = some(Car(wheels: 2))
-  let c2: option<Car> = none
-
-  let c1 = Some(Car(wheels: 2))
-  let c2: Option<Car> = None
-
-  match c
-    none -> print("no car")
-    some(car) -> car.getWheels()
-
-  Car c2 = null
-  c2.getWheels() // Null pointer
-```
-
 ### General naming convention
 
-| Item                    | Convention               |
-| ----------------------- | ------------------------ |
-| Modules                 | snake_case               |
-| Types                   | UpperCamelCase           |
-| Traits                  | UpperCamelCase           |
-| Enum variants           | UpperCamelCase           |
-| Functions               | snake_case               |
-| Methods                 | snake_case               |
-| General constructors    | new or with_more_details |
-| Conversion constructors | from_some_other_type     |
-| Local variables         | snake_case               |
-| Constants               | SCREAMING_SNAKE_CASE     |
-| Generics                | single uppercase letter  |
+| Item                     | Convention              |
+| ------------------------ | ----------------------- |
+| Modules                  | snake_case              |
+| Types/Traits/Enum        | UpperCamelCase          |
+| Fields/Functions/Methods | lowerCamelCase          |
+| Conversion constructors  | from_some_other_type    |
+| Local variables          | snake_case              |
+| Constants                | SCREAMING_SNAKE_CASE    |
+| Generics                 | single uppercase letter |
