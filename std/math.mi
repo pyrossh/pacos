@@ -72,6 +72,7 @@ fn acos(v: float) =
 
 `2**28
 const LARGE = 1 << 28
+
 fn acosh(v: float): float =
 	when
     x < 1 | IsNaN(x) -> // first case is special case

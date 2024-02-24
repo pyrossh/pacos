@@ -162,9 +162,9 @@ The nil type is used to represent types that are nilable
 
 The any type is an empty trait and is used to represent all types
 
-**err**
+**error**
 
-The err type is an enum of all errors
+The error type is an trait that represents all Error types
 
 **bool**
 
@@ -234,7 +234,9 @@ A str represents an array of runes or unicode code points. It is encoded to UTF-
 It supports interpolation of variables/values that implement the ToStr interface.
 
 ```go
-"Hello World"
+import std/os.{printLn}
+
+sed := "Hello World"
 name := "Pacos"
 age := 1
 printLn("Name ${name} age ${age}")
@@ -294,6 +296,74 @@ friends_tree
   .map(|k, v| v)
   .each(|k, v| printLn("v", v))
   .reduce(0, |k, v| v + 1)
+```
+
+**option**
+
+An option is a type that represents either value present Some or nothing present
+
+```go
+import std/option
+
+record Car(wheels: int)
+
+c := some(Car(wheels: 2))
+
+match c
+  none -> print("no car")
+  some(car) -> car.wheels
+```
+
+**result**
+
+A result is a type that represents either success ok or failure err.
+
+```rs
+import std/str
+import std/result
+
+#[error]
+record FetchError()
+
+#[error]
+record IOError()
+
+#[error]
+record JsonParseError()
+
+#[json]
+record UserData(
+  id: int,
+  name: str,
+  roles: List[str]
+)
+
+fn parse_version(header: List[int]): result[Version, error] =
+  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
+
+fn double_number(s: str): result[int] =
+  number_str.parse_int().map(|n| 2 * n)
+
+fn fetch_data(route: str): result[UserData] =
+  response := fetch(route)?
+  data := response.body.readAll()?
+  parse_json(data)?
+
+fn main(): result[int] =
+  double_number("10")?
+  version := parse_version(list.of(1, 2))
+  conn := pg.connect()?
+  
+  match pg.connect()
+    ok(c) -> return 0
+    err(e) -> return e
+
+  res := fetch_data()
+  match res
+    ok(u) -> u.id
+    err(IOError(e)) -> printLn("IO failed")
+    err(e) -> printLn("generic error ${e.msg()}")
+  ok(0)
 ```
 
 **constants**
@@ -487,6 +557,10 @@ paint := Paint()
   ..color = Colors.black
   ..strokeCap = StrokeCap.round
   ..strokeWidth = 5.0
+
+v := list.of(1, 2, 3)
+  ..add(4, 5)
+  ..get(0)
 ```
 
 **variadic operator**
@@ -526,7 +600,6 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
 | Modules                  | snake_case              |
 | Types/Traits/Enum        | UpperCamelCase          |
 | Fields/Functions/Methods | lowerCamelCase          |
-| Conversion constructors  | from_some_other_type    |
 | Local variables          | snake_case              |
 | Constants                | SCREAMING_SNAKE_CASE    |
 | Generics                 | single uppercase letter |

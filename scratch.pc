@@ -1,8 +1,4 @@
 data.price?.take_if(|a| a != "")
-trait Iterator(
-  fun has_next(): Bool
-  fun next(): T?
-)
 
 trait HasEq[A](
   fn eq(that: a): bool
@@ -57,175 +53,11 @@ fn (l: list) prepend(v: V) =
   l.first() = link(v, l.first())
 
 
-fn range(start: int, e: int, cb: fn(int)) =
-  match start < end ->
-    cb(start)
-    range(start + 1, end, cb)
-
-fn repeat(n: int, cb: fn(int): void) =
-  match n != 0
-    cb()
-    repeat(n - 1, cb)
-
-fn repeat(cb: fn(int): void) =
-  cb()
-  repeat(cb)
-
-fn iterate[T](l: list[T], cb: fn(t: T)) =
-  pass
-
-fn main() =
-  repeat(10) |i|
-    println(i)
-  range(10, 20) |i|
-    println(i)
-
-```
-fn create_post_action(req: Request): Result[Response] =
-  post := Post(title = req.params.title, body = req.params.body)
-  if post.valid()
-    RenderNewView()
-  else
-    post := createRecord(post)
-    setSuccessMessage("Post created")
-    redirectTo("/posts")
-
-fn divide(dividend: u32, divisor: u32) !u32 =
-  if divisor == 0
-    error.DivideByZero
-  else
-    dividend / divisor
-
-error FileOpenError
-  | AccessDenied(str)
-  | OutOfMemory(str)
-  | FileNotFound(str)
-
-fn parse_version(header: List[int]): result[Version, error] =
-  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
-
-fn main(): result[unit, unit] =
-  version := parse_version(list.of(1, 2))
-  match pg.connect()
-    ok(c) -> return 0
-    err(e) -> return e
-
-  greeting_file := file.open("hello.txt").unwrap_or_else() |error|
-    match error
-      ErrorKind::NotFound ->
-        File::create("hello.txt").unwrap_or_else() |error|
-          panic!("Problem creating the file: {:?}", error)
-      _ ->
-        panic!("Problem opening the file: {:?}", error)
-
-  conn := match pg.connect()?
-  create_post_action(req)
-    .map(|v| 0)
-    .map_err(|err| 1)
-
-  create_post_action(req)?
-  ok()
-
-  greeting_file := file.open("hello.txt")?
-  ok()
-
-import std/str
-import std/result
-
-fn double_number(s: str): result[i32, unit] =
-  number_str.parse_int().map(|n| 2 * n)
-
-fn main(): result<i32, unit> =
-  double_number("10")
-
-
-use std::num::ParseIntError;
-
-fn double_number(number_str: &str) -> Result<i32, ParseIntError> {
-    number_str.parse::<i32>().map(|n| 2 * n)
-}
-
-fn main() {
-    match double_number("10") {
-        Ok(n) => assert_eq!(n, 20),
-        Err(err) => printLn!("Error: {:?}", err),
-    }
-}
-
-trait error: debug + display (
-  fn description(): str
-  fn cause(): option<error>
-)
-
-trait From<T>(
-  fn from(v: T) -> Self;
-)
-
-trait Debug(
-  fn fmt(f: Formateer): result[unit, unit]
-)
-
-trait Display(
-  fn fmt(f: Formateer): result[unit, unit]
-)
-
-record Car(wheels: int)
-
-fn getWheels() =
-  returns 4
-
-fn main() =
-  let c1 = some(Car(wheels: 2))
-  let c2: option<Car> = none
-
-  let c1 = Some(Car(wheels: 2))
-  let c2: Option<Car> = None
-
-  match c
-    none -> print("no car")
-    some(car) -> car.getWheels()
-
-  Car c2 = null
-  c2.getWheels() // Null pointer
-```
-
 (1 + 2).mod(3).pow(2).sqrt()
 
-math.sqrt(math.pow(math.mod(1 + 2, 3)))
+math.sqrt(math.pow(math.mod(1 + 2, 3), 2))
 
-repeat(10) |i|
-  pass
-
-repeat(n) |i|
-  pass
-
-data.each() |k, v|
-  pass
-
-list.of(1, 2, 3).each() |v, i|
-  pass
-
-map.of("a" => 1, "b" => 2).each() |k, v|
-  pass
-
-repeat() |_|
-  pass
-
-repeat(|_| i < 9) |i|
-  pass
-
-repeat(|_| a > b && c < d) |i|
-  pass
-
-let v = list.of(1, 2, 3)
-  |> list.add(1, 2)
-  |> list.get(0)
-
-let v = list.of(1, 2, 3)
-  ..add(1, 2)
-  ..get(0)
-
-if v == nil
+if v == none
   error.Error
 else
   c * 20
@@ -241,20 +73,6 @@ match v
   Some(c) ->
     return c * 20
 
-
-#[json]
-record UserData(
-  id: int,
-  name: str,
-  roles: List[str]
-)
-
-`This is to follow the http standards
-trait Error(
-  fn code(): int
-  fn msg(): str
-)
-
 `derive implements this func
 `Derive is a compiler plugin/generator similar to dart
 `which runs automatically. Its not a macro more like a decorator.
@@ -268,17 +86,3 @@ fn fetch_data(route: str): map[str, any] | UserData | FetchError | IOError |  Js
   res := fetch(route)?
   data := res.body.read_all()?
   parse_json(data)?
-
-fn main() =
-  res := fetch_data()
-  if res is UserData
-    printLn("Success ${res.id}")
-  else if res is IOError
-    printLn("IO failed")
-  else if res is Error
-    printLn("generic error ${res.msg()}")
-
-  when res
-    UserData -> printLn("Success ${res.id}")
-    IOError -> printLn("IO failed")
-    _ -> printLn("generic error ${res.msg()}")

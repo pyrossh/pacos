@@ -1,5 +1,48 @@
 module std
 
-fn printLn(): result[unit, unit] =
+fn printLn(): IOError =
   `Writes the specified data, followed by the current line terminator, to the standard output stream.
   pass
+
+fn readFile(path: str): IO =
+  `Returns a stream to a file from the fs
+  pass
+
+fn writeFile(path: str, data: IO)
+  pass
+
+
+fn access(path[, mode])
+fn appendFile(path, data[, options])
+fn chmod(path, mode)
+fn chown(path, uid, gid)
+fn copyFile(src, dest[, mode])
+fn cp(src, dest[, options])
+fn lchmod(path, mode)
+fn lchown(path, uid, gid)
+fn lutimes(path, atime, mtime)
+fn link(existingPath, newPath)
+fn lstat(path[, options])
+fn mkdir(path[, options])
+fn mkdtemp(prefix[, options])
+fn open(path, flags[, mode])
+fn opendir(path[, options])
+fn readdir(path[, options])
+fn readFile(path[, options])
+fn readlink(path[, options])
+fn realpath(path[, options])
+fn rename(oldPath, newPath)
+fn rmdir(path[, options])
+fn rm(path[, options])
+fn stat(path[, options])
+fn statfs(path[, options])
+fn symlink(target, path[, type])
+fn truncate(path[, len])
+fn unlink(path)
+fn utimes(path, atime, mtime)
+fn watch(filename[, options])
+
+
+O_RDWR,
+O_CREAT,
+O_EXCL,

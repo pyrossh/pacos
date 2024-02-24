@@ -1,17 +1,17 @@
 module std
 
-record Pair[K: Comparable, V](k: K, v: V)
+record pair[K: Comparable, V](k: K, v: V)
 
-`A slice is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-`A slice is not an array. A slice describes a piece of an array.
-record Map[K, V](
-  items: list[Pair[K, V]]
+record map[K, V](
+  `A slice is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+  `A slice is not an array. A slice describes a piece of an array.
+  items: list[pair[K, V]]
 )
 
-fn Map.of[K, V](kvs: ...Pair[K, V]): map[K, V] =
+fn Map.of[K, V](kvs: ...pair[K, V]): map[K, V] =
   map[K, V]().add(kvs)
 
-fn (m: Map) add(kvs: ...Pair[K, V]) =
+fn (m: Map) add(kvs: ...pair[K, V]) =
   `adds the specified elements to the start of the list
   items.add(kvs)
 
@@ -28,7 +28,7 @@ fn (m: Map[K, V]) get(k K): V? =
   nil
 
 fn (m: Map) put(k K, v V) =
-  list.add(Pair(k, v))
+  list.add(pair(k, v))
 
 fn (m: Map) put_if(k K, v V) =
   if 

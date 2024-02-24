@@ -1,6 +1,9 @@
 module std
 
-type bool = true | false
+#[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
+enum bool =
+  | true
+  | false
 
 fn (x: bool) op_eq(y: bool) = x == y
 fn (x: bool) op_ne(y: bool) = x != y

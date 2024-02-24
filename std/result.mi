@@ -1,35 +1,31 @@
 module std
 
-`result is a type that represents either success ok or failure err.
-#[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
-enum result[T]
-  | ok(T)
-  | err(error)
+trait Error(
+  `This is used to represent an error value across the language
+  fn code(): int
+  fn msg(): str
+  fn cause(): option<Error>
+)
 
-fn (r result) is_ok(): bool =
+enum result[T]
+  `result is a type that represents either success ok or failure err.
+  | ok(T)
+  | err(Error)
+
+fn (r result) isOk(): bool =
   match o
     ok(v) -> return true
     err(e) -> return false
 
-fn (r result) is_err(): bool =
+fn (r result) isErr(): bool =
   !o.is_ok()
-
-fn (r result[T, E]) ok(): option[T] =
-  match o
-    ok(v) -> some(v)
-    err(e) -> none
-
-fn (r result[T, E]) err(): option[E] =
-  match o
-    ok(v) -> none
-    err(e) -> some(v)
 
 fn (r result) get(): T =
   match o
     ok(v) -> v
     err(e) -> panic("called `result.get()` on a `none` value")
 
-fn (r result) default(d: T): T =
+fn (r result) getOrElse(d: T): T =
   match o
     ok(v) -> v
     err(e) -> d
@@ -37,9 +33,9 @@ fn (r result) default(d: T): T =
 fn (r result) map(cb: fn(v: T)): result =
   match o
     ok(v) -> cb(v)
-    err(e) -> unreachable
+    err(e) -> r
 
-fn (r result) map_err(cb: fn(e: E)): result =
+fn (r result) mapErr(cb: fn(e: error)): result =
   match o
-    ok(v) -> unreachable
+    ok(v) -> r
     err(e) -> cb(v)

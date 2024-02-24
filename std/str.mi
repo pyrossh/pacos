@@ -1,14 +1,16 @@
 module std
 
-`ToStr defines any data that can be converted to a str
 trait ToStr(
+  `ToStr defines any data that can be converted to a str
   fn to_str(): str
 )
 
-`A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
-`It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
-`The previous str is freed if its reference count is 0 within the block.
-record str(data: list[byte]): Comparable, ToStr
+record str(
+  `A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
+  `It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
+  `The previous str is freed if its reference count is 0 within the block.
+  data: list[byte]
+): Comparable, ToStr
 
 fn str.of(bs ...byte): str =
   data.add(bs)
