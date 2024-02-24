@@ -216,3 +216,69 @@ repeat(|_| i < 9) |i|
 
 repeat(|_| a > b && c < d) |i|
   pass
+
+let v = list.of(1, 2, 3)
+  |> list.add(1, 2)
+  |> list.get(0)
+
+let v = list.of(1, 2, 3)
+  ..add(1, 2)
+  ..get(0)
+
+if v == nil
+  error.Error
+else
+  c * 20
+
+if v == None
+  error.Error 
+else 
+  Some(c) := v
+  c * 20
+
+match v
+  None -> return error.Error 
+  Some(c) ->
+    return c * 20
+
+
+#[json]
+record UserData(
+  id: int,
+  name: str,
+  roles: List[str]
+)
+
+`This is to follow the http standards
+trait Error(
+  fn code(): int
+  fn msg(): str
+)
+
+`derive implements this func
+`Derive is a compiler plugin/generator similar to dart
+`which runs automatically. Its not a macro more like a decorator.
+fn UserData.fromJsonStr(data: str): UserData | JsonParseError =
+  // JsonParseError(line: line, pos: post, object: "UserData")
+  pass
+
+type FetchDataError =  FetchError | IOError |  JsonParseError
+
+fn fetch_data(route: str): map[str, any] | UserData | FetchError | IOError |  JsonParseError =
+  res := fetch(route)?
+  data := res.body.read_all()?
+  parse_json(data)?
+
+fn main() =
+  res := fetch_data()
+  if res is UserData
+    printLn("Success ${res.id}")
+  else if res is IOError
+    printLn("IO failed")
+  else if res is Error
+    printLn("generic error ${res.msg()}")
+
+  when res
+    UserData -> printLn("Success ${res.id}")
+    IOError -> printLn("IO failed")
+    _ -> printLn("generic error ${res.msg()}")

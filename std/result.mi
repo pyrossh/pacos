@@ -2,44 +2,44 @@ module std
 
 `result is a type that represents either success ok or failure err.
 #[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
-enum result[T, E]
+enum result[T]
   | ok(T)
-  | err(E)
+  | err(error)
 
-fn (o result) is_ok(): bool =
+fn (r result) is_ok(): bool =
   match o
     ok(v) -> return true
     err(e) -> return false
 
-fn (o result) is_err(): bool =
+fn (r result) is_err(): bool =
   !o.is_ok()
 
-fn (o result[T, E]) ok(): option[T] =
+fn (r result[T, E]) ok(): option[T] =
   match o
     ok(v) -> some(v)
     err(e) -> none
 
-fn (o result[T, E]) err(): option[E] =
+fn (r result[T, E]) err(): option[E] =
   match o
     ok(v) -> none
     err(e) -> some(v)
 
-fn (o result) get(): T =
+fn (r result) get(): T =
   match o
     ok(v) -> v
     err(e) -> panic("called `result.get()` on a `none` value")
 
-fn (o result) default(d: T): T =
+fn (r result) default(d: T): T =
   match o
     ok(v) -> v
     err(e) -> d
 
-fn (o result) map(cb: fn(v: T)): result =
+fn (r result) map(cb: fn(v: T)): result =
   match o
     ok(v) -> cb(v)
     err(e) -> unreachable
 
-fn (o result) map_err(cb: fn(e: E)): result =
+fn (r result) map_err(cb: fn(e: E)): result =
   match o
     ok(v) -> unreachable
     err(e) -> cb(v)

@@ -1,8 +1,6 @@
 module std
 
-enum bool =
-  | true
-  | false
+type bool = true | false
 
 fn (x: bool) op_eq(y: bool) = x == y
 fn (x: bool) op_ne(y: bool) = x != y

@@ -1,37 +1,63 @@
 module math
 
 `Euler's number, the base of natural logarithms, e
+`https://oeis.org/A001113
 const E = 2.718f
 
 `The natural logarithm of 10
+`https://oeis.org/A002392
 const LN10 = 2.302f
 
 `The natural logarithm of 2
+`https://oeis.org/A002162
 const LN2 = 0.693f
 
 `The base 10 logarithm of e
+`formula: 1 / LN10
 const LOG10E = 0.434f
 
 `The base 2 logarithm of e
+`formula: 1 / LN2
 const LOG2E = 1.442f
 
 `The ratio of the circumference of a circle to its diameter
+`https://oeis.org/A000796
 const PI = 3.14159f
+
+`https://oeis.org/A001622
+const PHI = 1.6180f
 
 `The square root of 1/2
 const SQRT1_2 = 0.707f
 
 `The square root of 2
+`https://oeis.org/A002193
 const SQRT2 = 1.414f
 
+`https://oeis.org/A019774
+const SQRT_E = 1.64872f
+
+`https://oeis.org/A002161
+const SQRT_PI  = 1.77245f
+
+`https://oeis.org/A139339
+const SQRT_PHI = 1.27201f
+
 `The difference between 1 and the smallest floating point number greater than 1
+`formula: 7/3 - 4/3 - 1
 const EPSILON = 2.220446049250313e-16f
 
-`Lowest valur of i64
+`Lowest value of int
 const MIN_INT_VALUE = -0x8000_0000_0000_0000
 
-`Highest valur of i64
+`Highest value of int
 const MAX_INT_VALUE = 0x7FFF_FFFF_FFFF_FFFF
+
+`Lowest valur of float
+const MIN_FLOAT_VALUE = 4.9406564584124654417656879286822137236505980e-324
+
+`Highest valur of float
+const MAX_FLOAT_VALUE = 1.79769313486231570814527423731704356798070e+308
 
 fn abs(v: float): float =
   `returns the absolute value of a number v
@@ -44,7 +70,25 @@ fn acos(v: float) =
     asin(-1v)
 
 
-fn acosh(v: float) = 0f
+`2**28
+const LARGE = 1 << 28
+fn acosh(v: float): float =
+	when
+    x < 1 | IsNaN(x) -> // first case is special case
+      NaN()
+	  x == 1 ->
+		  0
+	  x >= Large ->
+		  Log(x) + Ln2 // x > 2**28
+	  x > 2 ->
+		  Log(2*x - 1/(x+Sqrt(x*x-1))) // 2**28 > x > 2
+    _ -> 
+	    t := x - 1
+      // ((2*t+t*t).sqrt() + t).log1p()
+	    Log1p(t + Sqrt(2*t+t*t)) // 2 >= x > 1
+
+
+
 fn asin(v: float) = 0f
 fn asinh(v: float) = 0f
 fn atan(v: float) = 0f

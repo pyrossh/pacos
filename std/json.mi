@@ -1,0 +1,339 @@
+module std/json
+
+type Json = Map[str, Json] | List[Json] | int | float | str | bool | nil
+
+fn Json.parse(src: str | Buffer | IO): Json | ParseError =
+  JsonParser.withSrc(src).parse()
+
+#[error(400, "Failed to parse json ${object} at: ${line} ${pos}")]
+record ParseError(
+  line: str
+  pos:  str
+)
+
+record JsonParser(
+  cur: int = ' '
+  _pos: int = 0
+  _next: int = ' '
+  _buf: str | Buffer | IO
+)
+
+fn JsonParser.withSrc(src: str | Buffer | IO): JsonParser =
+  JsonParser(_buf = src)
+
+fn _is_space(c: U32): Bool => (c == ' ') or ((c >= '\t') and (c <= '\r'))
+
+fn _is_delim(c: U32): Bool => 
+    (c == ',') or (c == '}') or (c == ':') or (c == ']') or (_is_space(c)) or (c == 0)
+
+fn _is_digit(c: U32): Bool => (c >= '0') and (c <= '9')
+
+fn (p: Parser) _err(msg: str) => printLn(msg)
+
+fn _get_next_raw(): U32 =>
+  try
+      _inc_pos()
+      let chr: (U32, U8) = _buf.utf32(_pos-1)?
+      cur = _next = chr._1
+  else
+      cur = _next = 0
+  end
+
+fn _get_next(): U32 =>
+  try
+      repeat
+          _inc_pos()
+          let chr: (U32, U8) = _buf.utf32(_pos-1)?
+          cur = _next = chr._1
+      until not _is_space(cur) end
+      cur
+  else
+      cur = _next = 0
+  end
+
+
+fn _expect(chr: U32, msg: String): Bool =>
+  if cur == chr then
+      _get_next()
+      true
+  else
+      _err(msg)
+      false
+  end
+
+
+fn _inc_pos(i: ISize = 1) => _pos = _pos.add(i)
+
+fn (p JsonParser) parse(): Json =
+  match parser.get_next()
+    '{' -> p.parseObject()
+    '[' -> p.parseList()
+    _ -> nil
+
+fn (p JsonParser) parseObject(): Map[str, Json] =
+  object := Map[str, Json]()
+  p._get_next() // '{'
+  while true
+    if p.cur != '"'
+      p._err("JSON: Object: expected '\"'\n")
+      break
+
+    val_key := p.parse_string()
+    if !p._expect(':', "JSON: Object: expected ':'\n")
+      break
+
+    val_val := Json(nil)
+    when p.cur
+      '{' -> 
+        val_val = parse_object(p)
+        p._expect('}', "JSON: Object: expected '}'\n")
+      '[' -> 
+        val_val = parse_array(p) 
+        p._expect(']', "JSON: Object: expected ']'\n")
+      '"' ->
+        val_val = p.parseString()
+      'n' ->
+        val_val = try p._get_n()? end // null?
+      't' ->
+        val_val = try p._get_t()? end // true?
+      'f' ->
+        val_val = try p._get_f()? end // false?
+      ch -> 
+        if p._is_digit(ch) || ch == '.'
+          val_val = p.parseNum()
+        else
+          p._err("invalid value\n")
+          break
+
+    object.set(val_key, val_val)
+    if p.cur == '}'
+      break
+    if !p._expect(',', "JSON: Object: expected ','\n")
+      printLn("failed at: %s\n".cstring(), val_key.cstring())
+  object
+  
+fn (p: JsonParser) parseList(): List[Json] =
+  p._get_next() // '['
+  while true
+    when p.cur
+      '{' -> _values.push(JSONObject.create_with_parser(p)); p._expect('}', "JSON: Array: expected object delimiter\n")
+      '[' -> _values.push(JSONArray.create_with_parser(p)); p._expect(']', "JSON: Array: expected array delimiter\n")
+      '"' -> _values.push(p.parseString())
+      't' -> 
+        t: Bool := p._get_t()?
+        _values.push(t)
+      'f' ->
+        f: Bool := p._get_f()?
+        _values.push(f)
+      'n' ->
+        n: None := p._get_n()?
+        _values.push(n)
+      _ ->
+        if p._is_digit(p.cur) 
+          let n = p.parseNum()
+          _values.push(n)
+    
+    if p.cur == ']'
+      break
+    if !p._expect(',', "JSON: Array: expected ','\n")
+      break
+
+fn (p: Parser) parseUtf16(): int =
+  result := 0
+  count := 0
+  while count <= 4
+    p._get_next_raw()
+    if _is_digit(cur)
+      result = ((result << 4) or (cur - '0').i32())
+    else if (cur >= 'a') and (cur <= 'f')
+      result = ((result << 4) or ((cur - 'a').i32() + 10))
+    else if (cur >= 'A') and (cur <= 'F')
+      result = ((result << 4) or ((cur - 'A').i32() + 10))
+    count = count+1
+  result
+
+fn (p: JsonParser) parseStr(): str =
+  result := ""
+  while true
+    p._get_next_raw()
+    match cur
+      0 -> _err("JSON: parseString: expected '\"'\n"); return ""
+      '"' -> _get_next(); break
+      '\\' -> 
+        match _next
+          '\\' -> result.push('\\'); p._get_next_raw()
+          '"' -> result.push('"'); p._get_next_raw()
+          '\'' -> result.push('\''); p._get_next_raw()
+          '/' -> result.push('/'); p._get_next_raw()
+          'b' -> result.push('\b'); p._get_next_raw()
+          'f' -> result.push('\f'); p._get_next_raw()
+          'n' -> result.push('\n'); p._get_next_raw()
+          'r' -> result.push('\r'); p._get_next_raw()
+          't' -> result.push('\t'); p._get_next_raw()
+          'u' -> 
+            _get_next_raw()
+            ures := p.parseUtf16()
+            if ures < 0
+              _err("invalid utf escape\n")
+              break
+            result.push_utf32(ures.u32())
+      _ ->
+        result.push_utf32(cur.u32())
+    result
+
+fn (p: JsonParser) parseNum(): int | float =
+  result := ""
+  is_float := false
+
+  if cur == '-'
+    result.push('-')
+    _get_next_raw()
+
+  if cur == '.'
+      result.push('0')
+      result.push('.')
+      is_float = true
+      _get_next_raw()
+  else
+    while _is_digit(cur)
+      result.push(cur.u8())
+      _get_next_raw()
+    if cur == '.'
+      result.push('.')
+      _get_next_raw()
+
+  while _is_digit(cur)
+    result.push(cur.u8())
+    _get_next_raw()
+
+  is_exp := when cur
+    'e' ->
+      result.push('e'); _get_next_raw()
+      true
+    'E' ->
+      result.push('E'); _get_next_raw()
+      true
+    _ -> false
+
+  if is_exp
+    sign := when cur
+      '+' ->
+        result.push('+'); _get_next_raw()
+        true
+      '-' ->
+        result.push('-'); _get_next_raw()
+        true
+      _ -> false
+    if sign
+      while _is_digit(cur)
+        result.push(cur.u8())
+        _get_next_raw()
+
+  res := is_float ? result.f64() : result.i64()
+  if _is_space(cur)
+    _get_next() // skip to the next non-whitespace character
+  res
+
+fn _get_n(): None? =>
+    _get_next_raw()
+    if cur == 'u' then
+        _get_nu()?
+    else
+        error
+    end
+
+fn _get_nu(): None? =>
+    _get_next_raw()
+    if cur == 'l' then
+        _get_nul()?
+    else
+        error
+    end
+
+fn _get_nul(): None? =>
+    _get_next_raw()
+    if cur == 'l' then
+        _get_next()
+        None
+    else
+        error
+    end
+
+fn _get_t(): bool? =
+    _get_next_raw()
+    if cur == 'r' then
+        _get_tr()?
+    else
+        error
+    end
+
+fn _get_tr(): bool? =
+  _get_next_raw()
+  if cur == 'u' then
+      _get_tru()?
+  else 
+      error
+  end
+
+fn _get_tru(): bool? =
+  _get_next_raw()
+  if cur == 'e' then
+      _get_next()
+      true
+  else
+      error
+  end
+
+fn _get_f(): bool? = 
+  _get_next_raw()
+  if cur == 'a' then
+      _get_fa()?
+  else
+      error
+  end
+
+fn _get_fa(): bool? =
+  _get_next_raw()
+  if cur == 'l' then
+      _get_fal()?
+  else
+      error
+  end
+
+fn _get_fal(): bool? =
+  _get_next_raw()
+  if cur == 's' then
+    _get_fals()?
+  else
+      error
+  end
+
+fn _get_fals(): bool? =
+  _get_next_raw()
+  if cur == 'e' then
+      _get_next()
+      false
+  else
+      error
+  end
+
+test("parse int") |t|
+  assert Json.parse("123") == 123
+
+test("parse str") |t|
+  assert Json.parse(`"hello"`) == "hello"
+
+test("parse bool") |t|
+  assert Json.parse("true") == true
+  assert Json.parse("false") == false
+
+test("parse null") |t|
+  assert Json.parse("null") == nil
+
+test("parse array") |t|
+  assert Json.parse(`[]`) == List[Json]()
+  assert Json.parse(`[1, 2]`) == List.of[Json](1, 2)
+
+test("parse object") |t|
+  assert Json.parse(`{}`) == Map[str, Json]()
+  assert Json.parse(`{"a": 1, "b": 2}`) == Map.of[str, Json]("a" => 1, "b" => 2)p-

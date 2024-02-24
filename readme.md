@@ -81,16 +81,6 @@ fn (c: Cat) talk() =
 fn (c: Cat) toStr(): str =
   "Cat<{c.fullname()}, ${c.age}>"
 
-type MapCallback = fn(v: a): v
-
-trait Comparable(
-  fn compare(left: A, right: A): bool
-)
-
-trait ToStr(
-  fn to_str(): str
-)
-
 enum Temperature =
   | celsius(float)
   | fahrenheit(float)
@@ -102,6 +92,37 @@ fn (s: Temperature) to_str(): str =
     fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
     fahrenheit(t) -> "${t}F is below 86 fahrenheit"
 
+type MapCallback = fn(v: a): v
+
+trait Comparable(
+  fn compare(left: A, right: A): bool
+)
+
+trait ToStr(
+  fn to_str(): str
+)
+
+fn connect_db(conn_url: str): DB! =
+  db := postgres_connect(conn_url)?
+  db.exec("select 1")?
+
+fn db_select(conn_url: str): void! =
+  db := new_db(conn_url)?
+  db.exec("select 1")?
+
+record DB(conn_url: str)
+
+error DatabaseError
+  DatabaseNotOnline(conn_url: str)
+  RowReadFailure(query: str)
+
+fn new_db(conn_url: str) DB! =
+  db := DB(conn_url: str)
+  online := db.check()?
+  if !online
+    Err(errors.DatabaseNotOnline(conn_url))
+  else
+    db
 
 test("talks") |t|
   c := Cat(name: "123", age: 1)
@@ -343,7 +364,7 @@ for v := range list
   sum += k + v
 ```
 
-**For Custom Iterator**
+**Range Over Function**
 
 ```rb
 type Seq0 = fn(yield: fn(): bool): bool

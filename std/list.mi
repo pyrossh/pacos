@@ -82,6 +82,15 @@ fn (l: list) contains(v: V): bool =
   `returns the index of an item in the list if present and comparable otherwise nil
   pass
 
+fn (l: list[T]) op_range(yld: fn(v: T): bool): bool =
+  `range over func for a list
+  current := l.head
+  while current != nil
+    if !yld(current.value)
+      return false
+    current = current.next
+  true
+
 fn (l: list) op_spread(other: list): list[A] =
   `combines this list with other list and returns a new list
   pass

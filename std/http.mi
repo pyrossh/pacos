@@ -1,21 +1,21 @@
+module std/http
+
 import std/path
 import std/os
 import std/http/content_type
 
 #[builder]
 record Response(
-  headers: map[str, str]
-  body: Buffer
+  headers: Map[str, str]
+  body: str | Buffer | IO
   status: int
 )
 
-fn file_response(file: str): Response! =
-  ext := path::ext(file)
-  content := contentTypeFromExt(ext)
-  data := try os.read_file(file)
+fn file_response(path: str): Response | IOError =
+  content := contentTypeFromExt(path.ext())
+  data := os.readFile(file)?
   Response()
     .header("Content-Type", content)
-    .header("Content-Length", "2")
     .body(data)
     .status(200)
 
@@ -24,10 +24,10 @@ fn index(): Response! =
   file_response("index.html")
 
 #[get("/public/<...>")]
-fn public(file: str): Response! =
+fn public(file: str): Response | IOError =
   ext := path::ext(file)
   content := contentTypeFromExt(ext)
-  data := os.readFile?(file)
+  data := os.readFile(file)?
   Response()
     .header("Content-Type", content)
     .body(data)
