@@ -3,23 +3,14 @@
 - A statically typed, imperative programming language inspired by rust, koka.
 - The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
 
-**Rules**
-
-- Function parameters are passed by value only. You cannot modify a parameter. The compiler will throw an error if you try to.
-- Strict naming convention
-- Only one way of doing things ex: loops, condition
-
-**Todo**
-linter, formatter, test runner, language server, package manager
-
 Here is some sample code, please enjoy.
 
 ```go
 module lambda
 
-import pacos/list
-import pacos/math
-import pacos/http
+import std/list
+import std/math
+import std/http
 
 const START_YEAR = 2101
 const END_YEAR = 2111
@@ -154,17 +145,13 @@ for,while,if,else if,else,record,enum,fn,assert,match,type
 
 ### Types
 
-**nil**
-
-The nil type is used to represent types that are nilable
-
 **any**
 
 The any type is an empty trait and is used to represent all types
 
 **error**
 
-The error type is an trait that represents all Error types
+The error type is a trait that represents all Error types
 
 **bool**
 
@@ -242,7 +229,7 @@ age := 1
 printLn("Name ${name} age ${age}")
 ```
 
-**list**
+##list
 
 ```py
 import pacos/list
@@ -268,7 +255,7 @@ items
   .reduce(0, |v| v + 1)
 ```
 
-**map**
+## map
 
 ```rs
 import pacos/map
@@ -298,9 +285,9 @@ friends_tree
   .reduce(0, |k, v| v + 1)
 ```
 
-**option**
+## option
 
-An option is a type that represents either value present Some or nothing present
+An option is a type that represents either value present `some` or nothing present `none`
 
 ```go
 import std/option
@@ -314,9 +301,9 @@ match c
   some(car) -> car.wheels
 ```
 
-**result**
+## result
 
-A result is a type that represents either success ok or failure err.
+A result is a type that represents either success `ok` or failure `err`
 
 ```rs
 import std/str
@@ -379,7 +366,7 @@ const PI = 3.14159
 const NAME = "pacos"
 const DEBUG_ENABLED = true
 const COUNT = count(10)
-const COUNTRIES_LIST = ist.of("US", "INDIA", "CANADA")
+const COUNTRIES_LIST = list.of("US", "INDIA", "CANADA")
 const COUNTRY_CODES = map.of(
   "in" => "INDIA",
   "us" => "United States",
@@ -434,32 +421,6 @@ for v := range list
   sum += k + v
 ```
 
-**Range Over Function**
-
-```rb
-type Seq0 = fn(yield: fn(): bool): bool
-type Seq1[V] = fn(yield: fn(V): bool): bool
-type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
-
-record Tree[E](
-  value E,
-  left: optional[Tree[E]],
-  right: optional[Tree[E]],
-)
-
-fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
-  t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
-
-tree := Tree(
-  value: 10,
-  left: Tree(20, Tree(30), Tree(39)),
-  right: Tree(40),
-)
-
-for t := range tree
-  printLn(v)
-```
-
 **if expression/statement**
 
 ```py
@@ -473,33 +434,33 @@ else
   printLn("Boring name...")
 ```
 
-**When expression/statement**
+## Match expression/statement
 
-```rb
-when
-  cmp > 0 -> low = mid + 1
-  cmp < 0 -> high = mid
-  cmp == 0 -> return mid, true
+```rs
+fn getPerimeter(shape: Shape): Result[float] =
+  match shape
+    Rectangle(r) -> Ok(2 * r.length() + 2 * r.width())
+    Circle(c) -> Ok(2 * c.radius() * PI)
+    c -> err(RuntimeError("expected shape but found ${@TypeName(c)}"))
 
-when x, y
+match x, y
   1, 1 -> "both are 1"
   1, _ -> "x is 1"
   _, 1 -> "y is 1"
   _, _ -> "neither is 1"
 
-when number
+match n
   2 | 4 | 6 | 8 -> "This is an even number"
   1 | 3 | 5 | 7 -> "This is an odd number"
   _ -> "I'm not sure"
 
-when xs
-  [] -> "This list is empty"
-  [a] -> "This list has 1 element"
-  [a, b] -> "This list has 2 elements"
-  _ -> "This list has more than 2 elements"
+match
+  cmp > 0 -> low = mid + 1
+  cmp < 0 -> high = mid
+  cmp == 0 -> return mid, true
 ```
 
-### Conditional operators
+## Operators
 
 **not operator**
 
@@ -586,12 +547,44 @@ fn add(items ...str) =
 	x >>= y // 3
 ```
 
-**generics**
+**range operator**
+
+```go
+type Seq0 = fn(yield: fn(): bool): bool
+type Seq1[V] = fn(yield: fn(V): bool): bool
+type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
+
+record Tree[E](
+  value E,
+  left: option[Tree[E]],
+  right: option[Tree[E]],
+)
+
+fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
+  t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
+
+tree := Tree(
+  value: 10,
+  left: Tree(20, Tree(30), Tree(39)),
+  right: Tree(40),
+)
+
+for t := range tree
+  printLn(v)
+```
+
+## Generics
 
 ```
 fn add[T: int | float](a: List[T], b: List[T]): List[T] =
   pass
 ```
+
+## Rules
+
+- Function parameters are passed by value only. You cannot modify a parameter. The compiler will throw an error if you try to.
+- Strict naming convention
+- Only one way of doing things ex: loops, condition
 
 ### General naming convention
 
@@ -603,3 +596,7 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
 | Local variables          | snake_case              |
 | Constants                | SCREAMING_SNAKE_CASE    |
 | Generics                 | single uppercase letter |
+
+## Todo
+
+linter, formatter, test runner, language server, package manager
