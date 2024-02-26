@@ -36,13 +36,8 @@ fn factorial(n: int): int =
     a -> 1
     _ -> n * factorial(n - 1)
 
-fn firstItem(l: list[int]): option[int] =
-  l[0]
-
-fn firstItem(l: list[int]): option[int] =
-  match l
-    [] -> none
-    [head, ...rest] -> head
+fn firstItem(items: list[int]): option[int] =
+  items.get(0)
 
 fn toCelsius(f: float): float =
   (f - 32) * (5 / 9)
@@ -226,17 +221,17 @@ age := 1
 printLn("Name ${name} age ${age}")
 ```
 
-##list
+## list
 
 ```py
-import pacos/list
+import std/list
 
 a := List.of(1, 2, 3)   # List[int]
 b := List.of(          # List[List[int]]
   List.of(1),
   List.of(2),
   List.of(3),
-)  
+)
 c := List.of(1, 2, 3 * 4, 8, n)
 
 actors := List.of("Krabs", "Squidward")
@@ -255,23 +250,23 @@ items
 ## map
 
 ```rs
-import pacos/map
+import std/map
 
-nums := Map.of(:one => 1, :two => 2)
-map.get(:one) // => 1
-map.get(:unknown) // => nil
+nums := Map.of("one" => 1, "two" => 2)
+map.get("one") // => some(1)
+map.get("unknown") // => none
 friends_tree := Map.of(
-  :value => "Fred",
-  :left => Map.of(
-    :value => "Jim",
+  "value" => "Fred",
+  "left" => Map.of(
+    "value" => "Jim",
   ),
-  :right => Map.of(
-    :value => "Shiela",
-    :left => Map.of(
-      :value => "Alice",
+  "right" => Map.of(
+    "value" => "Shiela",
+    "left" => Map.of(
+      "value" => "Alice",
     ),
-    :right => Map.of(
-      :value => "Bob"
+    "right" => Map.of(
+      "value" => "Bob"
     ),
   ),
 )
@@ -321,7 +316,7 @@ record IOError()
 record JsonParseError()
 
 #[error("Version is nil")]
-record ParseError()
+record ParseVersionError()
 
 #[json]
 record UserData(
@@ -330,59 +325,26 @@ record UserData(
   roles: List[str]
 )
 
-fn parse_version(header: List[int]): result[int, ParseError] =
+fn parseVersion(header: List[int]): result[int, ParseVersionError] =
   header.get(0) ?: ParseError()
 
-fn double_number(s: str): result[int] =
+fn doubleNumber(s: str): result[int] =
   number_str.parse_int().map(|n| 2 * n)
 
-fn fetch_data(route: str): result[UserData] =
+fn fetchData(route: str): result[UserData] =
   response := fetch(route)?
   data := response.body.readAll()?
-  parse_json(data)?
+  parseJson(data)?
 
 fn main(): result[int] =
-  double_number("10")?
-  version := parse_version(list.of(1, 2))?
-  conn := pg.connect()?
-
-  pg.connect()
-    .map(|| 0)
-    .map_err(|| 1)?
-  
-  match pg.connect()
-    ok(c) -> return 0
-    err(e) -> return e
-
-  res := fetch_data()
+  n := doubleNumber("10")?
+  version := parseVersion(list.of(1, 2))?
+  res := fetchData()
   match res
-    ok(u) -> u.id
+    ok(u) -> return ok(u.id)
     err(IOError(e)) -> printLn("IO failed")
     err(e) -> printLn("generic error ${e.msg()}")
   ok(0)
-
-fn connect_db(conn_url: str): result[DB] =
-  db := postgres_connect(conn_url)?
-  db.exec("select 1")?
-
-record DB(conn_url: str)
-
-#[error]
-enum DatabaseError
-  NotOnline(conn_url: str)
-  RowReadFailure(query: str)
-
-fn newDB(conn_url: str) result[DB, DatabaseError] =
-  db := DB(conn_url: str)
-  online := db.check()?
-  if !online
-    err(DatabaseError(conn_url))
-  else
-    db
-
-fn db_select(conn_url: str): result[unit, DatabaseError] =
-  db := newDB(conn_url)
-  db.exec("select 1")?
 ```
 
 **constants**
