@@ -1,25 +1,23 @@
 # 👾 Pacos Programming Language
 
-- A statically typed, imperative programming language inspired by rust, koka.
-- The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor.
+- A statically typed, imperative programming language inspired by rust, koka
+- The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor
+- Plans to be compiled to WASM
 
-Here is some sample code, please enjoy.
+Here is some sample code, please enjoy
 
-```go
+```rs
 module lambda
 
 import std/list
 import std/math
 import std/http
 
-const START_YEAR = 2101
-const END_YEAR = 2111
-const NAME = "Gleam"
-const SIZE = 100
+const DELTA = 11
 
-fn sum(a: int, b: int): int = a + b
+fn sum(a: int, b: int): int = a + b + DELTA
 
-fn sum_all(series: list[int]): int =
+fn sumAll(series: list[int]): int =
   series.reduce(0, |v| v + 1)
 
 fn fib(n: int): int =
@@ -38,33 +36,29 @@ fn factorial(n: int): int =
     a -> 1
     _ -> n * factorial(n - 1)
 
-fn firstItem(l: list[int]): int? =
+fn firstItem(l: list[int]): option[int] =
   l[0]
 
-fn firstItem(l: list[int]): int? =
+fn firstItem(l: list[int]): option[int] =
   match l
-    [] -> nil
+    [] -> none
     [head, ...rest] -> head
-
-fn firstItem(l: list[int]): int? =
-  if l.size > 0
-    l[0]
-  else
-    nil
 
 fn toCelsius(f: float): float =
   (f - 32) * (5 / 9)
 
-record Cat[A: Comparable & Stringable](
+record Cat(
   name: str
   age:  int
 )
 
+// Additional Cat Contructor which is just a static function on type Cat
 fn Cat.withName(name: str): Cat =
   Cat(name: name, age: 0)
 
+// A simple method
 fn (c: Cat) fullname(): str =
-  c.name + c.age.to_str()
+  c.name + c.age.toStr()
 
 fn (c: Cat) talk() =
   printLn("cat ${c.name} says meow")
@@ -76,7 +70,7 @@ enum Temperature =
   | celsius(float)
   | fahrenheit(float)
 
-fn (s: Temperature) to_str(): str =
+fn (s: Temperature) toStr(): str =
   match s
     celsius(t) && t > 30 -> "${t}C is above 30 celsius"
     celsius(t) -> "${t}C is below 30 celsius"
@@ -85,36 +79,39 @@ fn (s: Temperature) to_str(): str =
 
 type MapCallback = fn(v: a): v
 
-trait Comparable(
+trait Comparable[A: Compare](
   fn compare(left: A, right: A): bool
 )
 
-trait ToStr(
-  fn to_str(): str
+trait Stringable(
+  fn toStr(): str
 )
 
-fn connect_db(conn_url: str): DB! =
-  db := postgres_connect(conn_url)?
-  db.exec("select 1")?
+record DB(
+  conn_url: str
+)
 
-fn db_select(conn_url: str): void! =
-  db := new_db(conn_url)?
-  db.exec("select 1")?
-
-record DB(conn_url: str)
-
-error DatabaseError
-  DatabaseNotOnline(conn_url: str)
+#[error]
+enum DatabaseError =
+  NotOnline(conn_url: str)
   RowReadFailure(query: str)
 
-fn new_db(conn_url: str) DB! =
+fn newDB(conn_url: str) result[DB, DatabaseError] =
   db := DB(conn_url: str)
-  online := db.check()?
+  online := db.status()
   if !online
-    Err(errors.DatabaseNotOnline(conn_url))
+    err(NotOnline(conn_url))
   else
     db
 
+fn (d: DB) status(conn_url: str): bool =
+  res := d.exec("select 1")
+  if res == None
+    false
+  else
+    true
+
+// Testing
 test("talks") |t|
   c := Cat(name: "123", age: 1)
   c.talk()
@@ -123,12 +120,12 @@ test("fullname") |t|
   Cat("rabby", 21).fullname() == "rabby21"
   c2 := Cat(...c, age: c.age + 1)
 
-test("to_str") |t|
+test("ToStr") |t|
   items := [Cat("Molly", 9), Cat("Fenton", 6)]
       .retain(|p| p.name.size > 5)
       .map(|p| describe(p))
       .each(|d| printLn(d))
-  assert items[0].to_str() == "Cat<Fenton, 6>"
+  assert items[0].toStr() == "Cat<Fenton, 6>"
 
 bench("1231") |n|
   for i := range n
@@ -140,7 +137,7 @@ bench("1231") |n|
 **Keywords**
 
 ```rs
-for,while,if,else if,else,record,enum,fn,assert,match,type
+for,while,if,else,record,type,enum,fn,assert,match
 ```
 
 ### Types
@@ -299,6 +296,11 @@ c := some(Car(wheels: 2))
 match c
   none -> print("no car")
   some(car) -> car.wheels
+
+if Some(car) = c
+  printLn("Hello ${car.wheels}")
+else
+  printLn("nothing")
 ```
 
 ## result
@@ -359,10 +361,28 @@ fn main(): result[int] =
     err(e) -> printLn("generic error ${e.msg()}")
   ok(0)
 
-if Some(color) = favorite_color
-  printLn("Hello ${color}")
-else
-  println("qwe")
+fn connect_db(conn_url: str): result[DB] =
+  db := postgres_connect(conn_url)?
+  db.exec("select 1")?
+
+record DB(conn_url: str)
+
+#[error]
+enum DatabaseError
+  NotOnline(conn_url: str)
+  RowReadFailure(query: str)
+
+fn newDB(conn_url: str) result[DB, DatabaseError] =
+  db := DB(conn_url: str)
+  online := db.check()?
+  if !online
+    err(DatabaseError(conn_url))
+  else
+    db
+
+fn db_select(conn_url: str): result[unit, DatabaseError] =
+  db := newDB(conn_url)
+  db.exec("select 1")?
 ```
 
 **constants**

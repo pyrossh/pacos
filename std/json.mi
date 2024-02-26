@@ -2,6 +2,15 @@ module std/json
 
 type Json = Map[str, Json] | List[Json] | int | float | str | bool | nil
 
+enum Json =
+  | Object(Map[str, Json])
+  | Array(List[Json])
+  | Int(int)
+  | Float(float)
+  | String(str)
+  | Bool(bool)
+  | Nil
+
 fn Json.parse(src: str | Buffer | IO): Json | ParseError =
   JsonParser.withSrc(src).parse()
 
