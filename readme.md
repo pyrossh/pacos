@@ -318,6 +318,9 @@ record IOError()
 #[error]
 record JsonParseError()
 
+#[error("Version is nil")]
+record ParseError()
+
 #[json]
 record UserData(
   id: int,
@@ -325,8 +328,8 @@ record UserData(
   roles: List[str]
 )
 
-fn parse_version(header: List[int]): result[Version, error] =
-  header.get(0) != nil ? v : error.InvalidHeaderLength(header.get(0))
+fn parse_version(header: List[int]): result[int, ParseError] =
+  header.get(0) ?: ParseError()
 
 fn double_number(s: str): result[int] =
   number_str.parse_int().map(|n| 2 * n)
@@ -338,8 +341,12 @@ fn fetch_data(route: str): result[UserData] =
 
 fn main(): result[int] =
   double_number("10")?
-  version := parse_version(list.of(1, 2))
+  version := parse_version(list.of(1, 2))?
   conn := pg.connect()?
+
+  pg.connect()
+    .map(|| 0)
+    .map_err(|| 1)?
   
   match pg.connect()
     ok(c) -> return 0
@@ -351,6 +358,11 @@ fn main(): result[int] =
     err(IOError(e)) -> printLn("IO failed")
     err(e) -> printLn("generic error ${e.msg()}")
   ok(0)
+
+if Some(color) = favorite_color
+  printLn("Hello ${color}")
+else
+  println("qwe")
 ```
 
 **constants**
@@ -556,8 +568,8 @@ type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
 
 record Tree[E](
   value E,
-  left: option[Tree[E]],
-  right: option[Tree[E]],
+  left: Option[Tree],
+  right: Option[Tree],
 )
 
 fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
