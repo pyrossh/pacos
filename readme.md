@@ -42,6 +42,10 @@ fn firstItem(items: list[int]): option[int] =
 fn toCelsius(f: float): float =
   (f - 32) * (5 / 9)
 
+// Variadic function
+fn addItems(items ...str) =
+  list.add(items)
+
 record Cat(
   name: str
   age:  int
@@ -52,39 +56,74 @@ fn Cat.withName(name: str): Cat =
   Cat(name: name, age: 0)
 
 // A simple method
-fn (c: Cat) fullname(): str =
+fn fullname(c: Cat): str =
   c.name + c.age.toStr()
 
-fn (c: Cat) talk() =
+fn talk(c: Cat) =
   printLn("cat ${c.name} says meow")
 
-fn (c: Cat) toStr(): str =
+fn toStr(c: Cat): str =
   "Cat<{c.fullname()}, ${c.age}>"
 
-enum Temperature =
+trait Stringable where
+  fn toStr(): str
+
+// `Cat is a speciecs of felidae
+struct Cat is Stringable, Equal, Comparable =
+  | name: str
+  | age:  int
+
+  fn Cat(name: str, age: int) =
+    self.name = name
+    self.age = age
+
+  fn Cat.withName(name: str): Cat =
+    `Create a cat with only name
+    Cat(name: name, age: 0)
+
+  fn fullname(): str =
+    name + age.toStr()
+
+  fn talk() =
+    printLn("cat ${name} says meow")
+
+  fn toStr(): str =
+    "Cat<${fullname()}, ${age}>"
+
+enum Temperature where
   | celsius(float)
   | fahrenheit(float)
 
-fn (s: Temperature) toStr(): str =
-  match s
-    celsius(t) && t > 30 -> "${t}C is above 30 celsius"
-    celsius(t) -> "${t}C is below 30 celsius"
-    fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
-    fahrenheit(t) -> "${t}F is below 86 fahrenheit"
+  fn toStr(): str =
+    match self
+      celsius(t) && t > 30 -> "${t}C is above 30 celsius"
+      celsius(t) -> "${t}C is below 30 celsius"
+      fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
+      fahrenheit(t) -> "${t}F is below 86 fahrenheit"
 
 type MapCallback = fn(v: a): v
 
-trait Comparable[A: Compare](
-  fn compare(left: A, right: A): bool
-)
+struct DB(conn_url: str) where
 
-trait Stringable(
-  fn toStr(): str
-)
+  fn connect(): Result[unit, DatabaseError] =
+   `connect to the database
+    online := status()
+    if !online
+      Err(NotOnline(conn_url))
+    else
+      Ok(unit)
 
-record DB(
-  conn_url: str
-)
+  fn status(): bool =
+    `check if the database is running
+    res := exec("select 1")
+    if res == None
+      false
+    else
+      true
+
+  fn exec(q: str): Result[unit] =
+    `exec some stuff
+    printLn("Going to exec q")
 
 #[error]
 enum DatabaseError =
@@ -99,53 +138,47 @@ fn newDB(conn_url: str) result[DB, DatabaseError] =
   else
     db
 
-fn (d: DB) status(conn_url: str): bool =
+fn (d: DB) status(): bool =
   res := d.exec("select 1")
   if res == None
     false
   else
     true
 
-// Testing
-test("talks") |t|
-  c := Cat(name: "123", age: 1)
-  c.talk()
+suite "Cat" do
+  test "talks"  do
+    c := Cat(name: "123", age: 1)
+    c2 := Cat(...c, age: c.age + 1)
+    c.talk()
 
-test("fullname") |t|
-  Cat("rabby", 21).fullname() == "rabby21"
-  c2 := Cat(...c, age: c.age + 1)
+  test "fullname"  do
+    Assert.equal(Cat("rabby", 21).fullname(), "rabby21")
 
-test("ToStr") |t|
-  items := [Cat("Molly", 9), Cat("Fenton", 6)]
-      .retain(|p| p.name.size > 5)
-      .map(|p| describe(p))
-      .each(|d| printLn(d))
-  assert items[0].toStr() == "Cat<Fenton, 6>"
+  test "ToStr" do
+    items := [Cat("Molly", 9), Cat("Fenton", 6)]
+        .retain(|p| p.name.size > 5)
+        .map(|p| describe(p))
+        .each(|d| printLn(d))
+    Assert.equal(items[0].toStr(), "Cat<Fenton, 6>")
 
-bench("1231") |n|
-  for i := range n
-    printLn(i)
+suite "diagonal" do
+  test "3 4 5" do
+    Assert.equal 5.0 (diagonal 3.0 4.0)
+  test "5 12 13" do
+    Assert.equal 5.0 (diagonal 3.0 4.0)
 ```
 
-## Language Reference
+# Types
 
-**Keywords**
-
-```rs
-for,while,if,else,record,type,enum,fn,assert,match
-```
-
-### Types
-
-**any**
+### any
 
 The any type is an empty trait and is used to represent all types
 
-**error**
+### error
 
 The error type is a trait that represents all Error types
 
-**bool**
+## bool
 
 A bool can be either `true` or `false`. It is used in logical operations and conditional statements.
 
@@ -156,58 +189,47 @@ if true || false
   print("works")
 ```
 
-**byte**
+## byte
 
 A byte represents an unsigned 8-bit number. It is mainly used to represent strings and binary data.
 
-```rb
-let data: []byte?
-data = [104, 101, 197, 130, 197, 130, 111, 0]
+```go
+up_event := 'a'
+key_code := 102
 ```
 
-**int**
+## int
 
 An int is a signed 64-bit number. It can be represented in various ways,
 
-```
-0b - Binary (Base 2)
-0x - Hexadecimal (Base 16)
-27 - Standard (Base 10)
-```
+| Notation | Type        | Base    | Example                   |
+| -------- | ----------- | ------- | ------------------------- |
+| 0b       | Binary      | Base 2  | `0b00101010`, `0b1_1111`  |
+| 0x       | Hexadecimal | Base 16 | `0xff00ff`, `0xFF80_0000` |
+| number   | Standard    | Base 10 | `98762`, `98_762`         |
 
-```rb
-0b00101010
-0b1_1111_1
-0xff00ff
-0xFF00FF
-0xFF80_0000_0000_0000
-98762
-1_000_000
-```
-
-**float**
+## float
 
 A float represents a 64-bit floating point [IEEE-754-2008](https://en.wikipedia.org/wiki/Double-precision_floating-point_format).
 
-```java
-1.2
--0.4
-12.0f
-15.03f
-```
+| Type        | Example           |
+| ----------- | ----------------- |
+| Normal      | `1.2`, `-0.4`     |
+| With suffix | `15.03f`, `12.0f` |
+| E notation  | `2.7e-12`, `1e10` |
 
-**dec**
+## dec
 
 A dec is a decimal floating-point numbering format which is 64-bit data type.
 It is intended for applications where it is necessary to emulate decimal rounding exactly, such as financial and tax computations.
 It supports 16 decimal digits of significand and an exponent range of −383 to +384.
 
-```java
-2.4d
--13.3d
-```
+| Type       | Example           |
+| ---------- | ----------------- |
+| Normal     | `2.4d`, `-13.3d`  |
+| E notation | `2.7e-12`, `1e10` |
 
-**str**
+## str
 
 A str represents an array of runes or unicode code points. It is encoded to UTF-8 by default.
 It supports interpolation of variables/values that implement the ToStr interface.
@@ -284,16 +306,14 @@ An option is a type that represents either value present `some` or nothing prese
 ```go
 import std/option
 
-record Car(wheels: int)
-
-c := some(Car(wheels: 2))
+c := some(2)
 
 match c
   none -> print("no car")
-  some(car) -> car.wheels
+  some(c) -> print("${c}")
 
-if Some(car) = c
-  printLn("Hello ${car.wheels}")
+if some(count) = c
+  printLn("Hello ${count}")
 else
   printLn("nothing")
 ```
@@ -347,7 +367,9 @@ fn main(): result[int] =
   ok(0)
 ```
 
-**constants**
+# Declarations
+
+## constants
 
 Constants can be declared at the top level of a program. They cannot be reassigned.
 
@@ -370,20 +392,115 @@ const COUNTRY_CODES = map.of(
 fn count(n: int): int = n * 1
 ```
 
-**Assignment statement**
+## variables
+
+Variables can be declared only at the local scope of a function as they are mutable. They are references/pointers to data.
+We use the Short Variable Declaration Operator `:=` to declare a variable
+
+```go
+fn calculate(n: int): int =
+  a := 1 + n
+  b := 1 * n
+  a * b
+```
+
+## Functions
+
+```rs
+fn fib(n: int): int =
+  match n
+    0 | 1 -> n
+    _ -> fib(n - 1) + fib(n - 2)
+
+fn log(level: str, msg: str) =
+  printLn("${level}: ${msg}")
+
+fn info(msg: str) =
+  printLn("INFO", msg)
+
+fn warning(msg: str) =
+  printLn("WARN", msg)
+
+fn addLists[T](a: List[T], b: List[T]): List[T] =
+  a.concat(b)
+
+// Variadic function
+fn addItems(items ...str) =
+  for i, v := range items
+    printLn("${i} ${v}")
+```
+
+## Records
+
+A record is a collect of data indexed by fields. It is a reference type and reference counted.
+
+```rs
+struct Cat is Stringable =
+  | name: str
+  | age:  int
+
+  fn Cat.withName(name: str): Cat =
+    Cat(name: name, age: 0)
+
+  fn fullname(): str =
+    name + age.toStr()
+
+  fn talk() =
+    printLn("cat ${name} says meow")
+
+  fn toStr(): str =
+    "Cat<${fullname()}, ${age}>"
+```
+
+## Traits
+
+```rs
+trait Equatable[A] where
+  fn eq(left: A, right: A): bool
+  fn neq(left: A, right: A): bool
+
+trait Comparable[A: Ord] where
+  fn compare(left: A, right: A): Ordering
+```
+
+## Enums
+
+An Algebraic Data Type
+
+```rs
+enum Ordering is Stringable =
+  | LT
+  | EQ
+  | GT
+
+  fn toStr(): str =
+    match self
+      LT -> "LT"
+      EQ -> "EQ"
+      GT -> "GT"
+```
+
+## Type
+
+```rs
+type Size = int
+type Metre = float
+type MapString[T] = Map[String, T]
+```
+
+# Statements
+
+## Assignment statement
 
 ```rb
 low, mid, high := 0, 0, n.numItems
 x := 10
 y := 20
-xy_list := [x, y]
-xy_map := [x: x, y: y]
-assoc_list = [:a => 1, :b => 2]
-assoc_list[:a]
-assoc_list["b"]
+xy_list := List.of(1, 2, 3)
+xy_map := Map.of(1 => "one", 2 => "two")
 ```
 
-**While statement**
+## while statement
 
 ```rb
 low, mid, high := 0, 0, n.size
@@ -396,9 +513,12 @@ while low < high
 
 while a > b
   a += 1
+
+while Some(top) = stack.pop()
+  printLn(top)
 ```
 
-**For statement**
+## for statement
 
 ```rb
 for i := range 10
@@ -415,7 +535,7 @@ for v := range list
   sum += k + v
 ```
 
-**if expression/statement**
+## if expression/statement
 
 ```py
 if name == "Andreas"
@@ -435,7 +555,7 @@ fn getPerimeter(shape: Shape): Result[float] =
   match shape
     Rectangle(r) -> Ok(2 * r.length() + 2 * r.width())
     Circle(c) -> Ok(2 * c.radius() * PI)
-    c -> err(RuntimeError("expected shape but found ${@TypeName(c)}"))
+    _ -> Err(RuntimeError("expected shape but found ${@TypeName(shape)}"))
 
 match x, y
   1, 1 -> "both are 1"
@@ -456,75 +576,6 @@ match
 
 ## Operators
 
-**not operator**
-
-```rb
-!a
-!true
-```
-
-**ternary operator**
-
-```rb
-x ? x : y
-```
-
-**safe navigation operator**
-
-```rb
-a?.b?.c?.d
-```
-
-**double-bang operator/not-null assertion operator**
-
-```rb
-a!!.b
-```
-
-**elvis operator**
-
-```rb
-x ?: y
-```
-
-**elvis assignment operator**
-
-```rb
-atomic_number ?= 2
-```
-
-**spread operator**
-
-```
-list := [1, 2, 3]
-list2 := [0, ...list]
-assert list2.length == 4
-
-list = nil
-list3 := [0, ...list?];
-assert list2.length == 1
-```
-
-**cascade operator**
-
-```dart
-paint := Paint()
-  ..color = Colors.black
-  ..strokeCap = StrokeCap.round
-  ..strokeWidth = 5.0
-
-v := list.of(1, 2, 3)
-  ..add(4, 5)
-  ..get(0)
-```
-
-**variadic operator**
-
-```go
-fn add(items ...str) =
-  list.add(items)
-```
-
 **assignment operator**
 
 ```go
@@ -539,39 +590,70 @@ fn add(items ...str) =
 	x |= y  // 3
 	x <<= y // 24
 	x >>= y // 3
+  a ?= 2  // elvis assignment operator
+```
+
+**not operator**
+
+```rb
+!a
+!true
+```
+
+**ternary operator**
+
+```rb
+x ? a : b
+```
+
+**safe navigation operator**
+
+```rb
+a?.b?.c?.d
+```
+
+**elvis operator**
+
+```rb
+x ?: y
+```
+
+**cascade operator (remove??)**
+
+```dart
+paint := Paint()
+  ..color = Colors.black
+  ..strokeCap = StrokeCap.round
+  ..strokeWidth = 5.0
+
+v := list.of(1, 2, 3)
+  ..add(4, 5)
+  ..get(0)
 ```
 
 **range operator**
 
-```go
+```rs
 type Seq0 = fn(yield: fn(): bool): bool
 type Seq1[V] = fn(yield: fn(V): bool): bool
 type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
 
-record Tree[E](
-  value E,
-  left: Option[Tree],
-  right: Option[Tree],
-)
+struct Tree[E] =
+  | value E
+  | left: Option[Tree]
+  | right: Option[Tree]
 
-fn (t Tree[E]) op_range(yld: fn(E): bool): bool =
-  t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
+  fn op_range(yld: fn(E): bool): bool =
+    t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
 
-tree := Tree(
+let tree = Tree(
   value: 10,
   left: Tree(20, Tree(30), Tree(39)),
   right: Tree(40),
 )
 
-for t := range tree
+for t := range tree:
   printLn(v)
-```
-
-## Generics
-
-```
-fn add[T: int | float](a: List[T], b: List[T]): List[T] =
-  pass
 ```
 
 ## Rules
@@ -590,7 +672,3 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
 | Local variables          | snake_case              |
 | Constants                | SCREAMING_SNAKE_CASE    |
 | Generics                 | single uppercase letter |
-
-## Todo
-
-linter, formatter, test runner, language server, package manager
