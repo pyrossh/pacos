@@ -135,13 +135,13 @@ fn reverse(): str
     start = start + 1
   result
 
-fn parse_int(): int! =
+fn parseInt(): int! =
   0
 
-fn parse_float(): float! =
+fn parseFloat(): float! =
   0.0
 
-fn parse_bool(): bool! =
+fn parseBool(): bool! =
   match to_lower()
     "true" -> bool::true
     "false" -> bool::false

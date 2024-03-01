@@ -1,0 +1,162 @@
+---
+title: 👾 pacos-lang
+description: A statically typed, imperative programming language inspired by rust, koka
+template: splash
+hero:
+  tagline: A statically typed, imperative programming language inspired by rust, koka. With plans to be compiled to WASM.
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: Checkout the Documentation
+      link: /primitive-types
+      icon: right-arrow
+      variant: secondary
+---
+
+### Here is some sample code, please enjoy,
+
+```rs
+module lambda
+
+import std/list
+import std/math
+import std/http
+
+const DELTA = 11
+
+fn sum(a: int, b: int): int = a + b + DELTA
+
+fn sumAll(series: list[int]): int =
+  series.reduce(0, |v| v + 1)
+
+fn fib(n: int): int =
+  match n
+    0 | 1 -> n
+    _ -> fib(n - 1) + fib(n - 2)
+
+fn fib(n: int): int =
+  if n == 0 || n == 1
+    n
+  else
+    fib(n - 1) + fib(n - 2)
+
+fn factorial(n: int): int =
+  match n
+    a -> 1
+    _ -> n * factorial(n - 1)
+
+fn firstItem(items: list[int]): option[int] =
+  items.get(0)
+
+fn toCelsius(f: float): float =
+  (f - 32) * (5 / 9)
+
+// Variadic function
+fn addItems(items ...str) =
+  list.add(items)
+
+trait Stringable where
+  fn toStr(): str
+
+// `Cat is a speciecs of felidae
+struct Cat is Stringable, Equal, Comparable =
+  | name: str
+  | age:  int
+
+  fn Cat(name: str, age: int) =
+    self.name = name
+    self.age = age
+
+  fn Cat.withName(name: str): Cat =
+    `Create a cat with only name
+    Cat(name: name, age: 0)
+
+  fn fullname(): str =
+    name + age.toStr()
+
+  fn talk() =
+    printLn("cat ${name} says meow")
+
+  fn toStr(): str =
+    "Cat<${fullname()}, ${age}>"
+
+enum Temperature where
+  | celsius(float)
+  | fahrenheit(float)
+
+  fn toStr(): str =
+    match self
+      celsius(t) && t > 30 -> "${t}C is above 30 celsius"
+      celsius(t) -> "${t}C is below 30 celsius"
+      fahrenheit(t) && t > 86 -> "${t}F is above 86 fahrenheit"
+      fahrenheit(t) -> "${t}F is below 86 fahrenheit"
+
+alias MapCallback = fn(v: a): v
+
+struct DB where
+  let conn_url: str
+
+  fn connect(): Result[unit, DatabaseError] =
+   `connect to the database
+    online := status()
+    if !online
+      Err(NotOnline(conn_url))
+    else
+      Ok(unit)
+
+  fn status(): bool =
+    `check if the database is running
+    res := exec("select 1")
+    if res == None
+      false
+    else
+      true
+
+  fn exec(q: str): Result[unit] =
+    `exec some stuff
+    printLn("Going to exec q")
+
+#[error]
+enum DatabaseError =
+  NotOnline(conn_url: str)
+  RowReadFailure(query: str)
+
+fn newDB(conn_url: str) result[DB, DatabaseError] =
+  db := DB(conn_url: str)
+  online := db.status()
+  if !online
+    err(NotOnline(conn_url))
+  else
+    db
+
+fn (d: DB) status(): bool =
+  res := d.exec("select 1")
+  if res == None
+    false
+  else
+    true
+
+
+#[test]
+primitive CatTest
+  fn talk(t: TestHelper) =
+    c := Cat(name: "123", age: 1)
+    c2 := Cat(...c, age: c.age + 1)
+    c.talk()
+
+  fn fullname(t: TestHelper) =
+    Assert.equal(Cat("rabby", 21).fullname(), "rabby21")
+
+  fn toStr() =
+    items := [Cat("Molly", 9), Cat("Fenton", 6)]
+      .retain(|p| p.name.size > 5)
+      .map(|p| describe(p))
+      .each(|d| printLn(d))
+    Assert.equal(items[0].toStr(), "Cat<Fenton, 6>")
+
+suite "diagonal" do
+  test "3 4 5" do
+    Assert.equal 5.0 (diagonal 3.0 4.0)
+  test "5 12 13" do
+    Assert.equal 5.0 (diagonal 3.0 4.0)
+```
