@@ -1,40 +1,74 @@
 module std
 
-record pair[K: Comparable, V](k: K, v: V)
+record pair[K: Comparable, V] where
+  | k: K
+  | v: V
 
-record map[K, V](
-  `A slice is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-  `A slice is not an array. A slice describes a piece of an array.
-  items: list[pair[K, V]]
+struct Map[K, V] where
+  `A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+  `A Map is not an array. A slice describes a piece of an array.
+  | items: list[pair[K, V]]
+
+  static fn of[K, V](kvs: ...pair[K, V]): Map[K, V] =
+    Map[K, V]().add(kvs)
+
+  fn add(kvs: ...pair[K, V]) =
+    `adds the specified elements to the start of the list
+    
+  fn op_range(yld: fn(k: K, v: V): bool): bool =
+    `allows the range operator to iterate over the Map
+    for item := range items
+      if !yld(item.k, item.v)
+        false
+    true
+
+  fn get(k K): Option[V] =
+    `get a value from the Map using key k
+    for k, v := range m
+      if k == k
+        return v
+    nil
+
+  fn set(k K, v V) =
+    `put a value into the Map
+    list.add(pair(k, v))
+
+  fn putIf(k K, v V) =
+    `put a value into the Map if its not already present
+    pass
+
+
+
+`A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+`A Map is not an array. A slice describes a piece of an array.
+record Map[K, V](
+  items: List[Pair[K, V]]
 )
 
-fn Map.of[K, V](kvs: ...pair[K, V]): map[K, V] =
-  map[K, V]().add(kvs)
-
-fn (m: Map) add(kvs: ...pair[K, V]) =
+fn Map.add(kvs: ...pair[K, V]) =
   `adds the specified elements to the start of the list
   items.add(kvs)
 
-fn (m: Map[K, V]) op_range(yld: fn(k: K, v: V): bool): bool =
-  for item := range items
-    if !yld(item.k, item.v)
-      false
-  true
-
-fn (m: Map[K, V]) get(k K): V? =
+fn (Map) get(k K): V? =
   for k, v := range m
     if k == k
       return v
   nil
 
-fn (m: Map) put(k K, v V) =
+fn (Map) put(k K, v V) =
   list.add(pair(k, v))
 
-fn (m: Map) put_if(k K, v V) =
+fn (Map) put_if(k K, v V) =
   if 
 
-fn (m: Map) update() =
+fn (Map) update() =
   pass
 
-fn (m: Map) update_if() =
+fn (Map) update_if() =
   pass
+
+fn (Map->Range) range(yld: fn(k: K, v: V): bool): bool =
+  for item := range items
+    if !yld(item.k, item.v)
+      false
+  true

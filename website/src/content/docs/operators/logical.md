@@ -13,18 +13,8 @@ description: These are basic types
 **assignment operator**
 
 ```go
-  x := 5
-	y := 3
-	x += y  // 8
-	x -= y  // 5
-	x *= y  // 15
-	x /= y  // 5
-	x %= y  // 2
-	x &= y  // 2
-	x |= y  // 3
-	x <<= y // 24
-	x >>= y // 3
-  a ?= 2  // elvis assignment operator
+  x, y := 5, 3
+  z := x + y // 8
 ```
 
 **not operator**
@@ -68,24 +58,26 @@ v := list.of(1, 2, 3)
 **range operator**
 
 ```rs
-type Seq0 = fn(yield: fn(): bool): bool
-type Seq1[V] = fn(yield: fn(V): bool): bool
-type Seq2[K, V] = fn(yield: fn(K, V): bool): bool
+trait Rangeble where  
+  fn range[V](yield: fn(V): bool): bool
 
-struct Tree[E] =
-  | value E
-  | left: Option[Tree]
-  | right: Option[Tree]
+trait RangebleKV where  
+  fn rangeKV[K, V](yield: fn(K, V): bool): bool
 
-  fn op_range(yld: fn(E): bool): bool =
-    t ? true : t.left?.in_order(yld) && yld(t.val) && t.right?.in_order(yld)
+record Tree[E](
+  value: E
+  left: Option[Tree] = None
+  right: Option[Tree] = None
+)
+
+fn (Tree->Rangeble) range(yld: fn(E): bool): bool =
+  t.left?.range(yld) && yld(t.val) && t.right?.range(yld)
 
 let tree = Tree(
   value: 10,
   left: Tree(20, Tree(30), Tree(39)),
   right: Tree(40),
 )
-
-for t := range tree:
+for t := range tree
   printLn(v)
 ```

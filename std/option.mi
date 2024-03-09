@@ -24,7 +24,7 @@ fn (o option[T]) getOrElse(default: T): T =
     some(val) -> val
     none -> d
 
-fn (o option[T: ToStr]) toStr(): str =
+fn (Option->ToStr) toStr(): str =
   match o
     some(v) -> v.to_str()
     none -> "none"
