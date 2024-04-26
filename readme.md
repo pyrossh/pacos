@@ -4,4 +4,4 @@
 - The compiler users the tree-sitter parser so has out of the box syntax highlighting support for helix and zed editor
 - Plans to be compiled to WASM
 
-View the docs here [pacos.sh](https://pacos.sh)
+View the docs here [pacos.dev](https://pacos.dev)
