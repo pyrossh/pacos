@@ -10,8 +10,13 @@ trait Equatable[A] where
   fn eq(other: A): bool
   fn ne(other: A): bool
 
+enum Compare =
+  | Less
+  | Equal
+  | Greater
+
 trait Comparable[A: Ord] where
-  fn compareTo(other: A): int
+  fn compareTo(other: A): Compare
 
 trait ArithmeticOperator[A] where
   fn add(other: A): A

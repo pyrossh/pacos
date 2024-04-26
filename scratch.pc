@@ -1,56 +1,31 @@
 data.price?.take_if(|a| a != "")
 
-trait HasEq[A](
-  fn eq(that: a): bool
-)
-
-trait Equatable[A]
-  `A trait that defines equal and not equal operations
-
-  fn eq(b: Equatable[A]): bool
-  fn ne(b: Equatable[A]): bool
-end
-
-enum Compare
-  | Less
-  | Equal
-  | Greater
-end
-
-trait Comparable[A] is Equatable[A]
-  fn lt(that: A): bool
-  fn le(that: A): bool 
-  fn ge(that: A): bool
-  fn gt(that: A): bool
-  fn compare(that: a): Compare
-end
-
-enum list<T> =
+enum List<T> =
   | empty
   | link(v: T, rest: list<T>)
 
-fn list.of[A](values: ...A): list[A] =
+fn List.of[A](values: ...A): list[A] =
   list[A]().add(values)
 
-fn (o list<T>) each(cb: fn(v: T)) =
-  match o
+fn (List) each(cb: fn(v: T)) =
+  match self
     empty -> return
     link(a, rest) ->
       cb(a)
       rest.each(cb)
 
-fn (l: list) append(values: ...V) =
+fn (List) append(values: ...V) =
   `adds the specified elements to the start of the list
   range(values) |v|
-    l.add(v)
+    self.add(v)
 
-fn (l: list) append(v: V) =
+fn (List) append(v: V) =
   `adds the specified elements to the start of the list
-  l.last().rest = link(v, empty)
+  self.last().rest = link(v, empty)
 
-fn (l: list) prepend(v: V) =
+fn (List) prepend(v: V) =
   `adds the specified elements to the start of the list
-  l.first() = link(v, l.first())
+  self.first() = link(v, self.first())
 
 
 (1 + 2).mod(3).pow(2).sqrt()
@@ -82,7 +57,8 @@ fn UserData.fromJsonStr(data: str): UserData | JsonParseError =
 
 type FetchDataError =  FetchError | IOError |  JsonParseError
 
-fn fetch_data(route: str): map[str, any] | UserData | FetchError | IOError |  JsonParseError =
+#effects(IO)
+fn fetch_data(route: str): Result[UserData] =
   res := fetch(route)?
   data := res.body.read_all()?
   parse_json(data)?

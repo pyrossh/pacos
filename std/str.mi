@@ -15,19 +15,19 @@ record str(
 fn str.of(bs ...byte): str =
   data.add(bs)
 
-fn (s str) get(i: int) =
+fn<str> get(i: int) =
   data[i]
 
-fn (s str) contains(search: str): bool =
+fn (str) contains(search: str): bool =
   pass
 
-fn (s str) index_of(sub: str): int =
+fn (str) index_of(sub: str): int =
   pass
 
-fn (s str) test(pattern: Regex): []str =
+fn (str) test(pattern: Regex): []str =
   pass
 
-fn (s str) search(key str): int, bool =
+fn (str) search(key str): int, bool =
 	low, mid, high := 0, 0, n.numItems
 	while low < high
 		mid = (low + high) / 2
@@ -51,51 +51,51 @@ fn (t BTree) delete(key str): bool =
 		return true
 	return false
 
-fn (s str) starts_with(search: str): bool =
+fn (str) starts_with(search: str): bool =
   pass
 
-fn (s str) concat(other: str): str =
+fn (str) concat(other: str): str =
   s + other
 
-fn (s str) to_str(): str = s
+fn (str) to_str(): str = s
 
-fn (s str) concat(other: str): str =
+fn (str) concat(other: str): str =
   s + s
 
-fn (s str) starts_with(search: str): bool =
+fn (str) starts_with(search: str): bool =
   pass
 
-fn (s str) ends_with(search: str): bool =
+fn (str) ends_with(search: str): bool =
   pass
 
-fn (s str) contains(search: str): bool =
+fn (str) contains(search: str): bool =
   pass
 
-fn (s str) index_of(sub: str): int =
+fn (str) index_of(sub: str): int =
   pass
 
-fn (s str) match(pattern: Regex): []str =
+fn (str) match(pattern: Regex): []str =
   pass
 
-fn (s str) match_all(pattern: Regex): []str =
+fn (str) match_all(pattern: Regex): []str =
   pass
 
-fn (s str) pad_start(sub: str, count: int): str =
+fn (str) pad_start(sub: str, count: int): str =
   pass
 
-fn (s str) pad_end(sub: str, count: int): str =
+fn (str) pad_end(sub: str, count: int): str =
   pass
 
-fn (s str) repeat(count: int): str =
+fn (str) repeat(count: int): str =
   pass
 
-fn (s str) replace(pattern: Regex, sub: str): str =
+fn (str) replace(pattern: Regex, sub: str): str =
   pass
 
-fn (s str) replace_all(pattern: Regex, sub: str): str =
+fn (str) replace_all(pattern: Regex, sub: str): str =
   pass
 
-fn (s str) search(pattern: Regex): str =
+fn (str) search(pattern: Regex): str =
   pass
 
 fn slice(start: int, end: int): str =

@@ -4,7 +4,7 @@ description: These are basic types
 ---
 
 ```rs
-fn fib(n: int): int =
+fn fib(n: int) -> int =
   match n
     0 | 1 -> n
     _ -> fib(n - 1) + fib(n - 2)
@@ -12,13 +12,13 @@ fn fib(n: int): int =
 fn log(level: str, msg: str) =
   printLn("${level}: ${msg}")
 
-fn info(msg: str) =
-  printLn("INFO", msg)
+pub fn info(msg: str) =
+  log("INFO", msg)
 
-fn warning(msg: str) =
-  printLn("WARN", msg)
+pub fn warning(msg: str) =
+  log("WARN", msg)
 
-fn addLists[T](a: List[T], b: List[T]): List[T] =
+fn addLists(a: List[T], b: List[T]): List[T] =
   a.concat(b)
 
 // Variadic function
