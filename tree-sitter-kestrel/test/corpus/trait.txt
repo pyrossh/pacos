@@ -1,0 +1,38 @@
+================================================================================
+Enum
+================================================================================
+
+trait Comparable[A](
+  fn compare(left: A, right: A): bool
+)
+
+trait Stringable(
+  fn to_str(): str
+)
+
+--------------------------------------------------------------------------------
+
+(source
+  (trait
+    (typename)
+    (generics
+      (generic_type
+        (genericname)))
+    (trait_field
+      (identifier)
+      (param
+        (identifier)
+        (type
+          (typename)))
+      (param
+        (identifier)
+        (type
+          (typename)))
+      (return_type
+        (typename))))
+  (trait
+    (typename)
+    (trait_field
+      (identifier)
+      (return_type
+        (typename)))))

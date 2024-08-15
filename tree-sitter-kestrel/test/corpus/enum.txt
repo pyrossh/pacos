@@ -1,0 +1,40 @@
+================================================================================
+Enum
+================================================================================
+
+enum Temperature =
+  | celsius(float)
+  | fahrenheit(float)
+
+enum Colors =
+  | rgb(int, int, int)
+  | rgba(int, int, int, int)
+  | hex(int)
+
+--------------------------------------------------------------------------------
+
+(source
+  (enum
+    (typename)
+    (enum_field
+      (identifier)
+      (identifier))
+    (enum_field
+      (identifier)
+      (identifier)))
+  (enum
+    (typename)
+    (enum_field
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier))
+    (enum_field
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier))
+    (enum_field
+      (identifier)
+      (identifier))))

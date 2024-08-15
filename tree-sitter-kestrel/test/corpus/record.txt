@@ -1,0 +1,76 @@
+================================================================================
+Record
+================================================================================
+
+record Cat(name: str, age:  int)
+
+record Dog(
+  name: str,
+  age:  int
+)
+
+record Dog[A, B](
+  name: A,
+  age:  B
+)
+
+record Dog[A: Compare & String, B](
+  name: A,
+  age:  B
+)
+
+--------------------------------------------------------------------------------
+
+(source
+  (record
+    (typename)
+    (record_field
+      (identifier)
+      (type
+        (typename)))
+    (record_field
+      (identifier)
+      (type
+        (typename))))
+  (record
+    (typename)
+    (record_field
+      (identifier)
+      (type
+        (typename)))
+    (record_field
+      (identifier)
+      (type
+        (typename))))
+  (record
+    (typename)
+    (generics
+      (generic_type
+        (genericname))
+      (generic_type
+        (genericname)))
+    (record_field
+      (identifier)
+      (type
+        (typename)))
+    (record_field
+      (identifier)
+      (type
+        (typename))))
+  (record
+    (typename)
+    (generics
+      (generic_type
+        (genericname)
+        (typename)
+        (typename))
+      (generic_type
+        (genericname)))
+    (record_field
+      (identifier)
+      (type
+        (typename)))
+    (record_field
+      (identifier)
+      (type
+        (typename)))))

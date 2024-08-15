@@ -1,0 +1,271 @@
+================================================================================
+If Statement
+================================================================================
+
+test("If") |t|
+  a := (1 * 5) + (2 + 3)
+  if a < b
+    assert a != b
+  else if a > 9
+    assert a == 9
+  else if a < 9
+    assert b == 0
+  else
+    assert a == 9
+
+--------------------------------------------------------------------------------
+
+(source
+  (test
+    (string
+      (string_start)
+      (string_end))
+    (lambda
+      (identifier)
+      (body
+        (assignment_statement
+          (identifier)
+          (binary_operator
+            (parenthesized_expression
+              (binary_operator
+                (integer)
+                (integer)))
+            (parenthesized_expression
+              (binary_operator
+                (integer)
+                (integer)))))
+        (if_statement
+          (comparison_operator
+            (identifier)
+            (identifier))
+          (block
+            (assert_statement
+              (comparison_operator
+                (identifier)
+                (identifier))))
+          (else_if_clause
+            (comparison_operator
+              (identifier)
+              (integer))
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer)))))
+          (else_if_clause
+            (comparison_operator
+              (identifier)
+              (integer))
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer)))))
+          (else_clause
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer))))))))))
+
+================================================================================
+For
+================================================================================
+
+test("for") |t|
+  for i := range 10
+    pass
+
+  for i := range n
+    pass
+
+  for k, v := range data
+    pass
+
+  // for v := range data.list
+  //   pass
+
+  for i, v := range list.of(1, 2, 3)
+    pass
+
+  for k, v := range map.of("a" => 1, "b" => 2)
+    pass
+
+--------------------------------------------------------------------------------
+
+(source
+  (test
+    (string
+      (string_start)
+      (string_end))
+    (lambda
+      (identifier)
+      (body
+        (for_statement
+          (identifier)
+          (integer)
+          (body
+            (pass_statement)))
+        (for_statement
+          (identifier)
+          (identifier)
+          (body
+            (pass_statement)))
+        (for_statement
+          (identifier)
+          (identifier)
+          (identifier)
+          (body
+            (pass_statement)))
+        (comment)
+        (comment)
+        (for_statement
+          (identifier)
+          (identifier)
+          (call
+            (reference
+              (identifier)
+              (identifier))
+            (argument_list
+              (integer)
+              (integer)
+              (integer)))
+          (body
+            (pass_statement)))
+        (for_statement
+          (identifier)
+          (identifier)
+          (call
+            (reference
+              (identifier)
+              (identifier))
+            (argument_list
+              (pair_argument
+                (string
+                  (string_start)
+                  (string_end))
+                (integer))
+              (pair_argument
+                (string
+                  (string_start)
+                  (string_end))
+                (integer))))
+          (body
+            (pass_statement)))))))
+
+================================================================================
+while
+================================================================================
+
+test("while") |t|
+  while true
+    pass
+
+  while i < 9
+    pass
+
+  while a > b && c < d
+    pass
+
+--------------------------------------------------------------------------------
+
+(source
+  (test
+    (string
+      (string_start)
+      (string_end))
+    (lambda
+      (identifier)
+      (body
+        (while_statement
+          (true)
+          (block
+            (pass_statement)))
+        (while_statement
+          (comparison_operator
+            (identifier)
+            (integer))
+          (block
+            (pass_statement)))
+        (while_statement
+          (boolean_operator
+            (comparison_operator
+              (identifier)
+              (identifier))
+            (comparison_operator
+              (identifier)
+              (identifier)))
+          (block
+            (pass_statement)))))))
+
+================================================================================
+assert
+================================================================================
+
+test("assert") |t|
+  assert 1 != 2
+  assert 5 > 4
+  assert 7 != 9
+  assert list.of(1, 2) == list.of(1, 2)
+  assert map.of("1" => 2) == map.of("1" => 2)
+
+--------------------------------------------------------------------------------
+
+(source
+  (test
+    (string
+      (string_start)
+      (string_end))
+    (lambda
+      (identifier)
+      (body
+        (assert_statement
+          (comparison_operator
+            (integer)
+            (integer)))
+        (assert_statement
+          (comparison_operator
+            (integer)
+            (integer)))
+        (assert_statement
+          (comparison_operator
+            (integer)
+            (integer)))
+        (assert_statement
+          (comparison_operator
+            (call
+              (reference
+                (identifier)
+                (identifier))
+              (argument_list
+                (integer)
+                (integer)))
+            (call
+              (reference
+                (identifier)
+                (identifier))
+              (argument_list
+                (integer)
+                (integer)))))
+        (assert_statement
+          (comparison_operator
+            (call
+              (reference
+                (identifier)
+                (identifier))
+              (argument_list
+                (pair_argument
+                  (string
+                    (string_start)
+                    (string_end))
+                  (integer))))
+            (call
+              (reference
+                (identifier)
+                (identifier))
+              (argument_list
+                (pair_argument
+                  (string
+                    (string_start)
+                    (string_end))
+                  (integer))))))))))

@@ -1,0 +1,34 @@
+{
+  "name": "pacos",
+  "displayName": "pacos",
+  "description": "Textmate grammar for pacos",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "pacos",
+        "aliases": [
+          "Pacos",
+          "pacos"
+        ],
+        "extensions": [
+          ".pc"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "pacos",
+        "scopeName": "source.pc",
+        "path": "./syntaxes/pacos.tmLanguage.json"
+      }
+    ]
+  }
+}

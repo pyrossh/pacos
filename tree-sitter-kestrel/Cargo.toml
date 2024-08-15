@@ -1,0 +1,26 @@
+[package]
+name = "tree-sitter-pacos"
+description = "pacos grammar for tree-sitter"
+version = "0.20.4"
+authors = [
+	"pyrossh <pyros2097@gmail.com>",
+]
+license = "MIT"
+readme = "bindings/rust/README.md"
+keywords = ["incremental", "parsing", "pacos"]
+categories = ["parsing", "text-editors"]
+repository = "https://github.com/pyrossh/tree-sitter-pacos"
+edition = "2021"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*"]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter = "~0.20.10"
+
+[build-dependencies]
+cc = "~1.0"
