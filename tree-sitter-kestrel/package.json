@@ -44,6 +44,7 @@
     "build": "tree-sitter generate",
     "build-wasm": "tree-sitter build --wasm",
     "lint": "eslint grammar.js",
+    "format": "prettier -w .",
     "parse": "tree-sitter parse",
     "test": "tree-sitter test"
   },
@@ -74,6 +75,7 @@
       "sourceType": "module"
     },
     "rules": {
+      "quotes": "off",
       "arrow-parens": "off",
       "camel-case": "off",
       "indent": [

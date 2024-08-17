@@ -60,7 +60,7 @@
         "required": true,
         "types": [
           {
-            "type": "primary_expression",
+            "type": "expression",
             "named": true
           }
         ]
@@ -166,22 +166,6 @@
     }
   },
   {
-    "type": "block",
-    "named": true,
-    "fields": {
-      "alternative": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "case_clause",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "body",
     "named": true,
     "fields": {},
@@ -210,7 +194,15 @@
           "named": true
         },
         {
-          "type": "if_statement",
+          "type": "if",
+          "named": true
+        },
+        {
+          "type": "match",
+          "named": true
+        },
+        {
+          "type": "return",
           "named": true
         },
         {
@@ -292,7 +284,7 @@
     }
   },
   {
-    "type": "case_clause",
+    "type": "case",
     "named": true,
     "fields": {
       "body": {
@@ -327,10 +319,6 @@
       "types": [
         {
           "type": "class_pattern",
-          "named": true
-        },
-        {
-          "type": "complex_pattern",
           "named": true
         },
         {
@@ -452,25 +440,6 @@
     }
   },
   {
-    "type": "complex_pattern",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "float",
-          "named": true
-        },
-        {
-          "type": "integer",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "continue",
     "named": true,
     "fields": {}
@@ -478,17 +447,7 @@
   {
     "type": "decorator",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "dotted_name",
@@ -506,7 +465,7 @@
     }
   },
   {
-    "type": "else_clause",
+    "type": "else",
     "named": true,
     "fields": {
       "body": {
@@ -522,7 +481,7 @@
     }
   },
   {
-    "type": "else_if_clause",
+    "type": "else_if",
     "named": true,
     "fields": {
       "body": {
@@ -644,21 +603,6 @@
         },
         {
           "type": "ternary_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "expression_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
           "named": true
         }
       ]
@@ -829,7 +773,7 @@
     }
   },
   {
-    "type": "if_statement",
+    "type": "if",
     "named": true,
     "fields": {
       "alternative": {
@@ -837,11 +781,11 @@
         "required": false,
         "types": [
           {
-            "type": "else_clause",
+            "type": "else",
             "named": true
           },
           {
-            "type": "else_if_clause",
+            "type": "else_if",
             "named": true
           }
         ]
@@ -904,6 +848,32 @@
       },
       "value": {
         "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "match",
+    "named": true,
+    "fields": {
+      "case": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "case",
+            "named": true
+          }
+        ]
+      },
+      "subject": {
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -1167,6 +1137,21 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "return",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -1473,10 +1458,6 @@
     "named": false
   },
   {
-    "type": "#",
-    "named": false
-  },
-  {
     "type": "%",
     "named": false
   },
@@ -1573,6 +1554,10 @@
     "named": false
   },
   {
+    "type": "@",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -1594,10 +1579,6 @@
   },
   {
     "type": "break",
-    "named": false
-  },
-  {
-    "type": "case",
     "named": false
   },
   {

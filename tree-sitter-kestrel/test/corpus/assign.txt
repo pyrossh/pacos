@@ -7,6 +7,9 @@ val pi = 3.14159
 val name = "kestrel"
 val debugEnabled = True
 val count = counter(10)
+val sum = 1 + ((2 * 3) / 4)
+val enabled = !False
+val open = (count > 10) && (enabled == True) || (debug == False)
 val countriesList = listOf("US", "INDIA", "CANADA")
 val countryCode = mapOf(
   "in" => "INDIA",
@@ -19,75 +22,145 @@ val countryCode = mapOf(
 (source
   (assign
     (identifier)
-    (primary_expression
-      (integer)))
+    (expression
+      (primary_expression
+        (integer))))
   (assign
     (identifier)
-    (primary_expression
-      (float)))
+    (expression
+      (primary_expression
+        (float))))
   (assign
     (identifier)
-    (primary_expression
-      (string
-        (quoted_content))))
+    (expression
+      (primary_expression
+        (string
+          (quoted_content)))))
   (assign
     (identifier)
-    (primary_expression
-      (typename)))
+    (expression
+      (primary_expression
+        (typename))))
   (assign
     (identifier)
-    (primary_expression
-      (call
-        (reference
-          (identifier))
-        (argument_list
-          (expression
-            (primary_expression
-              (integer)))))))
+    (expression
+      (primary_expression
+        (call
+          (reference
+            (identifier))
+          (argument_list
+            (expression
+              (primary_expression
+                (integer))))))))
   (assign
     (identifier)
-    (primary_expression
-      (call
-        (reference
-          (identifier))
-        (argument_list
-          (expression
-            (primary_expression
-              (string
-                (quoted_content))))
-          (expression
-            (primary_expression
-              (string
-                (quoted_content))))
-          (expression
-            (primary_expression
-              (string
-                (quoted_content))))))))
+    (expression
+      (primary_expression
+        (binary_operator
+          (primary_expression
+            (integer))
+          (primary_expression
+            (parenthesized_expression
+              (expression
+                (primary_expression
+                  (binary_operator
+                    (primary_expression
+                      (parenthesized_expression
+                        (expression
+                          (primary_expression
+                            (binary_operator
+                              (primary_expression
+                                (integer))
+                              (primary_expression
+                                (integer)))))))
+                    (primary_expression
+                      (integer)))))))))))
   (assign
     (identifier)
-    (primary_expression
-      (call
-        (reference
-          (identifier))
-        (argument_list
-          (pair_argument
-            (string
-              (quoted_content))
+    (expression
+      (not_operator
+        (expression
+          (primary_expression
+            (typename))))))
+  (assign
+    (identifier)
+    (expression
+      (boolean_operator
+        (expression
+          (boolean_operator
+            (expression
+              (primary_expression
+                (parenthesized_expression
+                  (expression
+                    (comparison_operator
+                      (primary_expression
+                        (identifier))
+                      (primary_expression
+                        (integer)))))))
+            (expression
+              (primary_expression
+                (parenthesized_expression
+                  (expression
+                    (comparison_operator
+                      (primary_expression
+                        (identifier))
+                      (primary_expression
+                        (typename)))))))))
+        (expression
+          (primary_expression
+            (parenthesized_expression
+              (expression
+                (comparison_operator
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (typename))))))))))
+  (assign
+    (identifier)
+    (expression
+      (primary_expression
+        (call
+          (reference
+            (identifier))
+          (argument_list
             (expression
               (primary_expression
                 (string
-                  (quoted_content)))))
-          (pair_argument
-            (string
-              (quoted_content))
+                  (quoted_content))))
             (expression
               (primary_expression
                 (string
-                  (quoted_content)))))
-          (pair_argument
-            (string
-              (quoted_content))
+                  (quoted_content))))
             (expression
               (primary_expression
                 (string
-                  (quoted_content))))))))))
+                  (quoted_content)))))))))
+  (assign
+    (identifier)
+    (expression
+      (primary_expression
+        (call
+          (reference
+            (identifier))
+          (argument_list
+            (pair_argument
+              (string
+                (quoted_content))
+              (expression
+                (primary_expression
+                  (string
+                    (quoted_content)))))
+            (pair_argument
+              (string
+                (quoted_content))
+              (expression
+                (primary_expression
+                  (string
+                    (quoted_content)))))
+            (pair_argument
+              (string
+                (quoted_content))
+              (expression
+                (primary_expression
+                  (string
+                    (quoted_content)))))))))))

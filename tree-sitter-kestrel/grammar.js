@@ -1,6 +1,8 @@
 const PREC = {
   conditional: -1,
   parenthesized_expression: 1,
+  or: 10,
+  and: 11,
   not: 12,
   compare: 13,
   bitwise_or: 14,
@@ -18,6 +20,7 @@ module.exports = grammar({
   name: "kestrel",
   externals: ($) => [$.quoted_content],
   conflicts: ($) => [[$.closure, $.primary_expression]],
+  // inline: ($) => [$.expression],
   rules: {
     source: ($) =>
       seq(
@@ -107,7 +110,7 @@ module.exports = grammar({
         field("body", $.body),
       ),
 
-    decorator: ($) => seq("#", "[", $.expression, "]"),
+    decorator: ($) => seq("@"),
 
     body: ($) => seq("{", repeat($._statement), "}"),
 
@@ -119,10 +122,9 @@ module.exports = grammar({
         $.assert,
         $.for,
         $.while,
-        $.if_statement,
-        // $.match_statement
-        // $.expression_statement,
-        // $.return_statement,
+        $.if,
+        $.match,
+        $.return,
       ),
 
     assign: ($) =>
@@ -130,53 +132,27 @@ module.exports = grammar({
         choice("val", "var"),
         field("left", commaSep1($.identifier)),
         "=",
-        field("right", $.primary_expression),
+        field("right", $.expression),
       ),
 
     assert: ($) => seq("assert", commaSep1($.expression)),
-
-    expression_statement: ($) =>
-      choice($.expression, seq(commaSep1($.expression), optional(","))),
-
-    return_statement: ($) => seq("return", optional($._expressions)),
-
-    _expressions: ($) => choice($.expression, $.expression_list),
-
+    return: ($) => seq("return", optional($.expression)),
     break: (_) => prec.left("break"),
     continue: (_) => prec.left("continue"),
 
-    if_statement: ($) =>
+    if: ($) =>
       seq(
         "if",
         field("condition", $.expression),
         field("body", $.body),
-        repeat(field("alternative", $.else_if_clause)),
-        optional(field("alternative", $.else_clause)),
+        repeat(field("alternative", $.else_if)),
+        optional(field("alternative", $.else)),
       ),
 
-    else_if_clause: ($) =>
+    else_if: ($) =>
       seq("else if", field("condition", $.expression), field("body", $.body)),
 
-    else_clause: ($) => seq("else", field("body", $.body)),
-
-    match_statement: ($) =>
-      seq(
-        "match",
-        commaSep1(field("subject", $.expression)),
-        field("body", alias($._match_block, $.block)),
-      ),
-
-    _match_block: ($) =>
-      choice(seq("{", repeat(field("alternative", $.case_clause)), "}")),
-
-    case_clause: ($) =>
-      seq(
-        "case",
-        commaSep1($.case_pattern),
-        optional(","),
-        ":",
-        field("body", $.body),
-      ),
+    else: ($) => seq("else", field("body", $.body)),
 
     reference: ($) =>
       prec(PREC.call, seq($.identifier, optional(seq(".", $.identifier)))),
@@ -193,33 +169,33 @@ module.exports = grammar({
     while: ($) =>
       seq("while", field("condition", $.expression), field("body", $.body)),
 
-    block: ($) => seq(repeat($._statement), "}"),
-
-    expression_list: ($) =>
-      prec.right(
-        seq(
-          $.expression,
-          choice(",", seq(repeat1(seq(",", $.expression)), optional(","))),
-        ),
-      ),
-
     dotted_name: ($) => prec(1, sep1($.identifier, ".")),
 
     // Match cases
-
-    case_pattern: ($) => prec(1, choice($._simple_pattern)),
-    _simple_pattern: ($) =>
-      prec(
-        1,
-        choice(
-          $.class_pattern,
-          $.string,
-          seq(optional("-"), choice($.integer, $.float)),
-          $.complex_pattern,
-          $.dotted_name,
-          "_",
-        ),
+    match: ($) =>
+      seq(
+        "match",
+        commaSep1(field("subject", $.expression)),
+        "{",
+        repeat(field("case", $.case)),
+        "}",
       ),
+
+    case: ($) =>
+      seq(
+        commaSep1($.case_pattern),
+        "->",
+        field("body", $.body),
+      ),
+
+    case_pattern: ($) => prec(1, choice(
+      $.class_pattern,
+      $.string,
+      $.integer,
+      $.float,
+      $.dotted_name,
+      "_",
+    )),
 
     class_pattern: ($) =>
       seq(
@@ -227,17 +203,6 @@ module.exports = grammar({
         "(",
         optional(seq(commaSep1($.case_pattern), optional(","))),
         ")",
-      ),
-
-    complex_pattern: ($) =>
-      prec(
-        1,
-        seq(
-          optional("-"),
-          choice($.integer, $.float),
-          choice("+", "-"),
-          choice($.integer, $.float),
-        ),
       ),
 
     expression: ($) =>
@@ -272,19 +237,21 @@ module.exports = grammar({
 
     boolean_operator: ($) =>
       choice(
-        seq(
-          "(",
-          field("left", $.expression),
-          field("operator", "&&"),
-          field("right", $.expression),
-          ")",
+        prec.left(
+          PREC.and,
+          seq(
+            field("left", $.expression),
+            field("operator", "&&"),
+            field("right", $.expression),
+          ),
         ),
-        seq(
-          "(",
-          field("left", $.expression),
-          field("operator", "||"),
-          field("right", $.expression),
-          ")",
+        prec.left(
+          PREC.or,
+          seq(
+            field("left", $.expression),
+            field("operator", "||"),
+            field("right", $.expression),
+          ),
         ),
       ),
 
@@ -309,7 +276,6 @@ module.exports = grammar({
             precedence,
             seq(
               field("left", $.primary_expression),
-              // @ts-ignore
               field("operator", operator),
               field("right", $.primary_expression),
             ),
@@ -399,7 +365,7 @@ module.exports = grammar({
     float: ($) => /-?[0-9_]+\.[0-9_]*(e-?[0-9_]+)?(f)?/,
     integer: ($) => choice($._hex, $._decimal, $._binary),
     _hex: ($) => /0x[0-9a-fA-F_]+/,
-    _decimal: ($) => /[0-9][0-9_]*(i)?/,
+    _decimal: ($) => /[0-9][0-9_-]*(i)?/,
     _binary: ($) => /0b[0-1_]+/,
 
     identifier: (_) => /[_a-z][_a-zA-Z0-9]*/,
@@ -414,8 +380,6 @@ module.exports = grammar({
     doc_comment: (_) => token(seq("`", /.*/)),
   },
 });
-
-module.exports.PREC = PREC;
 
 function commaSep1(rule) {
   return sep1(rule, ",");

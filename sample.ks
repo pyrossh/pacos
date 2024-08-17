@@ -121,13 +121,13 @@ object RuntimeError : Error {
 }
 
 val lazyValue: Str by lazy {
-    println("computed!")
+    printLn("computed!")
     "Hello"
 }
 
 var name: Str by Delegates.observable("<no name>") {
     prop, old, new ->
-      println("$old -> $new")
+      printLn("$old -> $new")
 }
 
 trait ClosedShape {
