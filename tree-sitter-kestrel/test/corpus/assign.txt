@@ -1,0 +1,93 @@
+================================================================================
+Assign
+================================================================================
+
+val startYear = 2101
+val pi = 3.14159
+val name = "kestrel"
+val debugEnabled = True
+val count = counter(10)
+val countriesList = listOf("US", "INDIA", "CANADA")
+val countryCode = mapOf(
+  "in" => "INDIA",
+  "us" => "United States",
+  "ca" => "Canada"
+)
+
+--------------------------------------------------------------------------------
+
+(source
+  (assign
+    (identifier)
+    (primary_expression
+      (integer)))
+  (assign
+    (identifier)
+    (primary_expression
+      (float)))
+  (assign
+    (identifier)
+    (primary_expression
+      (string
+        (quoted_content))))
+  (assign
+    (identifier)
+    (primary_expression
+      (typename)))
+  (assign
+    (identifier)
+    (primary_expression
+      (call
+        (reference
+          (identifier))
+        (argument_list
+          (expression
+            (primary_expression
+              (integer)))))))
+  (assign
+    (identifier)
+    (primary_expression
+      (call
+        (reference
+          (identifier))
+        (argument_list
+          (expression
+            (primary_expression
+              (string
+                (quoted_content))))
+          (expression
+            (primary_expression
+              (string
+                (quoted_content))))
+          (expression
+            (primary_expression
+              (string
+                (quoted_content))))))))
+  (assign
+    (identifier)
+    (primary_expression
+      (call
+        (reference
+          (identifier))
+        (argument_list
+          (pair_argument
+            (string
+              (quoted_content))
+            (expression
+              (primary_expression
+                (string
+                  (quoted_content)))))
+          (pair_argument
+            (string
+              (quoted_content))
+            (expression
+              (primary_expression
+                (string
+                  (quoted_content)))))
+          (pair_argument
+            (string
+              (quoted_content))
+            (expression
+              (primary_expression
+                (string
+                  (quoted_content))))))))))

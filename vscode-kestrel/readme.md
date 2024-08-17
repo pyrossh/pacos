@@ -1,10 +1,10 @@
-# vscode-pacos
+# vscode-kestrel
 
-👾 Pacos Programming Language
+👾 Kestrel Programming Language
 
-VScode extension for [pacos programming language](https://github.com/pyrossh/pacos.sh)
+VScode extension for [kestrel programming language](https://github.com/pyrossh/kestrel.sh)
 
-This is the README for your extension "pacos". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "kestrel". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

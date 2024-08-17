@@ -1,13 +1,12 @@
 module std
 
-#[derive(Copy, PartialEq, PartialOrd, Eq, Ord, Debug, Hash)]
-enum bool =
-  | true
-  | false
-
-fn (x: bool) op_eq(y: bool) = x == y
-fn (x: bool) op_ne(y: bool) = x != y
-fn (x: bool) op_and(y: bool) = x == false || y == false ? false : true
-fn (x: bool) op_or(y: bool) = x == true || y == true ? true : false
-fn (x: bool) op_not(): bool = x == true ? false : true
-fn (x: bool) to_str() = x ? "true" : "false"
+enum Bool {
+  True
+  False
+} {
+  operator fn equals(o: Bool) = self == o
+  operator fn and(o: bool) = self == false || o == false ? false : true
+  operator fn or(o: bool) = self == true || o == true ? true : false
+  operator fn not(): bool = self == true ? false : true
+  fn toStr() = self ? "true" : "false"
+}

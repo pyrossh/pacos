@@ -1,4 +1,4 @@
-module std
+module sample
 
 import std.{List, Map, Math, Random}
 
@@ -174,7 +174,7 @@ fn iterate() {
   }
 }
 
-fn mkPerson(name: Str, age: Int): Either<Problem, Person> = either {
+fn mkPerson(name: Str, age: Int): Result<Person, ValidationError> = result {
   Person(validName(name).bind(), validAge(age).bind())
 }
 

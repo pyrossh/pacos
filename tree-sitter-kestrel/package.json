@@ -1,38 +1,60 @@
 {
-  "name": "tree-sitter-pacos",
+  "name": "tree-sitter-kestrel",
   "version": "0.0.1",
-  "description": "Pacos grammar for tree-sitter",
+  "description": "kestrel grammar for tree-sitter",
   "main": "bindings/node",
+  "types": "bindings/node",
   "keywords": [
     "parser",
     "lexer",
-    "pacos"
+    "kestrel"
+  ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
   ],
   "author": "pyrossh",
   "license": "MIT",
   "dependencies": {
-    "nan": "^2.18.0"
+    "node-addon-api": "^8.0.0",
+    "node-gyp-build": "^4.8.1"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree_sitter": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "eslint": "^8.53.0",
+    "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
-    "tree-sitter-cli": "^0.20.8"
+    "prebuildify": "^6.0.0",
+    "prettier": "^3.3.3",
+    "tree-sitter-cli": "^0.22.6"
   },
   "scripts": {
-    "build": "tree-sitter generate && node-gyp build",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --strip",
+    "build": "tree-sitter generate",
+    "build-wasm": "tree-sitter build --wasm",
     "lint": "eslint grammar.js",
     "parse": "tree-sitter parse",
-    "test": "tree-sitter test",
-    "test-windows": "tree-sitter test"
+    "test": "tree-sitter test"
   },
-  "repository": "https://github.com/pyrossh/tree-sitter-pacos",
+  "repository": "https://github.com/pyrossh/kestrel",
   "tree-sitter": [
     {
-      "scope": "source.pc",
+      "scope": "source.ks",
       "file-types": [
-        "py"
+        "ks"
       ],
-      "injection-regex": "py",
+      "injection-regex": "ks",
       "highlights": [
         "queries/highlights.scm"
       ],
@@ -40,5 +62,47 @@
         "queries/tags.scm"
       ]
     }
-  ]
+  ],
+  "eslintConfig": {
+    "env": {
+      "commonjs": true,
+      "es2021": true
+    },
+    "extends": "google",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "arrow-parens": "off",
+      "camel-case": "off",
+      "indent": [
+        "error",
+        2,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 160,
+          "ignoreComments": true,
+          "ignoreUrls": true,
+          "ignoreStrings": true
+        }
+      ],
+      "spaced-comment": [
+        "warn",
+        "always",
+        {
+          "line": {
+            "markers": [
+              "/"
+            ]
+          }
+        }
+      ]
+    }
+  }
 }

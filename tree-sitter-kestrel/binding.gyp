@@ -1,10 +1,12 @@
 {
   "targets": [
     {
-      "target_name": "tree_sitter_pacos_binding",
+      "target_name": "tree_sitter_kestrel_binding",
+      "dependencies": [
+        "<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
+      ],
       "include_dirs": [
-        "<!(node -e \"require('nan')\")",
-        "src"
+        "src",
       ],
       "sources": [
         "bindings/node/binding.cc",
@@ -12,7 +14,7 @@
         "src/scanner.c"
       ],
       "cflags_c": [
-        "-std=c99",
+        "-std=c11",
       ]
     }
   ]

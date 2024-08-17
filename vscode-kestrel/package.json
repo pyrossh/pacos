@@ -1,7 +1,7 @@
 {
-  "name": "pacos",
-  "displayName": "pacos",
-  "description": "Textmate grammar for pacos",
+  "name": "kestrel",
+  "displayName": "kestrel",
+  "description": "Textmate grammar for kestrel",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.87.0"
@@ -12,22 +12,21 @@
   "contributes": {
     "languages": [
       {
-        "id": "pacos",
+        "id": "kestrel",
         "aliases": [
-          "Pacos",
-          "pacos"
+          "kestrel"
         ],
         "extensions": [
-          ".pc"
+          ".ks"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "pacos",
-        "scopeName": "source.pc",
-        "path": "./syntaxes/pacos.tmLanguage.json"
+        "language": "kestrel",
+        "scopeName": "source.ks",
+        "path": "./syntaxes/kestrel.tmLanguage.json"
       }
     ]
   }
