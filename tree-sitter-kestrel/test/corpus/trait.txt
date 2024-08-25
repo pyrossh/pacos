@@ -1,14 +1,14 @@
 ================================================================================
-Enum
+trait
 ================================================================================
 
-trait Comparable[A](
-  fn compare(left: A, right: A): bool
-)
+trait Comparable[A] {
+  fn compare(left: A, right: A): Bool
+}
 
-trait Stringable(
-  fn to_str(): str
-)
+trait Stringable {
+  fn toStr(): Str
+}
 
 --------------------------------------------------------------------------------
 

@@ -2,14 +2,16 @@
 Enum
 ================================================================================
 
-enum Temperature =
-  | celsius(float)
-  | fahrenheit(float)
+enum Temperature {
+  Celsius(Float)
+  Fahrenheit(Float)
+}
 
-enum Colors =
-  | rgb(int, int, int)
-  | rgba(int, int, int, int)
-  | hex(int)
+enum Colors {
+  Rgb(Int, Int, Int)
+  Rgba(Int, Int, Int, Int)
+  Hex(Int)
+}
 
 --------------------------------------------------------------------------------
 
@@ -17,24 +19,24 @@ enum Colors =
   (enum
     (typename)
     (enum_field
-      (identifier)
-      (identifier))
+      (typename)
+      (typename))
     (enum_field
-      (identifier)
-      (identifier)))
+      (typename)
+      (typename)))
   (enum
     (typename)
     (enum_field
-      (identifier)
-      (identifier)
-      (identifier)
-      (identifier))
+      (typename)
+      (typename)
+      (typename)
+      (typename))
     (enum_field
-      (identifier)
-      (identifier)
-      (identifier)
-      (identifier)
-      (identifier))
+      (typename)
+      (typename)
+      (typename)
+      (typename)
+      (typename))
     (enum_field
-      (identifier)
-      (identifier))))
+      (typename)
+      (typename))))

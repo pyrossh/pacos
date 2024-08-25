@@ -13,11 +13,18 @@ const PREC = {
   times: 19,
   unary: 20,
   power: 21,
-  call: 22,
+  constructor: 22,
+  call: 23,
 };
+
+const DEC_DIGITS = token(sep1(/[0-9]+/, /_+/));
+const HEX_DIGITS = token(sep1(/[0-9a-fA-F]+/, /_+/));
+const BIN_DIGITS = token(sep1(/[01]/, /_+/));
+const REAL_EXPONENT = token(seq(/[eE]/, optional(/[+-]/), DEC_DIGITS));
 
 module.exports = grammar({
   name: "kestrel",
+  extras: ($) => [$.comment, /\s+/],
   externals: ($) => [$.quoted_content],
   conflicts: ($) => [[$.closure, $.primary_expression]],
   // inline: ($) => [$.expression],
@@ -26,7 +33,7 @@ module.exports = grammar({
       seq(
         optional(seq("module", $.module)),
         repeat($.import),
-        repeat(choice($.assign, $.record, $.trait, $.enum, $.fn)),
+        repeat(choice($.assign, $.record, $.object, $.trait, $.enum, $.fn)),
       ),
 
     module: ($) => $.identifier,
@@ -34,13 +41,14 @@ module.exports = grammar({
     import: ($) => seq("import", $.url),
     url: ($) => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, "/"),
 
-    generics: ($) => seq("[", commaSep1($.generic_type), "]"),
+    generics: ($) => seq("<", commaSep1($.generic_type), ">"),
     generic_type: ($) =>
+      seq($.genericname, optional(seq(":", sep1($.typename, "+")))),
+    type: ($) =>
       seq(
-        $.genericname,
-        optional(seq(":", sep1($.typename, choice("&", "|")))),
+        $.typename,
+        field("generics", optional(seq("<", commaSep1($.typename), ">"))),
       ),
-    type: ($) => seq($.typename, field("generics", optional($.generics))),
 
     record: ($) =>
       seq(
@@ -49,10 +57,19 @@ module.exports = grammar({
         field("name", $.typename),
         field("generics", optional($.generics)),
         field("fields", seq("(", commaSep1($.record_field), ")")),
+        field("implements", optional(seq(":", commaSep1($.typename)))),
+        field("body", optional(seq("{", repeat($.fn), "}"))),
       ),
 
     record_field: ($) =>
       seq(field("name", $.identifier), ":", field("type", $.type)),
+
+    object: $ => seq(
+      "object",
+      field("name", $.typename),
+      field("implements", optional(seq(":", commaSep1($.typename)))),
+      field("body", optional(seq("{", repeat($.fn), "}"))),
+    ),
 
     trait: ($) =>
       seq(
@@ -60,7 +77,7 @@ module.exports = grammar({
         "trait",
         field("name", $.typename),
         field("generics", optional($.generics)),
-        field("fields", seq("(", repeat($.trait_field), ")")),
+        field("fields", seq("{", repeat($.trait_field), "}")),
       ),
 
     trait_field: ($) =>
@@ -100,17 +117,23 @@ module.exports = grammar({
       seq(
         optional($.doc_comment),
         optional($.decorator),
+        field("modifier", optional($.fn_modifier)),
         "fn",
-        field("name", choice($.fnname, $._extension)),
+        field("name", $.fnname),
         field("generics", optional($.generics)),
         field("params", seq("(", optional(commaSep1($.param)), ")")),
-        ":",
-        field("returns", optional($.return_type)),
-        "=",
-        field("body", $.body),
+        field("returns", optional(seq(":", $.return_type))),
+        field("body", choice($.body, seq("=", $.expression))),
       ),
 
-    decorator: ($) => seq("@"),
+    decorator: ($) =>
+      seq(
+        "@",
+        field("function", $.reference),
+        field("arguments", $.argument_list),
+      ),
+
+    fn_modifier: ($) => choice("operator", "static", "override"),
 
     body: ($) => seq("{", repeat($._statement), "}"),
 
@@ -155,7 +178,10 @@ module.exports = grammar({
     else: ($) => seq("else", field("body", $.body)),
 
     reference: ($) =>
-      prec(PREC.call, seq($.identifier, optional(seq(".", $.identifier)))),
+      prec(
+        PREC.call,
+        seq(choice($.identifier, $.typename), optional(seq(".", $.identifier))),
+      ),
 
     for: ($) =>
       seq(
@@ -175,27 +201,26 @@ module.exports = grammar({
     match: ($) =>
       seq(
         "match",
-        commaSep1(field("subject", $.expression)),
+        commaSep1(field("subject", $.expression)), // remove comma use tuples (a, b) and match against tuples
         "{",
         repeat(field("case", $.case)),
         "}",
       ),
 
-    case: ($) =>
-      seq(
-        commaSep1($.case_pattern),
-        "->",
-        field("body", $.body),
-      ),
+    case: ($) => seq(commaSep1($.case_pattern), "->", field("body", $.body)),
 
-    case_pattern: ($) => prec(1, choice(
-      $.class_pattern,
-      $.string,
-      $.integer,
-      $.float,
-      $.dotted_name,
-      "_",
-    )),
+    case_pattern: ($) =>
+      prec(
+        1,
+        choice(
+          $.class_pattern,
+          $.string,
+          $.integer,
+          $.float,
+          $.dotted_name,
+          "_",
+        ),
+      ),
 
     class_pattern: ($) =>
       seq(
@@ -215,16 +240,21 @@ module.exports = grammar({
         $.ternary_expression,
       ),
 
+      // a == 2 ? b : c
+      // a ?: b 
+
     primary_expression: ($) =>
       choice(
         $.binary_operator,
+        $.self,
         $.identifier,
+        $.typename,
         $.string,
         $.integer,
         $.float,
         $.unary_operator,
+        // $.reference,
         $.attribute,
-        $.typename,
         $.call,
         $.parenthesized_expression,
       ),
@@ -340,7 +370,7 @@ module.exports = grammar({
       ),
 
     keyword_argument: ($) =>
-      seq(field("name", $.identifier), ":", field("value", $.expression)),
+      seq(field("name", $.identifier), "=", field("value", $.expression)),
 
     pair_argument: ($) =>
       seq(field("name", $.string), "=>", field("value", $.expression)),
@@ -350,6 +380,17 @@ module.exports = grammar({
         PREC.conditional,
         seq($.expression, "?", $.expression, ":", $.expression),
       ),
+
+    // ==========
+    // Literals
+    // ==========
+    integer_literal: $ => token(seq(optional(/[1-9]/), DEC_DIGITS)),
+    hex_literal: $ => token(seq("0", /[xX]/, HEX_DIGITS)),
+    bin_literal: $ => token(seq("0", /[bB]/, BIN_DIGITS)),
+
+    _interpolation: $ => choice(
+      seq("${", $.expression, "}"),
+    ),
 
     string: ($) =>
       seq(
@@ -368,15 +409,14 @@ module.exports = grammar({
     _decimal: ($) => /[0-9][0-9_-]*(i)?/,
     _binary: ($) => /0b[0-1_]+/,
 
+    self: (_) => /self/,
     identifier: (_) => /[_a-z][_a-zA-Z0-9]*/,
     fnname: (_) => /[a-z][a-z]*(([A-Z][a-z]+)*[A-Z]?|([a-z]+[A-Z])*|[A-Z])/, // lowerCamelCase no digits
-    constname: (_) => /[_A-Z0-9]+/, // screaming camel case
     genericname: (_) => /[A-Z]/, // single letter
     typename: (_) => /[_a-zA-Z][_a-zA-Z]*/, // upperCamelCase no digits
 
-    _interpolation: ($) => choice(seq("{", $.identifier, "}")),
-    _extension: ($) => seq($.typename, ".", $.fnname),
     comment: (_) => token(seq("//", /.*/)),
+    // whitespace: (_) => /\s+/,
     doc_comment: (_) => token(seq("`", /.*/)),
   },
 });

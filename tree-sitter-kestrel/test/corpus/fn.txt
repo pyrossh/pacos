@@ -1,26 +1,31 @@
 ================================================================================
-Function
+fn - no return
 ================================================================================
 
-fn sum(a: int, b: int): int =
-  pass
+fn sum(a: Int, b: Int) {
+}
 
-fn random(a: int = 10): int =
-  pass
+--------------------------------------------------------------------------------
 
-fn toCelsius(f: float): float =
-  `converts f in fahrenheit to celsius to a value
-  pass
+(source
+  (fn
+    (fnname)
+    (param
+      (identifier)
+      (type
+        (typename)))
+    (param
+      (identifier)
+      (type
+        (typename)))
+    (body)))
 
-fn createPostAction(req: Request): Response! =
-  pass
+================================================================================
+fn - return
+================================================================================
 
-#[get("/posts")]
-fn fetchAllPosts(req: Request): Response? =
-  pass
-
-fn add[T: int | float](a: List[T], b: List[T]): List[T] =
-  pass
+fn sum(a: Int, b: Int): Int {
+}
 
 --------------------------------------------------------------------------------
 
@@ -37,20 +42,44 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
         (typename)))
     (return_type
       (typename))
-    (body
-      (pass_statement)))
+    (body)))
+
+================================================================================
+fn - default value
+================================================================================
+
+fn random(a: Int = 10): Int {
+}
+
+--------------------------------------------------------------------------------
+
+(source
   (fn
     (fnname)
     (param
       (identifier)
       (type
         (typename))
-      (integer))
+      (expression
+        (primary_expression
+          (integer))))
     (return_type
       (typename))
-    (body
-      (pass_statement)))
+    (body)))
+
+================================================================================
+fn - doc_comment
+================================================================================
+
+`converts f in fahrenheit to celsius to a value
+fn toCelsius(f: Float): Float {
+}
+
+--------------------------------------------------------------------------------
+
+(source
   (fn
+    (doc_comment)
     (fnname)
     (param
       (identifier)
@@ -58,42 +87,82 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
         (typename)))
     (return_type
       (typename))
-    (body
-      (doc_comment)
-      (pass_statement)))
-  (fn
-    (fnname)
-    (param
-      (identifier)
-      (type
-        (typename)))
-    (return_type
-      (typename)
-      (throwable))
-    (body
-      (pass_statement)))
+    (body)))
+
+================================================================================
+fn - annotation
+================================================================================
+
+@get(method = "POST", route = "/posts")
+fn createPostAction(req: Request): Response {
+}
+
+@get("/posts")
+fn fetchAllPosts(req: Request): Response {
+}
+
+--------------------------------------------------------------------------------
+
+(source
   (fn
     (decorator
-      (call
-        (reference
-          (identifier))
-        (argument_list
-          (string
-            (string_start)
-            (string_end)))))
+      (reference
+        (identifier))
+      (argument_list
+        (keyword_argument
+          (identifier)
+          (expression
+            (primary_expression
+              (string
+                (quoted_content)))))
+        (keyword_argument
+          (identifier)
+          (expression
+            (primary_expression
+              (string
+                (quoted_content)))))))
     (fnname)
     (param
       (identifier)
       (type
         (typename)))
     (return_type
-      (typename)
-      (nilable))
-    (body
-      (pass_statement)))
+      (typename))
+    (body))
+  (fn
+    (decorator
+      (reference
+        (identifier))
+      (argument_list
+        (expression
+          (primary_expression
+            (string
+              (quoted_content))))))
+    (fnname)
+    (param
+      (identifier)
+      (type
+        (typename)))
+    (return_type
+      (typename))
+    (body)))
+
+================================================================================
+fn - generics
+================================================================================
+
+fn add<T: Int, Q: String + Compare>(a: List<T>, b: List<Q>): List<T> {
+}
+
+--------------------------------------------------------------------------------
+
+(source
   (fn
     (fnname)
     (generics
+      (generic_type
+        (genericname)
+        (typename))
       (generic_type
         (genericname)
         (typename)
@@ -102,20 +171,15 @@ fn add[T: int | float](a: List[T], b: List[T]): List[T] =
       (identifier)
       (type
         (typename)
-        (generics
-          (generic_type
-            (genericname)))))
+        (typename)))
     (param
       (identifier)
       (type
         (typename)
-        (generics
-          (generic_type
-            (genericname)))))
+        (typename)))
     (return_type
       (typename)
       (generics
         (generic_type
           (genericname))))
-    (body
-      (pass_statement))))
+    (body)))

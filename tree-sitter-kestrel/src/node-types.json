@@ -447,7 +447,28 @@
   {
     "type": "decorator",
     "named": true,
-    "fields": {}
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "argument_list",
+            "named": true
+          }
+        ]
+      },
+      "function": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "reference",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "dotted_name",
@@ -613,11 +634,19 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
+            "type": "=",
+            "named": false
+          },
+          {
             "type": "body",
+            "named": true
+          },
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -632,20 +661,22 @@
           }
         ]
       },
+      "modifier": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "fn_modifier",
+            "named": true
+          }
+        ]
+      },
       "name": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
           {
-            "type": ".",
-            "named": false
-          },
-          {
             "type": "fnname",
-            "named": true
-          },
-          {
-            "type": "typename",
             "named": true
           }
         ]
@@ -673,9 +704,13 @@
         ]
       },
       "returns": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
+          {
+            "type": ":",
+            "named": false
+          },
           {
             "type": "return_type",
             "named": true
@@ -697,6 +732,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "fn_modifier",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "for",
@@ -916,6 +956,58 @@
     }
   },
   {
+    "type": "object",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "fn",
+            "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
+          }
+        ]
+      },
+      "implements": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "typename",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "typename",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "pair_argument",
     "named": true,
     "fields": {
@@ -1029,6 +1121,10 @@
           "named": true
         },
         {
+          "type": "self",
+          "named": true
+        },
+        {
           "type": "string",
           "named": true
         },
@@ -1047,6 +1143,24 @@
     "type": "record",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "fn",
+            "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
+          }
+        ]
+      },
       "fields": {
         "multiple": true,
         "required": true,
@@ -1075,6 +1189,24 @@
         "types": [
           {
             "type": "generics",
+            "named": true
+          }
+        ]
+      },
+      "implements": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ":",
+            "named": false
+          },
+          {
+            "type": "typename",
             "named": true
           }
         ]
@@ -1137,6 +1269,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "typename",
           "named": true
         }
       ]
@@ -1212,6 +1348,10 @@
           "named": true
         },
         {
+          "type": "object",
+          "named": true
+        },
+        {
           "type": "record",
           "named": true
         },
@@ -1265,16 +1405,16 @@
         "required": true,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
             "type": "trait_field",
             "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
           }
         ]
       },
@@ -1363,11 +1503,23 @@
     "named": true,
     "fields": {
       "generics": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "generics",
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": "typename",
             "named": true
           }
         ]
@@ -1455,6 +1607,10 @@
   },
   {
     "type": "\"",
+    "named": false
+  },
+  {
+    "type": "${",
     "named": false
   },
   {
@@ -1558,14 +1714,6 @@
     "named": false
   },
   {
-    "type": "[",
-    "named": false
-  },
-  {
-    "type": "]",
-    "named": false
-  },
-  {
     "type": "^",
     "named": false
   },
@@ -1580,6 +1728,10 @@
   {
     "type": "break",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
   },
   {
     "type": "continue",
@@ -1646,6 +1798,18 @@
     "named": false
   },
   {
+    "type": "object",
+    "named": false
+  },
+  {
+    "type": "operator",
+    "named": false
+  },
+  {
+    "type": "override",
+    "named": false
+  },
+  {
     "type": "quoted_content",
     "named": true
   },
@@ -1655,6 +1819,14 @@
   },
   {
     "type": "return",
+    "named": false
+  },
+  {
+    "type": "self",
+    "named": true
+  },
+  {
+    "type": "static",
     "named": false
   },
   {
