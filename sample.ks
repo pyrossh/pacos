@@ -2,26 +2,37 @@ module sample
 
 import std.{List, Map, Math, Random}
 
+trait BinaryOp<T> {
+  fn add(rhs: T) -> T
+  fn sub(rhs: T) -> T
+  fn mul(rhs: T) -> T
+  fn div(rhs: T) -> T
+  fn rem(rhs: T) -> T
+  fn mod(rhs: T) -> T
+  fn neg(rhs: T) -> T
+}
+
+trait BooleanOp<T> {
+  fn not() -> T
+  fn and(rhs: T) -> T
+  fn or(rhs: T) -> T
+  fn xor(rhs: T) -> T
+}
+
+trait Bitwise<T> {
+  fn bitOr(rhs: T) -> T
+  fn bitAnd(rhs: T) -> T
+  fn bitXor(rhs: T) -> T
+  fn shl(rhs: T) -> T
+  fn shr(rhs: T) -> T
+}
+
 trait Comparable {
-  fn compareTo(other: T): Compare
+  fn compareTo(other: T) -> Compare
 }
 
-trait Shape(type: Int)
-
-enum Shape(index: Int) {
-  Circle(Int): Shape(0)
-  Square(Int): Shape(1)
-  Rectangle(Int, Int): Shape(2)
-} {
-  fn area() = match self {
-    Circle(r) -> PI * r * r,
-    Square(n) -> n * n,
-    Rectangle(l, b) -> l * b, 
-  }
-}
-
-trait Shape {
-  fn area(): Float
+trait Shape permits Circle, Square, Rectangle {
+  fn area() -> Float
 }
 
 tuple Circle(Int): Shape {
@@ -37,53 +48,12 @@ tuple Rectangle(Int, Int): Shape {
 }
 
 tuple Metre(Float): Shape {
-  static fn fromInt(v: Int): Metre {
+  static fn fromInt(v: Int) -> Metre {
     return Metre(v)
   }
 
-  fn toFloat(): Float {
+  fn toFloat() -> Float {
     return self.0
-  }
-}
-
-`Bool is a type that represents true or false
-enum Bool {
-  True
-  False
-} 
-
-`Option is a type that represents either value present Some or nothing present
-enum Option[T] {
-  Some(T)
-  None
-} {
-  fn isNone(): Bool = match self
-    None -> True
-    Some(t) -> False
-
-  fn isSome(): Bool = !self.isNone()
-
-  fn get(): T = match self
-    Some(val) -> val
-    None -> fail("called 'option.get()' on a 'none' value")
-
-  `get if present otherwise return default value
-  fn getOrElse(default: T): T = match self
-    Some(val) -> val
-    None -> default
-
-  fn toStr(): str = match self
-    Some(v) -> v.toStr()
-    None -> "None"
-}
-
-enum Result[T, E] {
-  Ok(T)
-  Err(E)
-} {
-  fn map(cb: fn(a) -> b): Result[b, e] = match self {
-    Ok(t) -> Ok(cb(t))
-    Err(e) -> Err(e)
   }
 }
 
@@ -91,11 +61,12 @@ enum Result[T, E] {
 record Cat(
   name: Option[Str],
   age: Int
-): Strable {
+): ToStr {
   static fn withName(name: Str): Cat(name: name, age: 0)
   static fn withAge(age: Int): Cat(name: "", age: age)
 
-  init {
+  fn init() {
+    printLn("called init")
     require(name.isNotEmpty()) {
       "name shouldn't be empty"
     }
@@ -104,10 +75,16 @@ record Cat(
     }
   }
 
-  fn fullname(): Str = "${name} ${age}"
+  fn deinit() {
+    printLn("called deinit")
+  }
+
+  fn fullname(): Str {
+    return "${self.name} ${self.age}"
+  }
 
   override fn toStr(): Str {
-    "Cat<${fullname()}, ${age}>"
+    return "Cat<${fullname()}, ${age}>"
   }
 }
 
@@ -115,10 +92,6 @@ trait Error {}
 trait IOError: Error {}
 record FileReadError(file: File): IOError() {}
 record DatabaseError(source: DataSource): IOError() {}
-
-object RuntimeError : Error {
-  val message = "Hello"
-}
 
 val lazyValue: Str by lazy {
     printLn("computed!")
@@ -159,27 +132,59 @@ record Response(
   }
 }
 
-fn iterate() {
-  val items = listOf(1, 2, 3, 4, 5)
-  for i in items {
-    if i == 5 {
-      continue
-    }
-    if i == 10 {
-      break
-    }
-  }
-  while i < 5 {
-    print("Hello")
+record LoopScope(running: Bool) {
+  fn stop() {
+    self.running = False
   }
 }
 
-fn mkPerson(name: Str, age: Int): Result<Person, ValidationError> = result {
+fn loop(scope: LoopScope = LoopScope(), cond: Option<() -> Bool> = None(), builder: LoopScope.() -> Unit) {
+  scope.apply(builder)
+  if cond is Some {
+    if cond() == True && scope.running == True {
+      loop(scope, cond, builder)
+    }
+  } else {
+    if scope.running == True {
+      loop(scope, cond, builder)
+    }
+  }
+}
+
+fn example() {
+  val items = listOf(1, 2, 3, 4, 5)
+  items.each { i ->
+    if i == 2 {
+      continue()
+    }
+    if i == 4 {
+      break()
+    }
+  }
+  range(0, 10).step(1).each { i ->
+    print("int ${i}")
+  }
+  loop().cond({ i < 5 }).do {
+    print("forever")
+  }
+  loop {
+    if (a > 5) {
+      break()
+    }
+  }
+  val list = "a b c d e f g h i j".split(" ")
+  list.groupBy(3) { group ->
+    puts group.join ""
+  }
+}
+
+@result()
+fn mkPerson(name: Str, age: Int) -> Result<Person, ValidationError> = result {
   Person(validName(name).bind(), validAge(age).bind())
 }
 
-#[get("/posts")]
-fn handler(req: Request): Response {
+@get("/posts")
+fn handler(req: Request) -> Response {
   Response()
     .status(2)
     .body("213")
@@ -189,39 +194,3 @@ fn handler(req: Request): Response {
 fn hasFlag(b: bool, d: List) {
   return data
 }
-
-
-// enum LoopStatus {
-//   Continue
-//   Break
-// }
-
-// fn example() {
-//   val items = listOf(1, 2, 3, 4, 5)
-//   items.each { i ->
-//     if i == 2 {
-//       Continue
-//     }
-//     if i == 4 {
-//       Break
-//     }
-//   }
-//   range(0, 10).step(1).each { i ->
-//     print("int ${i}")
-//   }
-//   loop({ i < 5 }) {
-//     print("forever")
-//   }
-//   val list = "a b c d e f g h i j".split(" ")
-//   list.groupBy(3) { group ->
-//     puts group.join ""
-//   }
-// }
-
-// tailcall fn loop(cb: () -> Bool, run: () -> LoopStatus) {
-//   if (cb()) {
-//     if (run() != Break) {
-//       loop(cb, run)
-//     }
-//   }
-// }

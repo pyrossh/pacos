@@ -1,12 +1,16 @@
 module std
 
-record list[V](
+record List[V](
   `A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
   `It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
   head: node[V]?
   tail: node[V]?
   _size: int
-)
+) {
+  fn of(values: ...V) -> List[V] {
+
+  }
+}
 
 record node[V](
   `A node stores the data in a list and contains pointers to the previous and next sibling nodes
@@ -186,3 +190,39 @@ fn (List) join(sep: str = ","): str =
     else
       res.write(@TypeToString(v), sep)
   res.to_str()
+
+
+trait List[T] permits Empty, Link {
+  fn each(cb: fn(v: T))
+  fn length() -> Int
+  fn append(v: V) -> List[T]
+  fn prepend(v: V) -> List[T]
+  fn append(values: ...V) -> List[T]
+}
+
+fn listOf(values: ...T) -> List[T] {
+  return Link[T].append(values)
+}
+
+tuple Empty(): List[_] {
+  fn each(cb: fn(v: T)) {}
+  fn append(v: V) -> List[T] {
+    return Link(v, Empty)
+  }
+  fn prepend(v: V) -> List[T] {
+    return Link(v, Empty)
+  }
+}
+
+tuple Link[T](T, List[T]): List[T] {
+  fn each(cb: fn(v: T)) {
+    cb(a)
+    self.1.each(cb)
+  }
+  fn append(v: V) {
+    self.last().rest = Link(v, Empty)
+  }
+  fn prepend(v: V) {
+    self.first() = Link(v, self.1)
+  }
+}

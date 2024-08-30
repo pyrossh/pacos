@@ -1,6 +1,9 @@
 const PREC = {
   conditional: -1,
+  LAMBDA_LITERAL: 0,
+  VAR_DECL: 3,
   parenthesized_expression: 1,
+  range: 9,
   or: 10,
   and: 11,
   not: 12,
@@ -15,6 +18,8 @@ const PREC = {
   power: 21,
   constructor: 22,
   call: 23,
+  POSTFIX: 16,
+  PREFIX: 15,
 };
 
 const DEC_DIGITS = token(sep1(/[0-9]+/, /_+/));
@@ -26,7 +31,9 @@ module.exports = grammar({
   name: "kestrel",
   extras: ($) => [$.comment, /\s+/],
   externals: ($) => [$.quoted_content],
-  conflicts: ($) => [[$.closure, $.primary_expression]],
+  conflicts: ($) => [
+    [$.closure, $.primary_expression],
+  ],
   // inline: ($) => [$.expression],
   rules: {
     source: ($) =>
@@ -41,13 +48,13 @@ module.exports = grammar({
     import: ($) => seq("import", $.url),
     url: ($) => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, "/"),
 
-    generics: ($) => seq("<", commaSep1($.generic_type), ">"),
+    generics: ($) => seq("[", commaSep1($.generic_type), "]"),
     generic_type: ($) =>
       seq($.genericname, optional(seq(":", sep1($.typename, "+")))),
     type: ($) =>
       seq(
         $.typename,
-        field("generics", optional(seq("<", commaSep1($.typename), ">"))),
+        field("generics", optional(seq("[", commaSep1($.typename), "]"))),
       ),
 
     record: ($) =>
@@ -64,12 +71,13 @@ module.exports = grammar({
     record_field: ($) =>
       seq(field("name", $.identifier), ":", field("type", $.type)),
 
-    object: $ => seq(
-      "object",
-      field("name", $.typename),
-      field("implements", optional(seq(":", commaSep1($.typename)))),
-      field("body", optional(seq("{", repeat($.fn), "}"))),
-    ),
+    object: ($) =>
+      seq(
+        "object",
+        field("name", $.typename),
+        field("implements", optional(seq(":", commaSep1($.typename)))),
+        field("body", optional(seq("{", repeat($.fn), "}"))),
+      ),
 
     trait: ($) =>
       seq(
@@ -122,7 +130,7 @@ module.exports = grammar({
         field("name", $.fnname),
         field("generics", optional($.generics)),
         field("params", seq("(", optional(commaSep1($.param)), ")")),
-        field("returns", optional(seq(":", $.return_type))),
+        field("returns", optional(seq("->", $.return_type))),
         field("body", choice($.body, seq("=", $.expression))),
       ),
 
@@ -193,7 +201,7 @@ module.exports = grammar({
       ),
 
     while: ($) =>
-      seq("while", field("condition", $.expression), field("body", $.body)),
+      seq("while", "(", field("condition", $.expression), ")", field("body", $.body)),
 
     dotted_name: ($) => prec(1, sep1($.identifier, ".")),
 
@@ -240,8 +248,8 @@ module.exports = grammar({
         $.ternary_expression,
       ),
 
-      // a == 2 ? b : c
-      // a ?: b 
+    // a == 2 ? b : c
+    // a ?: b
 
     primary_expression: ($) =>
       choice(
@@ -297,8 +305,8 @@ module.exports = grammar({
         [prec.left, "^", PREC.xor],
         [prec.left, "<<", PREC.shift],
         [prec.left, ">>", PREC.shift],
+        [prec.left, "..", PREC.range],
       ];
-
       // @ts-ignore
       return choice(
         ...table.map(([cb, operator, precedence]) =>
@@ -351,11 +359,17 @@ module.exports = grammar({
       ),
 
     call: ($) =>
-      prec(
+      prec.left(
         PREC.call,
         seq(
           field("function", $.reference),
-          field("arguments", $.argument_list),
+          field(
+            "arguments",
+            choice(
+              seq(optional($.argument_list), $.lambda_literal),
+              $.argument_list,
+            ),
+          ),
         ),
       ),
 
@@ -384,13 +398,35 @@ module.exports = grammar({
     // ==========
     // Literals
     // ==========
-    integer_literal: $ => token(seq(optional(/[1-9]/), DEC_DIGITS)),
-    hex_literal: $ => token(seq("0", /[xX]/, HEX_DIGITS)),
-    bin_literal: $ => token(seq("0", /[bB]/, BIN_DIGITS)),
 
-    _interpolation: $ => choice(
-      seq("${", $.expression, "}"),
-    ),
+    lambda_literal: ($) =>
+      prec(
+        PREC.LAMBDA_LITERAL,
+        seq(
+          "{",
+          optional(seq(optional($.lambda_parameters), "->")),
+          optional(repeat($._statement)),
+          "}",
+        ),
+      ),
+
+    lambda_parameters: ($) => sep1($._lambda_parameter, ","),
+
+    _lambda_parameter: ($) =>
+      choice($.variable_declaration, $.multi_variable_declaration),
+
+    variable_declaration: ($) =>
+      prec.left(
+        PREC.VAR_DECL,
+        seq(
+          // repeat($.annotation), TODO
+          $.identifier,
+          optional(seq(":", $.type)),
+        ),
+      ),
+
+    multi_variable_declaration: ($) =>
+      seq("(", sep1($.variable_declaration, ","), ")"),
 
     string: ($) =>
       seq(
@@ -403,11 +439,32 @@ module.exports = grammar({
         token.immediate(/\\[efnrt\"\\]/),
         token.immediate(/\\u\{[0-9a-fA-F]{1,6}\}/),
       ),
-    float: ($) => /-?[0-9_]+\.[0-9_]*(e-?[0-9_]+)?(f)?/,
-    integer: ($) => choice($._hex, $._decimal, $._binary),
-    _hex: ($) => /0x[0-9a-fA-F_]+/,
-    _decimal: ($) => /[0-9][0-9_-]*(i)?/,
-    _binary: ($) => /0b[0-1_]+/,
+
+    float: ($) =>
+      token(
+        choice(
+          seq(
+            choice(
+              seq(DEC_DIGITS, REAL_EXPONENT),
+              seq(
+                optional(DEC_DIGITS),
+                ".",
+                DEC_DIGITS,
+                optional(REAL_EXPONENT),
+              ),
+            ),
+            optional(/[fF]/),
+          ),
+          seq(DEC_DIGITS, /[fF]/),
+        ),
+      ),
+
+    integer: ($) =>
+      choice(
+        token(seq(optional(/[1-9]/), DEC_DIGITS)),
+        token(seq("0", /[xX]/, HEX_DIGITS)),
+        token(seq("0", /[bB]/, BIN_DIGITS)),
+      ),
 
     self: (_) => /self/,
     identifier: (_) => /[_a-z][_a-zA-Z0-9]*/,

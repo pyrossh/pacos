@@ -7,36 +7,32 @@ trait Error {
   fn cause(): Option[Error]
 }
 
-`Result is a type that represents either success Ok or failure Err
-enum Result[T, E: Error] {
-  Ok(T)
-  Err(E)
-} {
-  fn isOk(): bool =
-    match self
-      Ok(v) -> True
-      Err(e) -> False
+`Result is a type that represents either success `Ok` or failure `Err`
+trait Result[T, E: Error] permits Ok[T], Err[E] {
+  fn get() -> T
+  fn getOrElse(default: T) -> T
+}
 
-  fn isErr(): bool =
-    !self.isOk()
+tuple Ok[T](T) : Result[T, _] {
+  fn get() -> T {
+    return self.0
+  }
+  fn getOrElse(default: T) -> T {
+    return self.0
+  }
+  fn map(cb: fn(a) -> b) -> Result[b, _] {
+    return Ok(cb(self.0))
+  }
+}
 
-  fn get(): T =
-    match self
-      Ok(v) -> v
-      Err(e) -> crash("called `result.get()` on a `Err` value")
-
-  fn getOrElse(d: T): T =
-    match self
-      Ok(v) -> v
-      Err(_) -> d
-
-  fn map(cb: fn(v: T)): Self =
-    match self
-      Ok(v) -> cb(v)
-      Err(_) -> self
-
-  fn mapErr(cb: fn(e: error)): Self =
-    match self
-      Ok(v) -> self
-      Err(e) -> cb(v)
+tuple Err[E](E) : Result[_, E] {
+  fn get() -> T {
+    fail("called 'Result.get()' on an 'Err' value")
+  }
+  fn getOrElse(default: T) -> T {
+    return default
+  }
+  fn mapErr(cb: fn(a) -> b) -> Result[_, b] {
+    return Err(cb(self.0))
+  }
 }

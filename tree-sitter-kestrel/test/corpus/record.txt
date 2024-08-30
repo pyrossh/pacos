@@ -34,7 +34,7 @@ record Dog(
         (typename)))))
 
 ================================================================================
-record - generic
+type - generic
 ================================================================================
 
 record Dog<A, B>(
@@ -155,7 +155,7 @@ record Cat(
     return "Cat<${fullname()}, ${age}>"
   }
 
-  operator fn plus(other: Cat): Cat {
+  override fn plus(other: Cat): Cat {
     return Cat(name = self.name, age = age)
   }
 }

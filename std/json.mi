@@ -1,15 +1,40 @@
 module std/json
 
-enum Json = Map[Str, Json] | List[Json] | Int | Float | Str | Bool | Nil
+trait Json permits JsonStr, JsonBool, JsonNull, JsonFloat, JsonInt, JsonObject, JsonArray {
+  type = T
+  fn parse() -> T
+}
 
-enum Json {
-  JsonObject(Map[str, Json])
-  JsonArray(List[Json])
-  JsonInt(Int)
-  JsonFloat(Float)
-  JsonString(Str)
-  JsonBool(Bool)
-  JsonNull
+tuple JsonObject(Map[str, Json]) {
+  type = JsonObject
+  
+  fn parse() -> JsonObject {
+
+  }
+}
+
+
+tuple JsonArray(List[Json]) {
+  fn parse() {}
+}
+
+tuple JsonInt(Int) {
+
+}
+
+
+tuple JsonFloat(Float) {
+
+}
+
+
+tuple JsonString(Str) {
+}
+
+tuple JsonBool(Bool) {
+}
+
+tuple JsonNull {
 }
 
 fn Json.parse(src: str | Buffer | IO): Json | ParseError =
@@ -327,23 +352,29 @@ fn _get_fals(): bool? =
       error
   end
 
-test("parse int") |t|
+test("parse int") {
   assert Json.parse("123") == 123
+}
 
-test("parse str") |t|
+test("parse str") {
   assert Json.parse(`"hello"`) == "hello"
+}
 
-test("parse bool") |t|
+test("parse bool") {
   assert Json.parse("true") == true
   assert Json.parse("false") == false
+}
 
-test("parse null") |t|
+test("parse null") {
   assert Json.parse("null") == nil
+}
 
-test("parse array") |t|
+test("parse array") {
   assert Json.parse(`[]`) == List[Json]()
   assert Json.parse(`[1, 2]`) == List.of[Json](1, 2)
+}
 
-test("parse object") |t|
+test("parse object") {
   assert Json.parse(`{}`) == Map[str, Json]()
-  assert Json.parse(`{"a": 1, "b": 2}`) == Map.of[str, Json]("a" => 1, "b" => 2)p-
+  assert Json.parse(`{"a": 1, "b": 2}`) == Map.of[str, Json]("a" => 1, "b" => 2)
+}
