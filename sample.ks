@@ -2,6 +2,11 @@ module sample
 
 import std.{List, Map, Math, Random}
 
+Int.random()
+Float.random()
+
+Float.PI
+
 trait BinaryOp<T> {
   fn add(rhs: T) -> T
   fn sub(rhs: T) -> T
@@ -193,4 +198,18 @@ fn handler(req: Request) -> Response {
 
 fn hasFlag(b: bool, d: List) {
   return data
+}
+
+record Greeter(name: String) {
+  fn greet() {
+    println("Hello, ${name}")
+  }
+}
+
+fn main(args: List[String]) {
+  let g = Greeter(name: "abc")
+  g = g.copy(
+    name = "123"
+  )
+  Greeter(...g, name: "123")
 }

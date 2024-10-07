@@ -4,10 +4,11 @@ record pair[K: Comparable, V] where
   | k: K
   | v: V
 
+`A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+`A Map is not an array. A slice describes a piece of an array.
 struct Map[K, V] where
-  `A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-  `A Map is not an array. A slice describes a piece of an array.
-  | items: list[pair[K, V]]
+
+  let items: list[pair[K, V]]
 
   static fn of[K, V](kvs: ...pair[K, V]): Map[K, V] =
     Map[K, V]().add(kvs)

@@ -5,38 +5,40 @@ trait ToStr(
   fn toStr(): Str
 )
 
-record Str(
-  `A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
-  `It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
-  `The previous str is freed if its reference count is 0 within the block.
-  data: list[byte]
-): Comparable, ToStr
+`A str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
+`It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
+`The previous str is freed if its reference count is 0 within the block.
+record Str(data: Buffer): Comparable, ToStr {
+  fn get(i: int) {
+    return data.get(i)
+  }
 
-fn strOf(bs ...byte): Str =
-  data.add(bs)
+  fn contains(search: Str) -> Bool {
+    pass
+  }
 
-fn<str> get(i: int) =
-  data[i]
+  fn index_of(sub: Str) -> Int { 
+    pass
+  }
 
-fn (str) contains(search: str): bool =
-  pass
+  fn test(pattern: Regex) -> Bool {
+    pass
+  }
 
-fn (str) index_of(sub: str): int =
-  pass
-
-fn (str) test(pattern: Regex): []str =
-  pass
-
-fn (str) search(key str): int, bool =
-	low, mid, high := 0, 0, n.numItems
-	while low < high
-		mid = (low + high) / 2
- 		cmp := key > n.items[mid].key
-    low = cmp > 0 ? mid + 1 : low
-    high = cmp < 0 ? mid : high
-    if cmp == 0
-      return mid, true
-	low, false
+  fn search(key: Str) -> (Int, Bool) {
+    val (low, mid, high) = (0, 0, n.numItems)
+    while low < high {
+      mid = (low + high) / 2
+      val cmp := key > n.items[mid].key
+      low = cmp > 0 ? mid + 1 : low
+      high = cmp < 0 ? mid : high
+      if cmp == 0 {
+        return (mid, True)
+      }
+    }
+    return (low, False)
+  }
+}
 
 fn (t BTree) delete(key str): bool =
 	if t.root == nil
