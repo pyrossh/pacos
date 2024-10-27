@@ -151,7 +151,7 @@ fn fetchAllPosts(req: Request) -> Response {
 fn - generics
 ================================================================================
 
-fn add[T: Int, Q: String + Compare](a: List[T], b: List[Q]) -> List[T] {
+add[T: Int, Q: String + Compare](a: List[T], b: List[Q]) -> List[T] {
 }
 
 --------------------------------------------------------------------------------

@@ -5,7 +5,7 @@ trait Json permits JsonStr, JsonBool, JsonNull, JsonFloat, JsonInt, JsonObject, 
   fn parse() -> T
 }
 
-tuple JsonObject(Map[str, Json]) {
+tuple JsonObject(Map[str, Json]): Json {
   type = JsonObject
   
   fn parse() -> JsonObject {
@@ -14,27 +14,27 @@ tuple JsonObject(Map[str, Json]) {
 }
 
 
-tuple JsonArray(List[Json]) {
+tuple JsonArray(List[Json]): Json {
   fn parse() {}
 }
 
-tuple JsonInt(Int) {
+tuple JsonInt(Int): Json {
 
 }
 
 
-tuple JsonFloat(Float) {
+tuple JsonFloat(Float): Json {
 
 }
 
 
-tuple JsonString(Str) {
+tuple JsonString(Str): Json {
 }
 
-tuple JsonBool(Bool) {
+tuple JsonBool(Bool): Json {
 }
 
-tuple JsonNull {
+tuple JsonNull: Json {
 }
 
 fn Json.parse(src: str | Buffer | IO): Json | ParseError =
@@ -56,10 +56,14 @@ record JsonParser(
 fn JsonParser.withSrc(src: str | Buffer | IO): JsonParser =
   JsonParser(_buf = src)
 
-fn _is_space(c: U32): Bool => (c == ' ') or ((c >= '\t') and (c <= '\r'))
+fn isSpace(c: U32): Bool => (c == ' ') or ((c >= '\t') and (c <= '\r'))
 
-fn _is_delim(c: U32): Bool => 
+fn isDelim(c: U32): Bool => 
     (c == ',') or (c == '}') or (c == ':') or (c == ']') or (_is_space(c)) or (c == 0)
+
+fn isDigit(c: U32) -> Bool {
+  return (c >= '0') && (c <= '9')
+}
 
 fn _is_digit(c: U32): Bool => (c >= '0') and (c <= '9')
 

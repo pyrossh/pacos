@@ -1,0 +1,76 @@
+================================================================================
+statement - match
+================================================================================
+
+fn main() {
+  val a = (1 * 5) + (2 + 3)
+  match a {
+    case a < b => {
+      printLn(a != b)
+    }
+    case a > 9 => {
+      printLn(a == 9)
+    } 
+    case a < 9 => {
+      printLn(b == 0)
+    }
+    case _ => {
+      printLn(a == 9)
+    }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source
+  (test
+    (string
+      (string_start)
+      (string_end))
+    (lambda
+      (identifier)
+      (body
+        (assignment_statement
+          (identifier)
+          (binary_operator
+            (parenthesized_expression
+              (binary_operator
+                (integer)
+                (integer)))
+            (parenthesized_expression
+              (binary_operator
+                (integer)
+                (integer)))))
+        (if_statement
+          (comparison_operator
+            (identifier)
+            (identifier))
+          (block
+            (assert_statement
+              (comparison_operator
+                (identifier)
+                (identifier))))
+          (else_if_clause
+            (comparison_operator
+              (identifier)
+              (integer))
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer)))))
+          (else_if_clause
+            (comparison_operator
+              (identifier)
+              (integer))
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer)))))
+          (else_clause
+            (block
+              (assert_statement
+                (comparison_operator
+                  (identifier)
+                  (integer))))))))))
