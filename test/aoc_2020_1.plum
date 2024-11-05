@@ -1,0 +1,25 @@
+module aoc2020_1
+
+main() -> Unit =
+  input = fs::readFile!("./examples/test/demos/aoc2020/1.txt")
+  numbers = parseNumbers(input)
+  for i in 0..numbers.size
+    a = numbers.get!<u32>(i)
+    for j in 0..numbers.size
+      b = numbers.get!<u32>(j)
+      if a + b == 2020
+        printLn(a * b)
+        return
+
+fn parseNumbers(input: Str) -> List<Int> =
+  numbers = listOf<Int>()
+  current_number = 0
+  for i in 0..input.len()
+    c = input.charAt(i)
+    if c >= '0' && c <= '9'
+      current_number *= 10
+      current_number += (c - '0') as Int
+    if c == '\n'
+      numbers.push!<u32>(current_number)
+      current_number = 0
+  numbers

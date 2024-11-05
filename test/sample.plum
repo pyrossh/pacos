@@ -6,31 +6,6 @@ Int.random()
 Float.random()
 Float.PI
 
-trait BinaryOp<T> {
-  fn add(rhs: T) -> T
-  fn sub(rhs: T) -> T
-  fn mul(rhs: T) -> T
-  fn div(rhs: T) -> T
-  fn rem(rhs: T) -> T
-  fn mod(rhs: T) -> T
-  fn neg(rhs: T) -> T
-}
-
-trait BooleanOp<T> {
-  fn not() -> T
-  fn and(rhs: T) -> T
-  fn or(rhs: T) -> T
-  fn xor(rhs: T) -> T
-}
-
-trait Bitwise<T> {
-  fn bitOr(rhs: T) -> T
-  fn bitAnd(rhs: T) -> T
-  fn bitXor(rhs: T) -> T
-  fn shl(rhs: T) -> T
-  fn shr(rhs: T) -> T
-}
-
 trait Comparable {
   fn compareTo(other: T) -> Compare
 }
@@ -91,31 +66,6 @@ record Cat(
     return "Cat<${fullname()}, ${age}>"
   }
 }
-
-trait Error {}
-trait IOError: Error {}
-record FileReadError(file: File): IOError() {}
-record DatabaseError(source: DataSource): IOError() {}
-
-val lazyValue: Str by lazy {
-    printLn("computed!")
-    "Hello"
-}
-
-var name: Str by Delegates.observable("<no name>") {
-    prop, old, new ->
-      printLn("$old -> $new")
-}
-
-trait ClosedShape {
-  fn area(): Int
-}
-
-record Rectangle(width: Int, height: Int) : ClosedShape {
-  override fn area() = width * height
-}
-
-record Window(bounds: Rectangle) : ClosedShape by bounds
 
 record Response(
   body: Buffer = emptyBuffer(),
@@ -247,28 +197,6 @@ fn main() {
   }
 }
 
-
-
-birds = 3
-iguanas = 2
-total = addAndStringify birds iguanas
-
-main() =
-    Stdout.line! "There are $(total) animals."
-
-addAndStringify(num1: Int, num2: Int) -> Str = 
-    (num1 + num2) |> Int.toStr()
-
-addAndStringify = \num1: Int, num2: Int -> Str
-    Num.toStr (num1 + num2)
-
-val user = User(1, 2, 3)
-
-params = {"one" => 1, "two" => 2, "three" => 3}
-params.each do |k,v|
-  puts("#{k}=#{v}")
-end
-
 lib LibM
   fun sqrt(x: LibC::Double) -> LibC::Double
   fun pow(x: LibC::Double, y: LibC::Double) -> LibC::Double
@@ -298,15 +226,12 @@ end
 primitive Str : Comparable, ToStr
   val data: Buffer
 
-  fun get(i: Int) -> Char
-    return data.get(i)
-  end
+  get(i: Int) -> Char =
+    data.get(i)
 
-  fun contains(search: Str) -> Bool
-  end
+  contains(search: Str) -> Bool
 
-  fun indexOf(sub: Str) -> Int
-  end
+  indexOf(sub: Str) -> Int
 
   fun test(pattern: Regex) -> Bool
   end
@@ -386,25 +311,38 @@ record Response(a): Option(a, _)
 
   fun body(buf: Buffer) -> Response
     body = buf
+    if something > 0 then
+        Red
+    else if something == 0 then
+        Yellow
+    else
+        Green
+    end
   end
 
   fun status(v: Int) -> Response
     status = v
   end
+
+  fun delat()
+    User::create()
+    .name("John Doe")
+    .email("john@example.com")
+    .todo(Todo::create().title("Make pizza"))
+    .todo(Todo::create().title("Finish Toasty"))
+    .todo(Todo::create().title("Sleep"))
+  end
 end
 
-User::create()
-  .name("John Doe")
-  .email("john@example.com")
-  .todo(Todo::create().title("Make pizza"))
-  .todo(Todo::create().title("Finish Toasty"))
-  .todo(Todo::create().title("Sleep"))
+
+
 
 trait Result(a, b) permits Ok(a), Err(b)
   fn ok() -> a
   fn err() -> b
   fn okOrElse(default: a) -> a
-end
+  fn isOk() -> Bool
+  fn isErr() -> Bool
 
 tuple Ok(a): Result(a, _)
   fn ok() -> a = self.0
@@ -438,39 +376,180 @@ tuple None(a): Option(_)
         Yellow
     else
         Green
+  fn stoplightStr(stoplightColor: Color) -> Str
+    match stoplightColor
+      Red -> "red"
+      Green -> "green"
+      Yellow -> "yellow"
 
-  fn stoplightStr(stoplightColor: Color) -> Str =
-      when stoplightColor is
-        Red -> "red"
-        Green -> "green"
-        Yellow -> "yellow"
-      end
+  fun stoplightStr(stoplightColor: Color) -> Str
+    when stoplightColor is
+      Red -> "red"
+      Green -> "green"
+      Yellow -> "yellow"
+    end
+  end
 
-fn dddd(data: Option(Str)) -> Str =
-  if Some(v) = data then
+record Response(a): Option(a, _)
+  val body: Buffer = emptyBuffer()
+  val headers: Map(Str, Str) = emptyMap()
+  val status: Int = 0
+
+  fn header(k: Str, v: Str) -> Response =
+    headers.add(kv)
+    self
+
+  fn body(buf: Buffer) -> Response =
+    body = buf
+    self
+
+  fn status(v: Int) -> Response =
+    status = v
+    self
+
+record Response(
+  body: Buffer = emptyBuffer()
+  headers: Map(Str, Str) = emptyMap()
+  status: Int = 0
+): Option(a, _)
+
+  fn header(k: Str, v: Str) -> Response =
+    headers.add(kv)
+    self
+
+  fn body(buf: Buffer) -> Response =
+    body = buf
+    self
+
+  fn status(v: Int) -> Response =
+    status = v
+    self
+
+
+Response = {
+  body: Buffer = emptyBuffer()
+  headers: Map(Str, Str) = emptyMap()
+  status: Int = 0
+}
+
+Response\header(k: Str, v: Str) -> Response =
+  headers.add(kv)
+  self
+
+Response\body(buf: Buffer) -> Response =
+  body = buf
+  self
+
+Response\status(v: Int) -> Response =
+  status = v
+  self
+
+main() -> Unit =
+  printLn("123")
+
+main() -> Int, Err =
+    Stdout.line! "There are $(total) animals."
+
+Int\toStr() -> Str =
+  todo
+  # calculate to str
+
+Int::random() -> Int =
+  24
+
+sub(arg1: Int, arg2: Int) -> Int =
+  local1 = arg1
+  local2 = arg2
+  local1 - local2
+
+addAndStringify(num1: Int, num2: Int) -> Str =
+    (num1 + num2).toStr()
+
+factorial(x: Int) -> Int =
+  if x < 2 then
+    x
+  else
+    x * factorial(x - 1)
+
+Result(a, b) =
+ | Ok(a)
+ | Err(b)
+
+```
+Checks whether the result is an `Ok` value
+
+isOk(Ok(1)) # => True
+isOk(Err(Nil)) # => False
+```
+Result\isOk() -> Bool =
+  r! # will bubble back the result similar to try catch
+  o! # will bubble back the option/result
+  if self == Ok(v) then
+    True
+  else if self == Err(_) then
+    False
+
+birds = 3
+iguanas = 2
+total = addAndStringify(birds, iguanas)
+
+pluralize(singular: Str, plural: Str, count: Int) -> Str =
+  countstr = Num.toStr(count)
+  if count == 1 then
+    "$(countstr) $(singular)"
+  else
+    "$(countstr) $(plural)"
+
+pluralize_test(t: Test) -> Unit =
+  assert pluralize("cactus", "cacti", 1) == "1 cactus"
+  assert pluralize("cactus", "cacti", 2) == "2 cacti"
+
+User = {
+  name: String
+  age: String
+}
+
+user = User(1, 2, 3)
+params = {"one" => 1, "two" => 2, "three" => 3}
+
+User\isAuthorized() -> Bool =
+  False
+
+User\map(cb: (a: User) -> b) -> b =
+  cb(u)
+
+name(data: Option(Str)) -> Str =
+  if data == Some(v) then
     v.subString(0, 3)
   else if a ==  b then
     "123"
   else
     "1231"
 
-fn dddd(data: Option(Str)) -> Str =
-  if Some(v) = data then
+delta(data: Option(Str)) -> Str =
+  if data == Some(v)
     v.subString(0, 3)
-  else if a ==  b then
+  else if a == b
     "123"
   else
-    if a < 100 then
+    if a < 100
       printLn("Data")
     else
       println("No Data")
 
 
-names = ["Sam", "Lee", "Ari"]
-names |> List.append("Jess")
-names |> List.map(\num -> num * 2)
-List.map([1, 2, 3], \num -> num * 2)
+data.price?.takeIf(\a -> a != "")
+(1 + 2).mod(3).pow(2).sqrt()
 
-range data, 1, 2, do k,v 
-  puts(k, v)
-end 
+if v == None
+  error.Error
+else if v == Some(c)
+  c * 20
+
+match v
+  None -> error.Error 
+  Some(c) -> c * 20
+
+names = ["Sam", "Lee", "Ari"]
+names.append("Jess")
+names.map(\num -> num * 2)

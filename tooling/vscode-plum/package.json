@@ -1,7 +1,7 @@
 {
-  "name": "kestrel",
-  "displayName": "kestrel",
-  "description": "Textmate grammar for kestrel",
+  "name": "plum",
+  "displayName": "plum",
+  "description": "Textmate grammar for plum",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.87.0"
@@ -12,21 +12,21 @@
   "contributes": {
     "languages": [
       {
-        "id": "kestrel",
+        "id": "plum",
         "aliases": [
-          "kestrel"
+          "plum"
         ],
         "extensions": [
-          ".ks"
+          ".plum"
         ],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "kestrel",
-        "scopeName": "source.ks",
-        "path": "./syntaxes/kestrel.tmLanguage.json"
+        "language": "plum",
+        "scopeName": "source.plum",
+        "path": "./syntaxes/plum.tmLanguage.json"
       }
     ]
   }

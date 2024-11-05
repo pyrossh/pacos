@@ -1,0 +1,41 @@
+module aoc2020_4
+
+main() -> Result =
+  input = fs::readFile!("./examples/test/demos/aoc2020/4.txt")
+  valid_passwords = 0
+  passwords = StrCutter(input.toStr())
+  while passwords.rest.size > 0
+    has_byr = False
+    has_iyr = False
+    has_eyr = False
+    has_hgt = False
+    has_hcl = False
+    has_ecl = False
+    has_pid = False
+    passwords = passwords.cut_at("\n\n")
+    lines = StrCutter(passwords.piece)
+    while lines.rest.size > 0
+      lines = lines.cut_at("\n")
+      fields = StrCutter(lines.piece)
+      while fields.rest.size > 0
+        fields = fields.cut_at(" ")
+        field_parts = StrCutter(fields.piece).cut_at(":")
+        field_name = field_parts.piece;
+        field_value = field_parts.rest;
+        if field_name.equals("byr")
+          has_byr = True
+        else if field_name.equals("iyr")
+          has_iyr = True
+        else if field_name.equals("eyr")
+          has_eyr = True
+        else if field_name.equals("hgt")
+          has_hgt = True
+        else if field_name.equals("hcl")
+          has_hcl = True
+        else if field_name.equals("ecl")
+          has_ecl = true
+        else if field_name.equals("pid")
+          has_pid = True
+    if has_byr && has_iyr && has_eyr && has_hgt && has_hcl && has_ecl && has_pid
+      valid_passwords += 1
+  printLn(valid_passwords)

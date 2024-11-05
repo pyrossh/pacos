@@ -1,0 +1,87 @@
+module test
+
+import fs
+
+add(a: Int, b: Int) -> Int =
+  a + b
+
+give_42() -> Int =
+  42
+
+main() -> Int =
+  x1 = 2 * branch(4)
+  x2 = 3 * branch(9)
+  x3 = 5 * branch(11)
+  x1 + x2 + x3
+
+branch(x: Int) -> Int
+  if x < 5 
+    0
+  else if x < 10
+    1
+  else
+    2
+
+main() -> Int =
+  result = 0
+  for i in 0..10
+    result += i
+    if i == 4
+      continue
+    else i == 7
+      break
+
+# Recursive
+factorial(x: Int) -> Int =
+  if x < 2 then
+    x
+  else
+    x * factorial(x - 1)
+
+# While
+factorial(x: Int) -> Int =
+  result = 1
+  i = n
+  while i == 0
+    result *= i
+    i -= 1
+  result
+
+# For
+factorial(num: Int): Int =
+  result = 1
+  for i in 2..num
+    result *= i
+  result
+
+# Reduce
+factorial(num: Int) -> Int =
+  (1..num).reduce(\a, b -> a * b)
+
+main() -> Bool
+  5.squared() == 25
+
+Int\squared(): Int =
+  self * self
+
+main() -> Unit =
+  input = fs::readFile("./examples/test/demos/aoc2023/1.txt")
+  calibration_sum = 0
+  first_digit = 0
+  last_digit = 0
+  for i in 0..input.len()
+    c = input.charAt(i)
+    if c >= '0' && c <= '9'
+      if first_digit == 0
+        first_digit = (c - '0') as Int;
+        last_digit = (c - '0') as Int;
+      else
+        last_digit = (c - '0') as Int;
+      continue
+    if c == '\n'
+      calibration_value = first_digit * 10 + last_digit
+      calibration_sum += calibration_value
+      first_digit = 0
+      last_digit = 0
+      continue
+  printLn(calibration_sum)
