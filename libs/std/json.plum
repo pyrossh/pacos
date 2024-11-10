@@ -1,59 +1,50 @@
 module std/json
 
-trait Json permits JsonStr, JsonBool, JsonNull, JsonFloat, JsonInt, JsonObject, JsonArray {
-  type = T
-  fn parse() -> T
+Json =
+  | None
+  | Str
+  | Bool
+  | Float
+  | Int
+  | List
+  | Map
+
+JsonParseError = {
+  line: Int
+  pos: Int
+  token: Char
 }
 
-tuple JsonObject(Map[str, Json]): Json {
-  type = JsonObject
-  
-  fn parse() -> JsonObject {
-
-  }
-}
-
-
-tuple JsonArray(List[Json]): Json {
-  fn parse() {}
-}
-
-tuple JsonInt(Int): Json {
-
-}
-
-
-tuple JsonFloat(Float): Json {
-
-}
-
-
-tuple JsonString(Str): Json {
-}
-
-tuple JsonBool(Bool): Json {
-}
-
-tuple JsonNull: Json {
-}
-
-fn Json.parse(src: str | Buffer | IO): Json | ParseError =
+Json\\parse(src: Str | Buffer | IO) -> Json | JsonParseError =
   JsonParser.withSrc(src).parse()
 
-#[error(400, "Failed to parse json ${object} at: ${line} ${pos}")]
-record ParseError(
-  line: str
-  pos:  str
+Json\parseNone() -> None | JsonParseError =
+  parser.find("null")
+
+Json\parseStr() -> Str | JsonParseError =
+  parser.find("null")
+
+Json\parseFloat() -> Float | JsonParseError =
+  parser.find("null")
+
+Json\parseInt() -> Int | JsonParseError =
+  parser.find("null")
+
+Json\parseList() -> List | JsonParseError =
+  parser.find("null")
+
+Json\parseMap() -> Map | JsonParseError =
+  parser.find("null")
+
+
+JsonParser = (
+  cur: Int = ' '
+  _pos: Int = 0
+  _next: Int = ' '
+  _buf: Str | Buffer | IO
 )
 
-record JsonParser(
-  cur: int = ' '
-  _pos: int = 0
-  _next: int = ' '
-  _buf: str | Buffer | IO
-)
-
-fn JsonParser.withSrc(src: str | Buffer | IO): JsonParser =
+JsonParser::withSrc(src: Str | Buffer | IO) -> JsonParser =
   JsonParser(_buf = src)
 
 fn isSpace(c: U32): Bool => (c == ' ') or ((c >= '\t') and (c <= '\r'))
@@ -356,29 +347,25 @@ fn _get_fals(): bool? =
       error
   end
 
-test("parse int") {
+
+
+Json\test("parseInt") =
   assert Json.parse("123") == 123
-}
 
-test("parse str") {
+Json\test("parseStr") =
   assert Json.parse(`"hello"`) == "hello"
-}
 
-test("parse bool") {
+Json\test("parseBool") =
   assert Json.parse("true") == true
   assert Json.parse("false") == false
-}
 
-test("parse null") {
+Json\test("parse null") =
   assert Json.parse("null") == nil
-}
 
-test("parse array") {
+Json\test("parse array") =
   assert Json.parse(`[]`) == List[Json]()
   assert Json.parse(`[1, 2]`) == List.of[Json](1, 2)
-}
 
-test("parse object") {
+Json\test("parse object") =
   assert Json.parse(`{}`) == Map[str, Json]()
   assert Json.parse(`{"a": 1, "b": 2}`) == Map.of[str, Json]("a" => 1, "b" => 2)
-}

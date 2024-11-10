@@ -1,0 +1,23 @@
+module std
+
+Bool =
+  | True
+  | False
+
+# Might not be needed
+Bool\toStr() -> Str =
+  "True"
+
+Bool\and(other: Bool) -> Bool =
+  match self, other is
+    True, True => True
+    True, False => False
+    False, True => False
+    False, False => False
+
+Bool\or(other: Bool) -> Bool =
+  match self, other is
+    True, True => True
+    True, False => True
+    False, True => True
+    False, False => False

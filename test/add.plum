@@ -24,7 +24,7 @@ branch(x: Int) -> Int
 
 main() -> Int =
   result = 0
-  for i in 0..10
+  for i in 0...10
     result += i
     if i == 4
       continue

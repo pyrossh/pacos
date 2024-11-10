@@ -4,27 +4,24 @@ import std/path
 import std/os
 import std/http/content_type
 
-#[builder]
-record Response(
+Response = (
   headers: Map[Str, Str]
-  body: str | Buffer | IO
-  status: int
+  body: Str | Buffer | IO
+  status: Int
 )
 
-fn file_response(path: str): Response | IOError =
-  content := contentTypeFromExt(path.ext())
+createFileResponse(path: Str) -> Response | IOError =
+  content := content_type.fromExt(path.ext())
   data := os.readFile(file)?
   Response()
     .header("Content-Type", content)
     .body(data)
     .status(200)
 
-#[get("/")]
-fn index(): Response! =
-  file_response("index.html")
+index() -> Response! =
+  createFileResponse("index.html")
 
-#[get("/public/<...>")]
-fn public(file: str): Response | IOError =
+serveFile(file: Str) -> Response | IOError =
   ext := path::ext(file)
   content := contentTypeFromExt(ext)
   data := os.readFile(file)?

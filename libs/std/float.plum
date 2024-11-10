@@ -1,0 +1,33 @@
+Float::PI=3.14
+
+fn acosh(v: float): float =
+  when
+    x < 1 | IsNaN(x) -> // first case is special case
+      NaN()
+    x == 1 ->
+      0
+    x >= Large ->
+      Log(x) + Ln2 // x > 2**28
+    x > 2 ->
+      Log(2*x - 1/(x+Sqrt(x*x-1))) // 2**28 > x > 2
+    _ -> 
+      t := x - 1
+      // ((2*t+t*t).sqrt() + t).log1p()
+      Log1p(t + Sqrt(2*t+t*t)) // 2 >= x > 1
+
+fn is_finite(): bool = true
+  ` Check whether this number is finite, ie not +/-infinity and not NaN.
+  ` True if exponent is not all 1s
+  (bits() and 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
+
+# Check whether this number is +/-infinity
+is_infinite:  Bool =>
+  # True if exponent is all 1s and mantissa is 0
+  ((bits() and 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) and  # exp
+  ((bits() and 0x000F_FFFF_FFFF_FFFF) == 0)  // mantissa
+
+// Check whether this number is NaN.
+fn is_nan(): Bool =>
+  // True if exponent is all 1s and mantissa is non-0
+  ((bits() and 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) and  // exp
+  ((bits() and 0x000F_FFFF_FFFF_FFFF) != 0)  // mantissa

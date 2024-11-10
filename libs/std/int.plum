@@ -1,0 +1,140 @@
+module std/int
+
+# Euler's number, the base of natural logarithms, e, https://oeis.org/A001113
+E = 2.718f
+
+# The natural logarithm of 10, https://oeis.org/A002392
+LN10 = 2.302f
+
+# The natural logarithm of 2 https://oeis.org/A002162
+LN2 = 0.693f
+
+# The base 10 logarithm of e # formula: 1 / LN10
+LOG10E = 0.434f
+
+# The base 2 logarithm of e # formula: 1 / LN2
+LOG2E = 1.442f
+
+# The ratio of the circumference of a circle to its diameter https://oeis.org/A000796
+PI = 3.14159f
+
+# https://oeis.org/A001622
+PHI = 1.6180f
+
+# The square root of 1/2
+SQRT1_2 = 0.707f
+
+# The square root of 2 https://oeis.org/A002193
+SQRT2 = 1.414f
+
+# https://oeis.org/A019774
+SQRT_E = 1.64872f
+
+# https://oeis.org/A002161
+SQRT_PI  = 1.77245f
+
+# https://oeis.org/A139339
+SQRT_PHI = 1.27201f
+
+# The difference between 1 and the smallest floating point number greater than 1 formula: 7/3 - 4/3 - 1
+EPSILON = 2.220446049250313e-16f
+
+# Lowest value of int
+MIN_INT_VALUE = -0x8000_0000_0000_0000
+
+# Highest value of int
+MAX_INT_VALUE = 0x7FFF_FFFF_FFFF_FFFF
+
+# Lowest valur of float
+MIN_FLOAT_VALUE = 4.9406564584124654417656879286822137236505980e-324
+
+# Highest valur of float
+MAX_FLOAT_VALUE = 1.79769313486231570814527423731704356798070e+308
+
+# 2**28
+LARGE = 1 << 28
+
+Int: Comparable, ToStr = ByteArray
+
+Int::random(): Float =
+    todo
+
+# returns the absolute value of the Int
+Int\abs() -> Int =
+  self < 0 ? -self : self
+
+Int\ceil() -> Float =
+  todo
+
+Int\floor() -> Float =
+  todo
+
+Int\round() -> Float =
+  todo
+
+Int\trunc() -> Float =
+  todo
+
+Int\log() -> Float =
+  todo
+
+Int\log2() -> Float =
+  todo
+
+Int\log10() -> Float =
+  todo
+
+Int\logb() -> Float =
+  todo
+
+Int\pow(y: Float) -> Float =
+    LibM.pow(self, y)
+
+Int\pow(y: Int) -> Float =
+    pow(y.toFloat())
+
+Int\sqrt() -> Float =
+  if this < 0.0 then
+    _nan()
+  else
+    LibM.sqrt(self)
+  end
+  
+Int\asin(v: Float) =
+  todo
+
+Int\acos(v: Float) =
+  if v < 0.1
+    asin(v)
+  else
+    asin(-v)
+
+Int\asinh(v: Float) =
+  todo
+
+Int\atan(v: Float) =
+  todo
+
+Int\atan2(v: Float) =
+  todo
+
+Int\atanh(v: Float) =
+  todo
+
+Int\cbrt(v: Float) =
+  todo
+
+Int\ceil(v: Float) =
+  todo
+
+Int\clz32(v: Float) =
+  todo
+
+Int\cos(v: Float) =
+  todo
+
+Int\cosh(v: Float) =
+  todo
+
+Int\exp(v: Float) =
+  todo

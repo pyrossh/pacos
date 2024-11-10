@@ -8,7 +8,6 @@ record List[V](
   _size: int
 ) {
   fn of(values: ...V) -> List[V] {
-
   }
 }
 

@@ -1,0 +1,177 @@
+module std/str
+
+# ToStr defines any data that can be converted to a str
+ToStr = (
+  toStr() -> Str
+)
+
+```
+A Str is an array of contiguous data stored in memory with a null termination using hex 0x00 or ASCII 0x00.
+It is immutable and cannot be modified. It is copied for any changes and saved to a new memory location.
+The previous str is freed if its reference count is 0 within the block.
+```
+Str : Comparable + ToStr = {
+  data: Buffer
+}
+
+Str\get(i: Int) -> Char =
+  data.get(i)
+
+Str\contains(search: Str) -> Bool =
+  todo
+
+Str\indexOf(sub: Str) -> Int =
+  todo
+
+Str\test(pattern: Regex) -> Bool =
+  todo
+
+Str\search(key: Str) -> (Int, Bool) =
+  low, mid, high = 0, 0, n.numItems
+  while low < high
+    mid = (low + high) / 2
+    cmp = key > n.items[mid].key
+    low = cmp > 0 ? mid + 1 : low
+    high = cmp < 0 ? mid : high
+    if cmp == 0 then
+      return (mid, True)
+  (low, False)
+
+Str\startsWith(search: str) -> Bool =
+  todo
+
+Str\concat(other: Str) -> Str = 
+  s + other
+
+Str\toStr() -> Str =
+  self
+
+Str\matchPattern(pattern: Regex) -> List<Str> =
+  todo
+
+Str\matchAll(pattern: Regex) -> List<Str> =
+  todo
+
+Str\padStart(sub: Str, count: Int) -> Str = 
+  todo
+
+Str\padEnd(sub: Str, count: Int) -> Str =
+  todo
+
+Str\repeat(count: Int) -> Str =
+  todo
+
+Str\replace(pattern: Regex, sub: Str) -> Str =
+  todo
+
+Str\replaceAll(pattern: Regex, sub: Str) -> Str =
+  todo
+
+Str\search(pattern: Regex) -> Str =
+  todo
+
+Str\slice(start: Int, e: Int) -> Str =
+  todo
+
+Str\split(separator: Str, limit: Int) -> []Str =
+  todo
+
+Str\sub(start: Int, e: Int) -> Str =
+  todo
+
+Str\toLower() -> Str =
+  todo
+
+`reverses a Str
+Str\reverse() -> Str =
+  start := 0
+  end := length - 1
+  result := []
+  while start < end
+    const temp = data[start]
+    result[start] = data[end]
+    result[end] = temp
+    end = end - 1
+    start = start + 1
+  result
+
+Str\parseInt() -> Int =
+  0
+
+Str\parseFloat() -> Float =
+  0.0
+
+Str\parseBool() -> Bool =
+  match self.to_lower()
+    "true" -> True
+    "false" -> False
+    _ -> error("could not parse bool '${this}'")
+  if self.lower() == "true"
+    True
+  else if self.lower() == "false"
+    False
+  else
+    error("could not parse bool '${this}'")
+
+
+Str\camelCase() -> Str =
+  todo
+
+Str\snakeCase() -> Str =
+  todo
+
+Str\capitalize() -> Str =
+  todo
+
+Str\kebabCase() -> Str =
+  todo
+
+Str\lowerCase() -> Str =
+  todo
+
+Str\lowerFirst() -> Str =
+  todo
+
+Str\upperCase() -> Str =
+  todo
+
+Str\upperFirst() -> Str =
+  todo
+
+
+Str\startCase() -> Str =
+  todo
+
+Str\deburr() -> Str =
+  todo
+
+Str\escape() -> Str =
+  todo
+
+Str\escapeRegExp() -> Str =
+  todo
+
+Str\pad() -> Str =
+  todo
+
+Str\template() -> Str =
+  todo
+
+Str\trim() -> Str =
+  todo
+
+Str\trimEnd() -> Str =
+  todo
+
+Str\trimStart() -> Str =
+  todo
+
+Str\truncate() -> Str =
+  todo
+
+Str\unescape() -> Str =
+  todo
+
+Str\words() -> Str =
+  todo
+

@@ -6,425 +6,30 @@ Int.random()
 Float.random()
 Float.PI
 
-trait Comparable {
-  fn compareTo(other: T) -> Compare
+User = {
+  name: Str
+  email: Str
+  todos: List(Todo)
 }
 
-trait Shape permits Circle, Square, Rectangle {
-  fn area() -> Float
+Todo = {
+  title: Str
 }
 
-tuple Circle(Int): Shape {
-  fn area() = PI * self.0 * self.0 
-}
-
-tuple Square(Int): Shape {
-  fn area() = self.0 * self.0 
-}
-
-tuple Rectangle(Int, Int): Shape {
-  fn area() = self.0 * self.1 
-}
-
-tuple Metre(Float): Shape {
-  static fn fromInt(v: Int) -> Metre {
-    return Metre(v)
-  }
-
-  fn toFloat() -> Float {
-    return self.0
-  }
-}
-
-`A Cat is new a new type of animal
-record Cat(
-  name: Option[Str],
-  age: Int
-): ToStr {
-  static fn withName(name: Str): Cat(name: name, age: 0)
-  static fn withAge(age: Int): Cat(name: "", age: age)
-
-  fn init() {
-    printLn("called init")
-    require(name.isNotEmpty()) {
-      "name shouldn't be empty"
-    }
-    ensure(name.size > 20) {
-      ValidationErr("name too long")
-    }
-  }
-
-  fn deinit() {
-    printLn("called deinit")
-  }
-
-  fn fullname() -> Str {
-    return "${self.name} ${self.age}"
-  }
-
-  override fn toStr() -> Str {
-    return "Cat<${fullname()}, ${age}>"
-  }
-}
-
-record Response(
-  body: Buffer = emptyBuffer(),
-  headers: Map[Str, Str] = emptyMap(),
-  status: Int = 0,
-) {
-
-  fn header(kv: Pair): Self {
-    headers.add(kv)
-  }
-
-  fn body(b: Buffer): Self {
-    body = b
-  }
-
-  fn status(v int): Self {
-    status = v
-  }
-}
-
-record LoopScope(running: Bool) {
-  fn stop() {
-    self.running = False
-  }
-}
-
-fn loop(scope: LoopScope = LoopScope(), cond: Option<() -> Bool> = None(), builder: LoopScope.() -> Unit) {
-  scope.apply(builder)
-  if cond is Some {
-    if cond() == True && scope.running == True {
-      loop(scope, cond, builder)
-    }
-  } else {
-    if scope.running == True {
-      loop(scope, cond, builder)
-    }
-  }
-}
-
-fn example() {
-  val items = listOf(1, 2, 3, 4, 5)
-  items.each { i ->
-    if i == 2 {
-      continue()
-    }
-    if i == 4 {
-      break()
-    }
-  }
-  range(0, 10).step(1).each { i ->
-    print("int ${i}")
-  }
-  loop().cond({ i < 5 }).do {
-    print("forever")
-  }
-  loop {
-    if (a > 5) {
-      break()
-    }
-  }
-  val list = "a b c d e f g h i j".split(" ")
-  list.groupBy(3) { group ->
-    puts group.join ""
-  }
-}
-
-@result()
-fn mkPerson(name: Str, age: Int) -> Result<Person, ValidationError> = result {
-  Person(validName(name).bind(), validAge(age).bind())
-}
-
-@handler("GET", "/posts")
-fn getPosts() -> List<Post> {
-  return listOf(Post(id: 123))
-}
-
-fn handler(req: Request) -> Response {
-  return Response()
-    .status(2)
-    .body("213")
-    .headers("1" => "2")
-}
-
-fn hasFlag(b: bool, d: List) {
-  return data
-}
-
-record Greeter(name: String) {
-  fn greet() {
-    println("Hello, ${name}")
-  }
-}
-
-fn main(args: List[String]) {
-  let g = Greeter(name: "abc")
-  g = g.copy(
-    name = "123"
-  )
-  Greeter(...g, name: "123")
-}
-
-
-fn main() {
-  val a = (1 * 5) + (2 + 3)
-  match a {
-    case a < b => {
-      printLn(a != b)
-    }
-    case a > 9 => {
-      printLn(a == 9)
-    } 
-    case a < 9 => {
-      printLn(b == 0)
-    }
-    case _ => {
-      printLn(a == 9)
-    }
-  }
-
-  val list = listOf<Shape>(Circle(123), Square(20))
-
-  match list.get(0) {
-    case Circle(c): {
-      printLn("${c}")
-    }
-    case Square(a): {
-      printLn("${a}")
-    }
-  }
-}
-
-lib LibM
-  fun sqrt(x: LibC::Double) -> LibC::Double
-  fun pow(x: LibC::Double, y: LibC::Double) -> LibC::Double
-end
-
-primitive Int : Comparable, ToStr
-  fn abs() -> Float
-  fn ceil() -> Float
-  fn floor() -> Float
-  fn round() -> Float
-  fn trunc() -> Float
-  fun log() -> Float
-  fun log2() -> Float
-  fun log10() -> Float
-  fun logb() -> Float
-  fun pow(y: Float) -> Float
-    LibM.pow(self, y)
-  end
-  fun pow(y: Int) -> Float
-    pow(y.toFloat())
-  end
-  fun sqrt() -> Float
-    LibM.sqrt(self)
-  end
-end
-
-primitive Str : Comparable, ToStr
-  val data: Buffer
-
-  get(i: Int) -> Char =
-    data.get(i)
-
-  contains(search: Str) -> Bool
-
-  indexOf(sub: Str) -> Int
-
-  fun test(pattern: Regex) -> Bool
-  end
-
-  fun search(key: Str) -> (Int, Bool)
-    val (low, mid, high) = (0, 0, n.numItems)
-    while low < high do
-      mid = (low + high) / 2
-      val cmp = key > n.items[mid].key
-      low = cmp > 0 ? mid + 1 : low
-      high = cmp < 0 ? mid : high
-      if cmp == 0 then
-        return (mid, True)
-      end
-    end
-    return (low, False)
-  end
-
-  fun startsWith(search: str) -> Bool
-  end
-
-  fun endsWith(search: Str) -> Bool
-  end
-
-  fun concat(other: Str) -> Str
-    s + other
-  end
-
-  fun toStr() -> Str
-  end
-
-  fun matchPattern(pattern: Regex) -> []Str
-  end
-
-  fun matchAll(pattern: Regex) -> []Str
-  end
-
-  fun padStart(sub: Str, count: Int) -> Str
-  end
-
-  fun padEnd(sub: Str, count: Int) -> Str
-  end
-
-  fun repeat(count: Int) -> Str
-  end
-
-  fun replace(pattern: Regex, sub: Str) -> Str
-  end
-
-  fun replaceAll(pattern: Regex, sub: Str) -> Str
-  end
-
-  fun search(pattern: Regex) -> Str
-  end
-
-  fun slice(start: Int, e: Int) -> Str
-  end
-
-  fun split(separator: Str, limit: Int) -> []Str
-  end
-
-  fun sub(start: Int, e: Int) -> Str
-  end
-
-  fun toLower() -> Str
-  end
-end
-
-record Response(a): Option(a, _)
-  val body: Buffer = emptyBuffer()
-  val headers: Map(Str, Str) = emptyMap()
-  val status: Int = 0
-
-  fun header(k: Str, v: Str) -> Response
-    headers.add(kv)
-  end
-
-  fun body(buf: Buffer) -> Response
-    body = buf
-    if something > 0 then
-        Red
-    else if something == 0 then
-        Yellow
-    else
-        Green
-    end
-  end
-
-  fun status(v: Int) -> Response
-    status = v
-  end
-
-  fun delat()
-    User::create()
-    .name("John Doe")
-    .email("john@example.com")
-    .todo(Todo::create().title("Make pizza"))
-    .todo(Todo::create().title("Finish Toasty"))
-    .todo(Todo::create().title("Sleep"))
-  end
-end
-
-
-
-
-trait Result(a, b) permits Ok(a), Err(b)
-  fn ok() -> a
-  fn err() -> b
-  fn okOrElse(default: a) -> a
-  fn isOk() -> Bool
-  fn isErr() -> Bool
-
-tuple Ok(a): Result(a, _)
-  fn ok() -> a = self.0
-  fn err() -> fail("called 'Result.err()' on an 'Ok' value")
-  fn okOrElse(default: a) -> a = self.0
-  fn map(cb: fn(a) -> b) -> Result(b) = Ok(cb(self.0))
-
-tuple Err(a): Result(_, a)
-  fn get() -> a = fail("called 'Result.get()' on an 'Err' value")
-  fn err() -> self.1
-  fn okOrElse(default: a) -> a = default
-  fn mapErr(cb: fn(a) -> b) -> Result(_, b) = Err(cb(self.1))
-
-trait Option(a) permits Some(a), None
-  fn some() -> a
-  fn someOrElse(default: a) -> a
-  fn map(cb: fn(a) -> b) -> Option(b)
-
-tuple Some(a): Option(a)
-  fn some() -> a = self.0
-  fn someOrElse(default: a) -> a = self.0
-  fn map(cb: fn(a) -> b) -> Option(b) = Some(cb(self.0))
-
-tuple None(a): Option(_)
-  fn some() -> a = fail("called 'Option.some()' on an 'Some' value")
-  fn someOrElse(default: a) -> a = default
-  fn stoplightColor(something: Int) -> Color =
-    if something > 0 then
-        Red
-    else if something == 0 then
-        Yellow
-    else
-        Green
-  fn stoplightStr(stoplightColor: Color) -> Str
-    match stoplightColor
-      Red -> "red"
-      Green -> "green"
-      Yellow -> "yellow"
-
-  fun stoplightStr(stoplightColor: Color) -> Str
-    when stoplightColor is
-      Red -> "red"
-      Green -> "green"
-      Yellow -> "yellow"
-    end
-  end
-
-record Response(a): Option(a, _)
-  val body: Buffer = emptyBuffer()
-  val headers: Map(Str, Str) = emptyMap()
-  val status: Int = 0
-
-  fn header(k: Str, v: Str) -> Response =
-    headers.add(kv)
-    self
-
-  fn body(buf: Buffer) -> Response =
-    body = buf
-    self
-
-  fn status(v: Int) -> Response =
-    status = v
-    self
-
-record Response(
-  body: Buffer = emptyBuffer()
-  headers: Map(Str, Str) = emptyMap()
-  status: Int = 0
-): Option(a, _)
-
-  fn header(k: Str, v: Str) -> Response =
-    headers.add(kv)
-    self
-
-  fn body(buf: Buffer) -> Response =
-    body = buf
-    self
-
-  fn status(v: Int) -> Response =
-    status = v
-    self
-
+User()
+  .name("John Doe")
+  .email("john@example.com")
+  .todo(Todo().title("Make pizza"))
+  .todo(Todo().title("Finish Toasty"))
+  .todo(Todo().title("Sleep"))
+
+fn stoplightColor(something: Int) -> Color =
+  if something > 0 then
+      Red
+  else if something == 0 then
+      Yellow
+  else
+      Green
 
 Response = {
   body: Buffer = emptyBuffer()
@@ -432,27 +37,15 @@ Response = {
   status: Int = 0
 }
 
-Response\header(k: Str, v: Str) -> Response =
-  headers.add(kv)
-  self
-
-Response\body(buf: Buffer) -> Response =
-  body = buf
-  self
-
-Response\status(v: Int) -> Response =
-  status = v
-  self
-
 main() -> Unit =
   printLn("123")
 
 main() -> Int, Err =
     Stdout.line! "There are $(total) animals."
 
+# calculate to str
 Int\toStr() -> Str =
   todo
-  # calculate to str
 
 Int::random() -> Int =
   24
@@ -463,10 +56,10 @@ sub(arg1: Int, arg2: Int) -> Int =
   local1 - local2
 
 addAndStringify(num1: Int, num2: Int) -> Str =
-    (num1 + num2).toStr()
+  (num1 + num2).toStr()
 
 factorial(x: Int) -> Int =
-  if x < 2 then
+  if x < 2
     x
   else
     x * factorial(x - 1)
@@ -477,7 +70,6 @@ Result(a, b) =
 
 ```
 Checks whether the result is an `Ok` value
-
 isOk(Ok(1)) # => True
 isOk(Err(Nil)) # => False
 ```
@@ -510,7 +102,8 @@ User = {
 }
 
 user = User(1, 2, 3)
-params = {"one" => 1, "two" => 2, "three" => 3}
+params = Map("one" => 1, "two" => 2, "three" => 3)
+arr = List(1, 2, 3, 4)
 
 User\isAuthorized() -> Bool =
   False
@@ -553,3 +146,61 @@ match v
 names = ["Sam", "Lee", "Ari"]
 names.append("Jess")
 names.map(\num -> num * 2)
+
+module std/http
+
+import std/path
+import std/os
+import std/http/content_type
+import std/libc
+
+extern sqrt(x: libc.Double) -> libc.Double
+extern pow(x: libc.Double, y: libc.Double) -> libc.Double
+
+WriteError = EOF | Closed
+
+Writer = (
+	write(p: Str | Buffer) -> Int | WriteError
+)
+
+ReadError = EOF | Closed
+
+Reader = (
+	read(p: Str | Buffer) -> Int | ReadError
+)
+
+IO = Reader + Writer
+IOError = ReadError | WriteError
+
+Response(
+  headers: Map[Str, Str]
+  body: Str | Buffer | IO
+  status: Int
+)
+
+createFileResponse(path: Str) -> Response | IOError =
+  content := content_type.fromExt(path.ext())
+  data := os.readFile(file)?
+  Response()
+    .header("Content-Type", content)
+    .body(data)
+    .status(200)
+
+index() -> Response =
+  createFileResponse("index.html")
+
+serveFile(file: Str) -> Response | IOError =
+  ext := path::ext(file)
+  content := contentTypeFromExt(ext)
+  data := os.readFile(file)?
+  Response()
+    .header("Content-Type", content)
+    .body(data)
+    .status(200)
+
+http.createFileResponse("./src/sample.plum")
+http.index()
+http.serveFile("./src/sample.plum")
+
+g = Greeter(name: "abc")
+g = Greeter(...g, name: "123")

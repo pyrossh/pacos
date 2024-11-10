@@ -1,0 +1,182 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "plum",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#constant"
+    },
+    {
+      "include": "#entity"
+    },
+    {
+      "include": "#discards"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.plum",
+          "match": "\\b(return|continue|break|match|if|else|while|for|module|as|is|import|assert|todo|crash)\\b"
+        },
+        {
+          "name": "keyword.operator.arrow.plum",
+          "match": "(<\\-|\\->)"
+        },
+        {
+          "name": "keyword.operator.pipe.plum",
+          "match": "\\|>"
+        },
+        {
+          "name": "keyword.operator.splat.plum",
+          "match": "\\.\\."
+        },
+        {
+          "name": "keyword.operator.comparison.plum",
+          "match": "(==|!=)"
+        },
+        {
+          "name": "keyword.operator.comparison.float.plum",
+          "match": "(<=\\.|>=\\.|<\\.|>\\.)"
+        },
+        {
+          "name": "keyword.operator.comparison.int.plum",
+          "match": "(<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.plum",
+          "match": "(&&|\\|\\|)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.float.plum",
+          "match": "(\\+\\.|\\-\\.|/\\.|\\*\\.)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.int.plum",
+          "match": "(\\+|\\-|/|\\*|%)"
+        },
+        {
+          "name": "keyword.operator.assignment.plum",
+          "match": "="
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.plum",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.plum",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.plum",
+          "match": "#.*"
+        },
+        {
+          "begin": "```",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.plum"
+            }
+          },
+          "end": "```",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.plum"
+            }
+          },
+          "name": "comment.block.plum"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "include": "#binary_number"
+        },
+        {
+          "include": "#octal_number"
+        },
+        {
+          "include": "#hexadecimal_number"
+        },
+        {
+          "include": "#decimal_number"
+        },
+        {
+          "include": "#boolean"
+        },
+        {
+          "name": "entity.name.type.plum",
+          "match": "[[:upper:]][[:alnum:]]*"
+        }
+      ]
+    },
+    "binary_number": {
+      "name": "constant.numeric.binary.plum",
+      "match": "\\b0[bB]0*1[01_]*\\b",
+      "patterns": []
+    },
+    "octal_number": {
+      "name": "constant.numeric.octal.plum",
+      "match": "\\b0[oO]0*[1-7][0-7]*\\b",
+      "patterns": []
+    },
+    "decimal_number": {
+      "name": "constant.numeric.decimal.plum",
+      "match": "\\b(0*[1-9][0-9_]*|0)(\\.(0*[1-9][0-9_]*|0)?(e-?0*[1-9][0-9]*)?)?\\b",
+      "patterns": []
+    },
+    "hexadecimal_number": {
+      "name": "constant.numeric.hexadecimal.plum",
+      "match": "\\b0[xX]0*[1-9a-zA-Z][0-9a-zA-Z]*\\b",
+      "patterns": []
+    },
+    "entity": {
+      "patterns": [
+        {
+          "begin": "\\b([[:lower:]][[:word:]]*)\\b[[:space:]]*\\(",
+          "end": "\\)",
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ],
+          "captures": {
+            "1": {
+              "name": "entity.name.function.plum"
+            }
+          }
+        },
+        {
+          "name": "variable.parameter.plum",
+          "match": "\\b([[:lower:]][[:word:]]*):\\s"
+        },
+        {
+          "name": "entity.name.namespace.plum",
+          "match": "\\b([[:lower:]][[:word:]]*):"
+        }
+      ]
+    },
+    "discards": {
+      "name": "comment.unused.plum",
+      "match": "\\b_(?:[[:word:]]+)?\\b"
+    }
+  },
+  "scopeName": "source.plum"
+}

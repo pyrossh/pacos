@@ -1,0 +1,8 @@
+module std
+
+# This is used to represent an error value across the language
+Err = (
+  code() -> Int
+  msg() -> Str
+  cause() -> Err | Nil
+)
