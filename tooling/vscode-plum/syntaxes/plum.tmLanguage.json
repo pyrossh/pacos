@@ -26,7 +26,7 @@
       "patterns": [
         {
           "name": "keyword.control.plum",
-          "match": "\\b(return|continue|break|match|if|else|while|for|module|as|is|import|assert|todo|crash)\\b"
+          "match": "\\b(do|in|this|return|continue|break|match|if|else|while|for|module|as|is|import|assert|todo|crash)\\b"
         },
         {
           "name": "keyword.operator.arrow.plum",

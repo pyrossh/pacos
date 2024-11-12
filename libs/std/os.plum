@@ -1,0 +1,100 @@
+module std/os
+
+stdin  = File("/dev/stdin")
+stdout = File("/dev/stdout")
+stderr = File("/dev/stderr")
+
+# Writes the specified data, followed by the current line terminator, to the standard output stream.
+printLn(s: Str) -> IOError =
+  writeFile(stdout, s)
+
+# Returns a stream to a file from the fs
+readFile(path: str) -> IO =
+  todo
+
+writeFile(path: str, data: IO)
+  todo
+
+access(path[, mode]) =
+  todo
+
+appendFile(path, data[, options]) =
+  todo
+
+chmod(path, mode) =
+  todo
+
+chown(path, uid, gid) =
+  todo
+
+copyFile(src, dest[, mode]) =
+  todo
+
+cp(src, dest[, options]) =
+  todo
+
+lchmod(path, mode) =
+  todo
+
+lchown(path, uid, gid) =
+  todo
+
+lutimes(path, atime, mtime) =
+  todo
+
+link(existingPath, newPath) =
+  todo
+
+lstat(path[, options]) =
+  todo
+
+mkdir(path[, options]) =
+  todo
+
+mkdtemp(prefix[, options]) =
+  todo
+
+open(path, flags[, mode]) =
+  todo
+
+opendir(path[, options]) =
+  todo
+
+readdir(path[, options]) =
+  todo
+
+readlink(path[, options]) =
+  todo
+
+realpath(path[, options]) =
+  todo
+
+rename(oldPath, newPath) =
+  todo
+
+rmdir(path[, options]) =
+  todo
+
+rm(path[, options]) =
+  todo
+
+stat(path[, options]) =
+  todo
+
+statfs(path[, options]) =
+  todo
+
+symlink(target, path[, type]) =
+  todo
+
+truncate(path[, len]) =
+  todo
+
+unlink(path) =
+  todo
+
+utimes(path, atime, mtime) =
+  todo
+
+watch(filename[, options]) =
+  todo

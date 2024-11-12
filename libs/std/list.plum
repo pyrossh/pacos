@@ -1,187 +1,172 @@
 module std
 
-record List[V](
-  `A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-  `It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
-  head: node[V]?
-  tail: node[V]?
-  _size: int
-) {
-  fn of(values: ...V) -> List[V] {
-  }
+# A node stores the data in a list and contains pointers to the previous and next sibling nodes
+Node = {
+  value: V
+  prev: Node(a) | Nil
+  next: Node(a) | Nil
 }
 
-record node[V](
-  `A node stores the data in a list and contains pointers to the previous and next sibling nodes
-  value: V
-  prev: node[V]?
-  next: node[V]?
-)
+# A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+# It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
+List = {
+  head: Node(a) | Nil
+  tail: Node(a) | Nil
+  size: Int
+}
 
-fn listOf[A](values: ...A): list[A] =
-  list[A]().add(values)
+List(values: ...a) -> List(a) =
+  List().add(values)
 
-fn (List) get(i: int) -> A =
-  `gets the element at i'th index of the list
-  current := l.head
-  index := 0
-  while current != nil
+# gets the element at i'th index of the list
+List\get(i: Int) -> a =
+  current = l.head
+  index = 0
+  while current != Nil
     if index == i
       current.value
     else
       current = current.next
       index += 1
 
-fn (List) set(i: int, v: V) -> A =
-  `sets the element at i'th index of the list
-  pass
+# sets the element at i'th index of the list
+List\set(i: Int, v: a) -> a =
+  todo
 
-fn (List) length() -> A =
-  `returns the no of elements in the list
-  _size
+# returns the no of elements in the list
+List\length() -> a =
+  self.size
 
-fn (List) add(values: ...V) =
-  `adds the specified elements to the start of the list
-  for v := range values
-    l.head = node(value: v, prev: nil, next: l.head)
+# adds the specified elements to the start of the list
+List\add(values: ...V) =
+  for v in values
+    l.head = Node(value: v, prev: Nil, next: l.head)
     l.head.next.prev = l.head
-    l._size += 1
+    l.size += 1
 
-fn (List) removeAt(i int) =
-  `removes the element at i'th index of the list
-  l.tail?.prev?.next = nil
+# removes the element at i'th index of the list
+List\removeAt(i: Int) =
+  l.tail?.prev?.next = Nil
+  # old tail node gets deallocated due to zero reference count
+  l.tail = list.tail?.prev
+  l.size -= 1
+
+# removes the element v from list
+List\remove(v: a) =
+  l.tail?.prev?.next = Nil
+  # old tail node gets deallocated due to zero reference count
+  l.tail = list.tail?.prev
+  l.size -= 1
+
+# removes all objects from this list
+List\clear() =
+  l.tail?.prev?.next = Nil
   `old tail node gets deallocated due to zero reference count
   l.tail = list.tail?.prev
-  l._size -= 1
-
-fn (List) remove(v V) =
-  `removes the element v from list
-  l.tail?.prev?.next = nil
-  `old tail node gets deallocated due to zero reference count
-  l.tail = list.tail?.prev
-  l._size -= 1
-
-fn (List) clear() =
-  `removes all objects from this list
-  l.tail?.prev?.next = nil
-  `old tail node gets deallocated due to zero reference count
-  l.tail = list.tail?.prev
-  l._size -= 1
+  l.size -= 1
 
 
-fn (List) reverse(v: fn(v: V): true): list[A] =
-  `returns a new list with the elements in reverse order.
-  pass
+# returns a new list with the elements in reverse order.
+List\reverse(v: fn(v: a) -> Bool) -> List[A] =
+  todo
 
-fn (List) sort(sorter: fn(v: V): true): list[A] =
-  `returns a new list with the elements sorted by sorter
-  pass
+# returns a new list with the elements sorted by sorter
+List\sort(sorter: fn(v: a) -> Bool) -> List(A) =
+  todo
 
-fn (List) find(search: V): V?, int =
-  `returns an item and index in the list if the item is is equal to search item
-  pass
+# returns an item and index in the list if the item is is equal to search item
+List\find(search: V): V | Nil =
+  todo
 
-fn (List) contains(v: V): bool =
-  `returns the index of an item in the list if present and comparable otherwise nil
-  pass
+# returns the index of an item in the list if present and comparable otherwise Nil
+List\contains(v: a) -> Bool =
+  todo
 
-fn (l: list[T]) op_range(yld: fn(v: T): bool): bool =
-  `range over func for a list
+# calls f for each elem in the list
+List\each(cb: fn(v: a)) -> Unit =
   current := l.head
-  while current != nil
-    if !yld(current.value)
-      return false
-    current = current.next
-  true
-
-fn (List) op_spread(other: list): list[A] =
-  `combines this list with other list and returns a new list
-  pass
-
-fn (List) each(cb: fn(v: V)): void =
-  `calls f for each elem in the list
-  current := l.head
-  while current != nil
+  while current != Nil
     cb(current.value)
     current = current.next
 
-fn (List) map[B](cb: fn(v: V): B): list[A] =
-  `returns a list made up of B elements for each elem in the list
+# returns a list made up of B elements for each elem in the list
+List\map(cb: fn(v: a) -> b) -> List(b) =
   nl := []
   current := l.head
-  while current != nil
+  while current != Nil
     item := cb(current.value)
     nl.push(item)
   nl
 
-fn (List) flatMap() =
-  `returns a new list with all elements shuffled`
-  pass
+# returns a new list with all elements shuffled`
+List\flatMap() =
+  todo
 
-fn (List) retain(predicate: fn(v: V): A): list[A] =
-  `returns a new list with the elements that matched the predicate
-  pass
+# returns a new list with the elements that matched the predicate
+List\retain(predicate: fn(v: a) -> A) -> List(A) =
+  todo
 
-fn (List) reject(predicate: fn(v: V): A): list[A] =
-  `returns a new list with the elements that matched the predicate removed
-  pass
+# returns a new list with the elements that matched the predicate removed
+List\reject(predicate: fn(v: a) -> A) -> List(A) =
+  todo
 
-fn (List) any(predicate: fn(v: V): bool): bool =
-  `returns true if any element in the list satisfies the predicate
-  pass
+# returns true if any element in the list satisfies the predicate
+List\any(predicate: fn(v: a) -> Bool) -> Bool =
+  todo
 
-fn (List) every(predicate: fn(v: V): bool): bool =
-  `returns true if all of the elements in the list satisfies the predicate
-  pass
+# returns true if all of the elements in the list satisfies the predicate
+List\every(predicate: fn(v: a) -> Bool) -> Bool =
+  todo
 
-fn (List) reduce[B](acc: B, cb: fn(v: V): A): B =
-  `returns the accumulated value of all the elements in the list
-  pass
+# returns the accumulated value of all the elements in the list
+List\reduce[B](acc: B, cb: fn(v: a) -> A): B =
+  todo
 
-fn (List) first(): A? =
-  `returns the first element in the list
+# returns the first element in the list
+List\first() -> a | Nil =
   l.head?.value
 
-fn (List) last(): A? =
-  `returns the last element in the list
+# returns the last element in the list
+List\last() -> a | Nil =
   l.tail?.value
 
-fn (List) sublist(start: int, end: int): list[A] =
-  `returns a list containing the first n elements of the given list
-  pass
+# returns a list containing the first n elements of the given list
+List\sublist(start: int, end: int) -> List(A) =
+  todo
 
-fn (List) take(n: int): list[A] =
-  `returns a list containing the first n elements of the given list
-  pass
+# returns a list containing the first n elements of the given list
+List\take(n: int) -> List(A) =
+  todo
 
-fn (List) skip(n: int): list[A] =
-  `returns a list containing the first n elements of the given list
-  pass
+# returns a list containing the first n elements of the given list
+List\skip(n: int) -> List(A) =
+  todo
 
-fn (List) drop(n: int): list[A] =
-  `Returns a list containing the first n elements of the given list
+`Returns a list containing the first n elements of the given list
+List\drop(n: int) -> List(A) =
+  todo
 
-fn (List) sample() =
-  `returns a new list with some of the elements taken randomly`
-  pass
+# returns a new list with some of the elements taken randomly`
+List\sample() =
+  todo
 
-fn (List) shuffle() =
-  `returns a new list with all elements shuffled`
-  pass
+# returns a new list with all elements shuffled`
+List\shuffle() =
+  todo
 
-fn (List) partition() =
-  `returns a new list with all elements shuffled`
-  pass
+# returns a new list with all elements shuffled`
+List\partition() =
+  todo
 
-fn (List) chunk() =
-  `returns a new list with all elements shuffled`
-  pass
+# returns a new list with all elements shuffled`
+List\chunk() =
+  todo
 
-fn (List) groupBy() =
-  `returns a new list with all elements grouped`
-  pass
+# returns a new list with all elements grouped`
+List\groupBy() =
+  todo
 
-fn (List) join(sep: str = ","): str =
+List\join(sep: Str = ",") -> Str =
   res := Buffer()
   l.each() |v|
     if @HasTrait(V, ToStr)
@@ -189,39 +174,3 @@ fn (List) join(sep: str = ","): str =
     else
       res.write(@TypeToString(v), sep)
   res.to_str()
-
-
-trait List[T] permits Empty, Link {
-  fn each(cb: fn(v: T))
-  fn length() -> Int
-  fn append(v: V) -> List[T]
-  fn prepend(v: V) -> List[T]
-  fn append(values: ...V) -> List[T]
-}
-
-fn listOf(values: ...T) -> List[T] {
-  return Link[T].append(values)
-}
-
-tuple Empty(): List[_] {
-  fn each(cb: fn(v: T)) {}
-  fn append(v: V) -> List[T] {
-    return Link(v, Empty)
-  }
-  fn prepend(v: V) -> List[T] {
-    return Link(v, Empty)
-  }
-}
-
-tuple Link[T](T, List[T]): List[T] {
-  fn each(cb: fn(v: T)) {
-    cb(a)
-    self.1.each(cb)
-  }
-  fn append(v: V) {
-    self.last().rest = Link(v, Empty)
-  }
-  fn prepend(v: V) {
-    self.first() = Link(v, self.1)
-  }
-}

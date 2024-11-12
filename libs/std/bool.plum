@@ -6,17 +6,20 @@ Bool =
 
 # Might not be needed
 Bool\toStr() -> Str =
-  "True"
+  if this == True
+    "True"
+  else
+    "False"
 
 Bool\and(other: Bool) -> Bool =
-  match self, other is
+  match this, other is
     True, True => True
     True, False => False
     False, True => False
     False, False => False
 
 Bool\or(other: Bool) -> Bool =
-  match self, other is
+  match this, other is
     True, True => True
     True, False => True
     False, True => True

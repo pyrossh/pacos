@@ -1,9 +1,9 @@
-# tree-sitter-kestrel
+# tree-sitter-plum
 
-[![CI](https://github.com/pyrossh/tree-sitter-kestrel/actions/workflows/ci.yml/badge.svg)](https://github.com/pyrossh/tree-sitter-kestrel/actions/workflows/ci.yml)
-[![Rust Crate](https://img.shields.io/crates/v/tree-sitter-kestrel.svg)](https://crates.io/crates/tree-sitter-kestrel)
-[![Node Package](https://img.shields.io/npm/v/tree-sitter-kestrel.svg)](https://www.npmjs.com/package/tree-sitter-kestrel)
+[![CI](https://github.com/pyrossh/tree-sitter-plum/actions/workflows/ci.yml/badge.svg)](https://github.com/pyrossh/tree-sitter-plum/actions/workflows/ci.yml)
+[![Rust Crate](https://img.shields.io/crates/v/tree-sitter-plum.svg)](https://crates.io/crates/tree-sitter-plum)
+[![Node Package](https://img.shields.io/npm/v/tree-sitter-plum.svg)](https://www.npmjs.com/package/tree-sitter-plum)
 
-👾 kestrel Programming Language
+👾 plum Programming Language
 
-Tree sitter grammar for [kestrel programming language](https://github.com/pyrossh/kestrel.sh)
+Tree sitter grammar for [plum programming language](https://github.com/pyrossh/plum.sh)

@@ -5,20 +5,21 @@ import std/os
 import std/http/content_type
 
 Response = (
-  headers: Map[Str, Str]
+  headers: Map(Str, Str)
   body: Str | Buffer | IO
   status: Int
 )
 
 createFileResponse(path: Str) -> Response | IOError =
-  content := content_type.fromExt(path.ext())
-  data := os.readFile(file)?
+  content = content_type.fromExt(path.ext())
+  data = os.readFile(file)?
   Response()
     .header("Content-Type", content)
+    .contentType(.ApplicationJS)
     .body(data)
     .status(200)
 
-index() -> Response! =
+index() -> Response | IOError =
   createFileResponse("index.html")
 
 serveFile(file: Str) -> Response | IOError =

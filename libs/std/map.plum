@@ -22,7 +22,7 @@ Map\add(kvs: ...Pair) =
 
 # Get a value from the Map using key k
 Map\get(k: a) -> b | Nil =
-  for k, v in self
+  for k, v in items do
     if k == k
       return v
   Nil
