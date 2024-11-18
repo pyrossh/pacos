@@ -1,0 +1,156 @@
+================================================================================
+Literals
+================================================================================
+
+main() =
+  startYear = 2101
+  a = +123
+  b = -111
+  c = 456
+  d = 0xcafe
+  e = 0b001
+  pi = 3.14159
+  a = +1.2
+  b = -0.4
+  c = 12.0f
+  d = 15.03f
+  name = "plum"
+  a = True
+  b = False
+  c = Nil
+  count = counter(10)
+  sum = 1 + {{2 * 3} / 4}
+  "e = {1 + 2}.mod(3).pow(2).sqrt()"
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (body
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (integer))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (unary_operator
+              (primary_expression
+                (integer))))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (unary_operator
+              (primary_expression
+                (integer))))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (integer))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (integer))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (integer))))
+      (primary_expression
+        (integer))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (float))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (unary_operator
+              (primary_expression
+                (float))))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (unary_operator
+              (primary_expression
+                (float))))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (float))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (float))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (string
+              (string_start)
+              (string_content)
+              (string_end)))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (type_identifier))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (type_identifier))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (type_identifier))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (fn_call
+              (identifier)
+              (argument_list
+                (expression
+                  (primary_expression
+                    (integer))))))))
+      (assign
+        (identifier)
+        (expression
+          (primary_expression
+            (binary_operator
+              (primary_expression
+                (integer))
+              (primary_expression
+                (parenthesized_expression
+                  (expression
+                    (primary_expression
+                      (binary_operator
+                        (primary_expression
+                          (parenthesized_expression
+                            (expression
+                              (primary_expression
+                                (binary_operator
+                                  (primary_expression
+                                    (integer))
+                                  (primary_expression
+                                    (integer)))))))
+                        (primary_expression
+                          (integer)))))))))))
+      (primary_expression
+        (string
+          (string_start)
+          (string_content)
+          (string_end))))))

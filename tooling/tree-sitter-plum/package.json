@@ -1,13 +1,13 @@
 {
-  "name": "tree-sitter-kestrel",
+  "name": "tree-sitter-plum",
   "version": "0.0.1",
-  "description": "kestrel grammar for tree-sitter",
+  "description": "plum grammar for tree-sitter",
   "main": "bindings/node",
   "types": "bindings/node",
   "keywords": [
     "parser",
     "lexer",
-    "kestrel"
+    "plum"
   ],
   "files": [
     "grammar.js",
@@ -48,14 +48,14 @@
     "parse": "tree-sitter parse",
     "test": "tree-sitter test"
   },
-  "repository": "https://github.com/pyrossh/kestrel",
+  "repository": "https://github.com/pyrossh/plum",
   "tree-sitter": [
     {
-      "scope": "source.ks",
+      "scope": "source.plum",
       "file-types": [
-        "ks"
+        "plum"
       ],
-      "injection-regex": "ks",
+      "injection-regex": "plum",
       "highlights": [
         "queries/highlights.scm"
       ],

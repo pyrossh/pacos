@@ -1,0 +1,173 @@
+================================================================================
+function - no return
+================================================================================
+
+sum(a: Int, b: Int) =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (param
+      (identifier)
+      (type
+        (type_identifier)))
+    (param
+      (identifier)
+      (type
+        (type_identifier)))
+    (body
+      (todo))))
+
+================================================================================
+function - return
+================================================================================
+
+sum(a: Int, b: Int) -> Int =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (param
+      (identifier)
+      (type
+        (type_identifier)))
+    (param
+      (identifier)
+      (type
+        (type_identifier)))
+    (return_type
+      (type_identifier))
+    (body
+      (todo))))
+
+================================================================================
+function - default value
+================================================================================
+
+random(a: Int = 10) =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (param
+      (identifier)
+      (type
+        (type_identifier))
+      (expression
+        (primary_expression
+          (integer))))
+    (body
+      (todo))))
+
+================================================================================
+function - generics
+================================================================================
+
+add(param: a, param2: List(b)) -> List(b) =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (param
+      (identifier)
+      (type
+        (a)))
+    (param
+      (identifier)
+      (type
+        (type_identifier)
+        (type
+          (b))))
+    (return_type
+      (type_identifier)
+      (generics
+        (b)))
+    (body
+      (todo))))
+
+================================================================================
+function - method
+================================================================================
+
+User\fullname() -> String =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (method_identifier
+      (type_identifier)
+      (fn_identifier))
+    (return_type
+      (type_identifier))
+    (body
+      (todo))))
+
+================================================================================
+function - construtor
+================================================================================
+
+List\init(items: ...a) -> List(a) =
+  List().add(items)
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (method_identifier
+      (type_identifier)
+      (fn_identifier))
+    (param
+      (identifier)
+      (variadic_type
+        (type
+          (a))))
+    (return_type
+      (type_identifier)
+      (generics
+        (a)))
+    (body
+      (primary_expression
+        (attribute
+          (primary_expression
+            (type_call
+              (type_identifier)
+              (argument_list)))
+          (fn_call
+            (identifier)
+            (argument_list
+              (expression
+                (primary_expression
+                  (identifier))))))))))
+
+================================================================================
+function - static method
+================================================================================
+
+Int::random() -> Int =
+  todo
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (static_identifier
+      (type_identifier)
+      (fn_identifier))
+    (return_type
+      (type_identifier))
+    (body
+      (todo))))

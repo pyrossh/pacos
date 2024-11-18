@@ -1,4 +1,4 @@
-module github.com/tree-sitter/tree-sitter-kestrel
+module github.com/tree-sitter/tree-sitter-plum
 
 go 1.22
 

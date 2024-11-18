@@ -23,10 +23,10 @@ User()
   .todo(Todo().title("Finish Toasty"))
   .todo(Todo().title("Sleep"))
 
-fn stoplightColor(something: Int) -> Color =
-  if something > 0 then
+stoplightColor(something: Int) -> Color =
+  if something > 0
       Red
-  else if something == 0 then
+  else if something == 0
       Yellow
   else
       Green

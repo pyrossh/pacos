@@ -1,161 +1,106 @@
 ================================================================================
-statement - if
+if
 ================================================================================
 
-fn main() {
-  val a = (1 * 5) + (2 + 3)
-  if a < b {
-    printLn(a != b)
-  } else if a > 9 {
+main() =
+  if a < b
+    printLn("a is less than b")
+  else if a > 9
     printLn(a == 9)
-  } else if a < 9 {
+  else if a > 18
     printLn(b == 0)
-  } else {
-    printLn(a == 9)
-  }
-}
-
---------------------------------------------------------------------------------
-
-(source
-  (test
-    (string
-      (string_start)
-      (string_end))
-    (lambda
-      (identifier)
-      (body
-        (assignment_statement
-          (identifier)
-          (binary_operator
-            (parenthesized_expression
-              (binary_operator
-                (integer)
-                (integer)))
-            (parenthesized_expression
-              (binary_operator
-                (integer)
-                (integer)))))
-        (if_statement
-          (comparison_operator
-            (identifier)
-            (identifier))
-          (block
-            (assert_statement
-              (comparison_operator
-                (identifier)
-                (identifier))))
-          (else_if_clause
-            (comparison_operator
-              (identifier)
-              (integer))
-            (block
-              (assert_statement
-                (comparison_operator
-                  (identifier)
-                  (integer)))))
-          (else_if_clause
-            (comparison_operator
-              (identifier)
-              (integer))
-            (block
-              (assert_statement
-                (comparison_operator
-                  (identifier)
-                  (integer)))))
-          (else_clause
-            (block
-              (assert_statement
-                (comparison_operator
-                  (identifier)
-                  (integer))))))))))
-
-================================================================================
-statement - assert
-================================================================================
-
-fn main() {
-  assert 1 != 2
-  assert 5 > 4
-  assert 7 != 9
-  assert listOf(1, 2) == listOf(1, 2)
-  assert mapOf("1" => 2) == mapOf("1" => 2)
-}
+  else
+    if a > 5
+      printLn(a)
+    else
+      printLn("None")
 
 --------------------------------------------------------------------------------
 
 (source
   (fn
-    (fnname)
+    (fn_identifier)
     (body
-      (assert
+      (if
         (expression
           (comparison_operator
             (primary_expression
-              (integer))
+              (identifier))
             (primary_expression
-              (integer)))))
-      (assert
-        (expression
-          (comparison_operator
-            (primary_expression
-              (integer))
-            (primary_expression
-              (integer)))))
-      (assert
-        (expression
-          (comparison_operator
-            (primary_expression
-              (integer))
-            (primary_expression
-              (integer)))))
-      (assert
-        (expression
-          (comparison_operator
-            (primary_expression
-              (call
-                (reference
-                  (identifier))
-                (argument_list
-                  (expression
-                    (primary_expression
-                      (integer)))
-                  (expression
-                    (primary_expression
-                      (integer))))))
-            (primary_expression
-              (call
-                (reference
-                  (identifier))
-                (argument_list
-                  (expression
-                    (primary_expression
-                      (integer)))
-                  (expression
-                    (primary_expression
-                      (integer)))))))))
-      (assert
-        (expression
-          (comparison_operator
-            (primary_expression
-              (call
-                (reference
-                  (identifier))
-                (argument_list
-                  (pair_argument
+              (identifier))))
+        (body
+          (primary_expression
+            (fn_call
+              (identifier)
+              (argument_list
+                (expression
+                  (primary_expression
                     (string
-                      (quoted_content))
-                    (expression
-                      (primary_expression
-                        (integer)))))))
+                      (string_start)
+                      (string_content)
+                      (string_end))))))))
+        (else_if
+          (expression
+            (comparison_operator
+              (primary_expression
+                (identifier))
+              (primary_expression
+                (integer))))
+          (body
             (primary_expression
-              (call
-                (reference
-                  (identifier))
+              (fn_call
+                (identifier)
                 (argument_list
-                  (pair_argument
-                    (string
-                      (quoted_content))
-                    (expression
+                  (expression
+                    (comparison_operator
                       (primary_expression
-                        (integer)))))))))))))
+                        (identifier))
+                      (primary_expression
+                        (integer)))))))))
+        (else_if
+          (expression
+            (comparison_operator
+              (primary_expression
+                (identifier))
+              (primary_expression
+                (integer))))
+          (body
+            (primary_expression
+              (fn_call
+                (identifier)
+                (argument_list
+                  (expression
+                    (comparison_operator
+                      (primary_expression
+                        (identifier))
+                      (primary_expression
+                        (integer)))))))))
+        (else
+          (body
+            (if
+              (expression
+                (comparison_operator
+                  (primary_expression
+                    (identifier))
+                  (primary_expression
+                    (integer))))
+              (body
+                (primary_expression
+                  (fn_call
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier)))))))
+              (else
+                (body
+                  (primary_expression
+                    (fn_call
+                      (identifier)
+                      (argument_list
+                        (expression
+                          (primary_expression
+                            (string
+                              (string_start)
+                              (string_content)
+                              (string_end))))))))))))))))

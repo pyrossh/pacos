@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "tree_sitter_kestrel_binding",
+      "target_name": "tree_sitter_plum_binding",
       "dependencies": [
         "<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
       ],
@@ -15,7 +15,7 @@
       ],
       "cflags_c": [
         "-std=c11",
-      ]
+      ],
     }
   ]
 }

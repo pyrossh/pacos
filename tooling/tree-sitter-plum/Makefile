@@ -1,6 +1,6 @@
 VERSION := 0.0.1
 
-LANGUAGE_NAME := tree-sitter-kestrel
+LANGUAGE_NAME := tree-sitter-plum
 
 # repository
 SRC_DIR := src

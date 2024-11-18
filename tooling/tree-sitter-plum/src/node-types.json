@@ -27,7 +27,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
@@ -71,16 +71,6 @@
     "type": "attribute",
     "named": true,
     "fields": {
-      "attribute": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": false,
         "required": true,
@@ -91,6 +81,20 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "fn_call",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -129,10 +133,6 @@
           },
           {
             "type": "-",
-            "named": false
-          },
-          {
-            "type": "..",
             "named": false
           },
           {
@@ -206,7 +206,15 @@
           "named": true
         },
         {
+          "type": "primary_expression",
+          "named": true
+        },
+        {
           "type": "return",
+          "named": true
+        },
+        {
+          "type": "todo",
           "named": true
         },
         {
@@ -260,36 +268,6 @@
     "type": "break",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "call",
-    "named": true,
-    "fields": {
-      "arguments": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "argument_list",
-            "named": true
-          },
-          {
-            "type": "lambda_literal",
-            "named": true
-          }
-        ]
-      },
-      "function": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "reference",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "case",
@@ -368,36 +346,6 @@
     }
   },
   {
-    "type": "closure",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "body",
-            "named": true
-          }
-        ]
-      },
-      "parameters": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "comparison_operator",
     "named": true,
     "fields": {
@@ -451,32 +399,6 @@
     "type": "continue",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "decorator",
-    "named": true,
-    "fields": {
-      "arguments": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "argument_list",
-            "named": true
-          }
-        ]
-      },
-      "function": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "reference",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "dotted_name",
@@ -541,7 +463,7 @@
     "fields": {
       "fields": {
         "multiple": true,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "enum_field",
@@ -554,21 +476,11 @@
         "required": true,
         "types": [
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -580,27 +492,34 @@
         "required": true,
         "types": [
           {
-            "type": "typename",
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "parameters": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "type_identifier",
             "named": true
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "typename",
-          "named": true
-        }
-      ]
     }
-  },
-  {
-    "type": "escape_sequence",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "expression",
@@ -612,10 +531,6 @@
       "types": [
         {
           "type": "boolean_operator",
-          "named": true
-        },
-        {
-          "type": "closure",
           "named": true
         },
         {
@@ -652,30 +567,6 @@
           {
             "type": "body",
             "named": true
-          },
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      },
-      "generics": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "generics",
-            "named": true
-          }
-        ]
-      },
-      "modifier": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "fn_modifier",
-            "named": true
           }
         ]
       },
@@ -684,7 +575,15 @@
         "required": true,
         "types": [
           {
-            "type": "fnname",
+            "type": "fn_identifier",
+            "named": true
+          },
+          {
+            "type": "method_identifier",
+            "named": true
+          },
+          {
+            "type": "static_identifier",
             "named": true
           }
         ]
@@ -725,26 +624,33 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "decorator",
-          "named": true
-        },
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
     }
   },
   {
-    "type": "fn_modifier",
+    "type": "fn_call",
     "named": true,
-    "fields": {}
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "argument_list",
+            "named": true
+          }
+        ]
+      },
+      "function": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "for",
@@ -787,25 +693,6 @@
     }
   },
   {
-    "type": "generic_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "genericname",
-          "named": true
-        },
-        {
-          "type": "typename",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "generics",
     "named": true,
     "fields": {},
@@ -814,7 +701,23 @@
       "required": true,
       "types": [
         {
-          "type": "generic_type",
+          "type": "a",
+          "named": true
+        },
+        {
+          "type": "b",
+          "named": true
+        },
+        {
+          "type": "c",
+          "named": true
+        },
+        {
+          "type": "d",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
           "named": true
         }
       ]
@@ -881,6 +784,22 @@
     "fields": {}
   },
   {
+    "type": "interpolation",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "abc",
+            "named": false
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "keyword_argument",
     "named": true,
     "fields": {
@@ -904,76 +823,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "lambda_literal",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "assert",
-          "named": true
-        },
-        {
-          "type": "assign",
-          "named": true
-        },
-        {
-          "type": "break",
-          "named": true
-        },
-        {
-          "type": "continue",
-          "named": true
-        },
-        {
-          "type": "for",
-          "named": true
-        },
-        {
-          "type": "if",
-          "named": true
-        },
-        {
-          "type": "lambda_parameters",
-          "named": true
-        },
-        {
-          "type": "match",
-          "named": true
-        },
-        {
-          "type": "return",
-          "named": true
-        },
-        {
-          "type": "while",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "lambda_parameters",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "multi_variable_declaration",
-          "named": true
-        },
-        {
-          "type": "variable_declaration",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1003,6 +852,25 @@
     }
   },
   {
+    "type": "method_identifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "fn_identifier",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module",
     "named": true,
     "fields": {},
@@ -1012,21 +880,6 @@
       "types": [
         {
           "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "multi_variable_declaration",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "variable_declaration",
           "named": true
         }
       ]
@@ -1083,7 +936,7 @@
             "named": false
           },
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
@@ -1093,7 +946,7 @@
         "required": true,
         "types": [
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
@@ -1147,6 +1000,10 @@
           {
             "type": "type",
             "named": true
+          },
+          {
+            "type": "variadic_type",
+            "named": true
           }
         ]
       },
@@ -1194,11 +1051,11 @@
           "named": true
         },
         {
-          "type": "call",
+          "type": "float",
           "named": true
         },
         {
-          "type": "float",
+          "type": "fn_call",
           "named": true
         },
         {
@@ -1214,15 +1071,19 @@
           "named": true
         },
         {
-          "type": "self",
-          "named": true
-        },
-        {
           "type": "string",
           "named": true
         },
         {
-          "type": "typename",
+          "type": "this",
+          "named": true
+        },
+        {
+          "type": "type_call",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
           "named": true
         },
         {
@@ -1236,12 +1097,12 @@
     "type": "record",
     "named": true,
     "fields": {
-      "body": {
+      "fields": {
         "multiple": true,
-        "required": false,
+        "required": true,
         "types": [
           {
-            "type": "fn",
+            "type": "record_field",
             "named": true
           },
           {
@@ -1251,28 +1112,6 @@
           {
             "type": "}",
             "named": false
-          }
-        ]
-      },
-      "fields": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "record_field",
-            "named": true
           }
         ]
       },
@@ -1291,7 +1130,7 @@
         "required": false,
         "types": [
           {
-            "type": ",",
+            "type": "+",
             "named": false
           },
           {
@@ -1299,7 +1138,7 @@
             "named": false
           },
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
@@ -1309,21 +1148,11 @@
         "required": true,
         "types": [
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1350,25 +1179,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "reference",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "typename",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1406,7 +1216,7 @@
       "required": true,
       "types": [
         {
-          "type": "typename",
+          "type": "type_identifier",
           "named": true
         }
       ]
@@ -1420,10 +1230,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "assign",
-          "named": true
-        },
         {
           "type": "enum",
           "named": true
@@ -1456,7 +1262,53 @@
     }
   },
   {
+    "type": "static_identifier",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "fn_identifier",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "string",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "interpolation",
+          "named": true
+        },
+        {
+          "type": "string_content",
+          "named": true
+        },
+        {
+          "type": "string_end",
+          "named": true
+        },
+        {
+          "type": "string_start",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "string_content",
     "named": true,
     "fields": {},
     "children": {
@@ -1464,11 +1316,11 @@
       "required": false,
       "types": [
         {
-          "type": "escape_sequence",
+          "type": "escape_interpolation",
           "named": true
         },
         {
-          "type": "quoted_content",
+          "type": "escape_sequence",
           "named": true
         }
       ]
@@ -1488,6 +1340,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "todo",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "trait",
@@ -1526,21 +1383,11 @@
         "required": true,
         "types": [
           {
-            "type": "typename",
+            "type": "type_identifier",
             "named": true
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "doc_comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1600,19 +1447,19 @@
         "required": false,
         "types": [
           {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
-            "type": "[",
-            "named": false
-          },
-          {
-            "type": "]",
-            "named": false
-          },
-          {
-            "type": "typename",
+            "type": "type",
             "named": true
           }
         ]
@@ -1623,10 +1470,52 @@
       "required": true,
       "types": [
         {
-          "type": "typename",
+          "type": "a",
+          "named": true
+        },
+        {
+          "type": "b",
+          "named": true
+        },
+        {
+          "type": "c",
+          "named": true
+        },
+        {
+          "type": "d",
+          "named": true
+        },
+        {
+          "type": "type_identifier",
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "type_call",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "argument_list",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1665,17 +1554,13 @@
     "fields": {}
   },
   {
-    "type": "variable_declaration",
+    "type": "variadic_type",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
         {
           "type": "type",
           "named": true
@@ -1715,10 +1600,6 @@
   },
   {
     "type": "!=",
-    "named": false
-  },
-  {
-    "type": "\"",
     "named": false
   },
   {
@@ -1766,7 +1647,7 @@
     "named": false
   },
   {
-    "type": "..",
+    "type": "...",
     "named": false
   },
   {
@@ -1775,6 +1656,10 @@
   },
   {
     "type": ":",
+    "named": false
+  },
+  {
+    "type": "::",
     "named": false
   },
   {
@@ -1822,15 +1707,7 @@
     "named": false
   },
   {
-    "type": "@",
-    "named": false
-  },
-  {
-    "type": "[",
-    "named": false
-  },
-  {
-    "type": "]",
+    "type": "\\",
     "named": false
   },
   {
@@ -1842,12 +1719,28 @@
     "named": false
   },
   {
+    "type": "a",
+    "named": true
+  },
+  {
+    "type": "abc",
+    "named": false
+  },
+  {
     "type": "assert",
     "named": false
   },
   {
+    "type": "b",
+    "named": true
+  },
+  {
     "type": "break",
     "named": false
+  },
+  {
+    "type": "c",
+    "named": true
   },
   {
     "type": "comment",
@@ -1858,7 +1751,7 @@
     "named": false
   },
   {
-    "type": "doc_comment",
+    "type": "d",
     "named": true
   },
   {
@@ -1870,8 +1763,12 @@
     "named": false
   },
   {
-    "type": "enum",
-    "named": false
+    "type": "escape_interpolation",
+    "named": true
+  },
+  {
+    "type": "escape_sequence",
+    "named": true
   },
   {
     "type": "float",
@@ -1882,16 +1779,12 @@
     "named": false
   },
   {
-    "type": "fnname",
+    "type": "fn_identifier",
     "named": true
   },
   {
     "type": "for",
     "named": false
-  },
-  {
-    "type": "genericname",
-    "named": true
   },
   {
     "type": "identifier",
@@ -1910,6 +1803,10 @@
     "named": false
   },
   {
+    "type": "is",
+    "named": false
+  },
+  {
     "type": "match",
     "named": false
   },
@@ -1922,31 +1819,23 @@
     "named": false
   },
   {
-    "type": "operator",
-    "named": false
-  },
-  {
-    "type": "override",
-    "named": false
-  },
-  {
-    "type": "quoted_content",
-    "named": true
-  },
-  {
-    "type": "record",
-    "named": false
-  },
-  {
     "type": "return",
     "named": false
   },
   {
-    "type": "self",
+    "type": "string_end",
     "named": true
   },
   {
-    "type": "static",
+    "type": "string_start",
+    "named": true
+  },
+  {
+    "type": "this",
+    "named": true
+  },
+  {
+    "type": "todo",
     "named": false
   },
   {
@@ -1954,16 +1843,8 @@
     "named": false
   },
   {
-    "type": "typename",
+    "type": "type_identifier",
     "named": true
-  },
-  {
-    "type": "val",
-    "named": false
-  },
-  {
-    "type": "var",
-    "named": false
   },
   {
     "type": "while",

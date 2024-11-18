@@ -15,8 +15,8 @@ List = {
   size: Int
 }
 
-List(values: ...a) -> List(a) =
-  List().add(values)
+List\init(values: ...a) -> List(a) =
+  List().add(values...)
 
 # gets the element at i'th index of the list
 List\get(i: Int) -> a =
@@ -61,7 +61,7 @@ List\remove(v: a) =
 # removes all objects from this list
 List\clear() =
   l.tail?.prev?.next = Nil
-  `old tail node gets deallocated due to zero reference count
+  # old tail node gets deallocated due to zero reference count
   l.tail = list.tail?.prev
   l.size -= 1
 

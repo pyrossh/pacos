@@ -1,0 +1,88 @@
+================================================================================
+assert
+================================================================================
+
+main() =
+  assert 1 != 2
+  assert 5 > 4
+  assert 7 != 9
+  assert List(1, 2) == List(1, 2)
+  assert Map("1" => 2) == Map("1" => 2)
+
+--------------------------------------------------------------------------------
+
+(source
+  (fn
+    (fn_identifier)
+    (body
+      (assert
+        (expression
+          (comparison_operator
+            (primary_expression
+              (integer))
+            (primary_expression
+              (integer)))))
+      (assert
+        (expression
+          (comparison_operator
+            (primary_expression
+              (integer))
+            (primary_expression
+              (integer)))))
+      (assert
+        (expression
+          (comparison_operator
+            (primary_expression
+              (integer))
+            (primary_expression
+              (integer)))))
+      (assert
+        (expression
+          (comparison_operator
+            (primary_expression
+              (type_call
+                (type_identifier)
+                (argument_list
+                  (expression
+                    (primary_expression
+                      (integer)))
+                  (expression
+                    (primary_expression
+                      (integer))))))
+            (primary_expression
+              (type_call
+                (type_identifier)
+                (argument_list
+                  (expression
+                    (primary_expression
+                      (integer)))
+                  (expression
+                    (primary_expression
+                      (integer)))))))))
+      (assert
+        (expression
+          (comparison_operator
+            (primary_expression
+              (type_call
+                (type_identifier)
+                (argument_list
+                  (pair_argument
+                    (string
+                      (string_start)
+                      (string_content)
+                      (string_end))
+                    (expression
+                      (primary_expression
+                        (integer)))))))
+            (primary_expression
+              (type_call
+                (type_identifier)
+                (argument_list
+                  (pair_argument
+                    (string
+                      (string_start)
+                      (string_content)
+                      (string_end))
+                    (expression
+                      (primary_expression
+                        (integer)))))))))))))

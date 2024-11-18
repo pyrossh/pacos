@@ -18,7 +18,7 @@ fn parseNumbers(input: Str) -> List<Int> =
     c = input.charAt(i)
     if c >= '0' && c <= '9'
       current_number *= 10
-      current_number += (c - '0') as Int
+      current_number += Int(c - '0')
     if c == '\n'
       numbers.push!<u32>(current_number)
       current_number = 0

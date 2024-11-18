@@ -73,10 +73,10 @@ main() -> Unit =
     c = input.charAt(i)
     if c >= '0' && c <= '9'
       if first_digit == 0
-        first_digit = (c - '0') as Int;
-        last_digit = (c - '0') as Int;
+        first_digit = Int(c - '0')
+        last_digit = Int(c - '0')
       else
-        last_digit = (c - '0') as Int;
+        last_digit = Int(c - '0')
       continue
     if c == '\n'
       calibration_value = first_digit * 10 + last_digit

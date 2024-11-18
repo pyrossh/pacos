@@ -2,10 +2,10 @@ prefix=@PREFIX@
 libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
 
-Name: tree-sitter-kestrel
-Description: Kestrel grammar for tree-sitter
+Name: tree-sitter-plum
+Description: Plum grammar for tree-sitter
 URL: @URL@
 Version: @VERSION@
 Requires: @REQUIRES@
-Libs: -L${libdir} @ADDITIONAL_LIBS@ -ltree-sitter-kestrel
+Libs: -L${libdir} @ADDITIONAL_LIBS@ -ltree-sitter-plum
 Cflags: -I${includedir}

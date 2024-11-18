@@ -1,181 +1,8 @@
 ================================================================================
-assign - Int
-================================================================================
-
-val startYear = 2101
-val a = +123
-val b = -111
-val c = 456
-val d = 0xcafe
-// val e = 0b001
-
---------------------------------------------------------------------------------
-
-(source
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (integer))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (unary_operator
-          (primary_expression
-            (integer))))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (unary_operator
-          (primary_expression
-            (integer))))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (integer))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (integer))))
-  (comment))
-
-================================================================================
-assign - Float
-================================================================================
-
-val pi = 3.14159
-val a = +1.2
-val b = -0.4
-val c = 12.0f
-val d = 15.03f
-// val e = (1 + 2).mod(3).pow(2).sqrt()
-
---------------------------------------------------------------------------------
-
-(source
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (float))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (unary_operator
-          (primary_expression
-            (float))))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (unary_operator
-          (primary_expression
-            (float))))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (float))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (float))))
-  (comment))
-
-================================================================================
-assign - String
-================================================================================
-
-val name = "kestrel"
-val a = strOf("123")
-
---------------------------------------------------------------------------------
-
-(source
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (string
-          (quoted_content)))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (call
-          (reference
-            (identifier))
-          (argument_list
-            (expression
-              (primary_expression
-                (string
-                  (quoted_content))))))))))
-
-================================================================================
-assign - Type
-================================================================================
-
-val debugEnabled = True
-val a = True
-val b = False
-val c = nil
-
---------------------------------------------------------------------------------
-
-(source
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (typename))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (typename))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (typename))))
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (identifier)))))
-
-================================================================================
-assign - Call
-================================================================================
-
-val count = counter(10)
-
---------------------------------------------------------------------------------
-
-(source
-  (assign
-    (identifier)
-    (expression
-      (primary_expression
-        (call
-          (reference
-            (identifier))
-          (argument_list
-            (expression
-              (primary_expression
-                (integer)))))))))
-
-================================================================================
 assign - Expression
 ================================================================================
 
-val sum = 1 + ((2 * 3) / 4)
+sum = 1 + ((2 * 3) / 4)
 
 --------------------------------------------------------------------------------
 
@@ -208,7 +35,7 @@ val sum = 1 + ((2 * 3) / 4)
 assign - Not
 ================================================================================
 
-val enabled = !False
+enabled = !False
 
 --------------------------------------------------------------------------------
 
@@ -219,13 +46,13 @@ val enabled = !False
       (not_operator
         (expression
           (primary_expression
-            (typename)))))))
+            (type_identifier)))))))
 
 ================================================================================
 assign - Boolean expression
 ================================================================================
 
-val open = (count > 10) && (enabled == True) || (debug == False)
+open = (count > 10) && (enabled == True) || (debug == False)
 
 --------------------------------------------------------------------------------
 
@@ -253,7 +80,7 @@ val open = (count > 10) && (enabled == True) || (debug == False)
                       (primary_expression
                         (identifier))
                       (primary_expression
-                        (typename)))))))))
+                        (type_identifier)))))))))
         (expression
           (primary_expression
             (parenthesized_expression
@@ -262,16 +89,16 @@ val open = (count > 10) && (enabled == True) || (debug == False)
                   (primary_expression
                     (identifier))
                   (primary_expression
-                    (typename)))))))))))
+                    (type_identifier)))))))))))
 
 ================================================================================
 assign - Call list
 ================================================================================
 
-val countriesList = listOf("US", "INDIA", "CANADA")
-val a = list.of(1, 2, 3)
-val b = list.of(list.of(1), list.of(2), list.of(3))
-val c = list.of(1, 2, 3 * 4, 8, n)
+countriesList = listOf("US", "INDIA", "CANADA")
+a = list.of(1, 2, 3)
+b = list.of(list.of(1), list.of(2), list.of(3))
+c = list.of(1, 2, 3 * 4, 8, n)
 
 --------------------------------------------------------------------------------
 
@@ -287,15 +114,21 @@ val c = list.of(1, 2, 3 * 4, 8, n)
             (expression
               (primary_expression
                 (string
-                  (quoted_content))))
+                  (string_start)
+                  (string_content)
+                  (string_end))))
             (expression
               (primary_expression
                 (string
-                  (quoted_content))))
+                  (string_start)
+                  (string_content)
+                  (string_end))))
             (expression
               (primary_expression
                 (string
-                  (quoted_content)))))))))
+                  (string_start)
+                  (string_content)
+                  (string_end)))))))))
   (assign
     (identifier)
     (expression
@@ -386,13 +219,13 @@ val c = list.of(1, 2, 3 * 4, 8, n)
 assign - Call map
 ================================================================================
 
-val countryCode = mapOf(
+countryCode = mapOf(
   "in" => "INDIA",
   "us" => "United States",
   "ca" => "Canada"
 )
-val a = mapOf("a" => 1, "b" => 2)
-val b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
+a = mapOf("a" => 1, "b" => 2)
+b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
 
 --------------------------------------------------------------------------------
 
@@ -407,25 +240,37 @@ val b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
           (argument_list
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (string
-                    (quoted_content)))))
+                    (string_start)
+                    (string_content)
+                    (string_end)))))
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (string
-                    (quoted_content)))))
+                    (string_start)
+                    (string_content)
+                    (string_end)))))
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (string
-                    (quoted_content))))))))))
+                    (string_start)
+                    (string_content)
+                    (string_end))))))))))
   (assign
     (identifier)
     (expression
@@ -436,13 +281,17 @@ val b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
           (argument_list
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (integer))))
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (integer)))))))))
@@ -456,13 +305,17 @@ val b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
           (argument_list
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (integer))))
             (pair_argument
               (string
-                (quoted_content))
+                (string_start)
+                (string_content)
+                (string_end))
               (expression
                 (primary_expression
                   (call
@@ -472,13 +325,17 @@ val b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
                     (argument_list
                       (pair_argument
                         (string
-                          (quoted_content))
+                          (string_start)
+                          (string_content)
+                          (string_end))
                         (expression
                           (primary_expression
                             (integer))))
                       (pair_argument
                         (string
-                          (quoted_content))
+                          (string_start)
+                          (string_content)
+                          (string_end))
                         (expression
                           (primary_expression
                             (integer)))))))))))))))

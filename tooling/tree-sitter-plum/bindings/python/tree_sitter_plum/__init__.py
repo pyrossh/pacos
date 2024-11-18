@@ -1,4 +1,4 @@
-"plum grammar for tree-sitter"
+"Plum grammar for tree-sitter"
 
 from ._binding import language
 

@@ -1,15 +1,15 @@
 [package]
-name = "tree-sitter-kestrel"
-description = "kestrel grammar for tree-sitter"
-version = "0.20.4"
+name = "tree-sitter-plum"
+description = "plum grammar for tree-sitter"
+version = "0.0.1"
 authors = [
 	"pyrossh <pyros2097@gmail.com>",
 ]
 license = "MIT"
 readme = "bindings/rust/README.md"
-keywords = ["incremental", "parsing", "kestrel"]
+keywords = ["incremental", "parsing", "plum"]
 categories = ["parsing", "text-editors"]
-repository = "https://github.com/pyrossh/tree-sitter-kestrel"
+repository = "https://github.com/pyrossh/tree-sitter-plum"
 edition = "2021"
 autoexamples = false
 
@@ -20,7 +20,10 @@ include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*"]
 path = "bindings/rust/lib.rs"
 
 [dependencies]
-tree-sitter = "~0.20.10"
+tree-sitter-language = "0.1"
 
 [build-dependencies]
 cc = "~1.0"
+
+[dev-dependencies]
+tree-sitter = "0.24"
