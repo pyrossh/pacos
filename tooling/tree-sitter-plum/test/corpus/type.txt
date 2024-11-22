@@ -2,20 +2,35 @@
 type - definition
 ================================================================================
 
-Cat : ToStr = {
+type Cat is Stringable =
   name: Str
   age: Int
-}
 
-Dog = {
+type Dog =
   name: a
   age:  b
-}
 
-Dog(a: Compare + String, b) = {
+type Dog(a: Compare + Stringable, b) is Stringable =
   name: a
   age:  b
-}
+
+type Int =
+  add(other: Int) -> Int = this + other
+  sub(other: Int) -> Int = this - other
+
+type Cat is Stringable =
+  name: Str
+  age: Int
+
+  withName(name: Str) -> Cat =
+    Cat(name = name, age = 0)
+
+  withAge(age: Int) -> Cat =
+    Cat(name = "", age = age)
+
+  Stringable() -> Str =
+    "Cat"
+
 --------------------------------------------------------------------------------
 
 (source
@@ -54,32 +69,39 @@ Dog(a: Compare + String, b) = {
     (record_field
       (identifier)
       (type
-        (b)))))
-
-================================================================================
-type - methods
-================================================================================
-
-Cat : ToStr = {
-  name: Str
-  age: Int
-}
-
-Cat\withName(name: Str) -> Cat =
-  Cat(name = name, age = 0)
-
-Cat\withAge(age: Int) -> Cat =
-  Cat(name = "", age = age)
-
-Cat\fullname() -> Str =
-  "${name} ${age}"
-
-Cat\toStr() -> Str =
-  "Cat<{fullname()}, {age}>"
-
---------------------------------------------------------------------------------
-
-(source
+        (b))))
+  (record
+    (type_identifier)
+    (method
+      (identifier)
+      (param
+        (var_identier)
+        (type
+          (type_identifier)))
+      (return_type
+        (type_identifier))
+      (expression
+        (primary_expression
+          (binary_operator
+            (primary_expression
+              (this))
+            (primary_expression
+              (identifier))))))
+    (method
+      (identifier)
+      (param
+        (var_identier)
+        (type
+          (type_identifier)))
+      (return_type
+        (type_identifier))
+      (expression
+        (primary_expression
+          (binary_operator
+            (primary_expression
+              (this))
+            (primary_expression
+              (identifier)))))))
   (record
     (type_identifier)
     (type_identifier)
@@ -90,80 +112,62 @@ Cat\toStr() -> Str =
     (record_field
       (identifier)
       (type
-        (type_identifier))))
-  (fn
-    (method_identifier
-      (type_identifier)
-      (fn_identifier))
-    (param
-      (identifier)
-      (type
         (type_identifier)))
-    (return_type
-      (type_identifier))
-    (body
-      (primary_expression
-        (type_call
-          (type_identifier)
-          (argument_list
-            (keyword_argument
-              (identifier)
-              (expression
-                (primary_expression
-                  (identifier))))
-            (keyword_argument
-              (identifier)
-              (expression
-                (primary_expression
-                  (integer)))))))))
-  (fn
-    (method_identifier
-      (type_identifier)
-      (fn_identifier))
-    (param
+    (method
       (identifier)
-      (type
-        (type_identifier)))
-    (return_type
-      (type_identifier))
-    (body
-      (primary_expression
-        (type_call
-          (type_identifier)
-          (argument_list
-            (keyword_argument
-              (identifier)
-              (expression
-                (primary_expression
-                  (string
-                    (string_start)
-                    (string_end)))))
-            (keyword_argument
-              (identifier)
-              (expression
-                (primary_expression
-                  (identifier)))))))))
-  (fn
-    (method_identifier
-      (type_identifier)
-      (fn_identifier))
-    (return_type
-      (type_identifier))
-    (body
-      (primary_expression
-        (string
-          (string_start)
-          (string_content)
-          (string_end)))))
-  (fn
-    (method_identifier
-      (type_identifier)
-      (fn_identifier))
-    (return_type
-      (type_identifier))
-    (body
-      (primary_expression
-        (string
-          (string_start)
-          (string_content)
-          (string_end))))))
+      (param
+        (var_identier)
+        (type
+          (type_identifier)))
+      (return_type
+        (type_identifier))
+      (body
+        (primary_expression
+          (type_call
+            (type_identifier)
+            (argument_list
+              (keyword_argument
+                (identifier)
+                (expression
+                  (primary_expression
+                    (identifier))))
+              (keyword_argument
+                (identifier)
+                (expression
+                  (primary_expression
+                    (integer)))))))))
+    (method
+      (identifier)
+      (param
+        (var_identier)
+        (type
+          (type_identifier)))
+      (return_type
+        (type_identifier))
+      (body
+        (primary_expression
+          (type_call
+            (type_identifier)
+            (argument_list
+              (keyword_argument
+                (identifier)
+                (expression
+                  (primary_expression
+                    (string
+                      (string_start)
+                      (string_end)))))
+              (keyword_argument
+                (identifier)
+                (expression
+                  (primary_expression
+                    (identifier)))))))))
+    (method
+      (identifier)
+      (return_type
+        (type_identifier))
+      (body
+        (primary_expression
+          (string
+            (string_start)
+            (string_content)
+            (string_end)))))))

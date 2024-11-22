@@ -50,7 +50,7 @@
             "named": false
           },
           {
-            "type": "identifier",
+            "type": "var_identier",
             "named": true
           }
         ]
@@ -461,16 +461,6 @@
     "type": "enum",
     "named": true,
     "fields": {
-      "fields": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "enum_field",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
@@ -481,6 +471,20 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "enum_field",
+          "named": true
+        },
+        {
+          "type": "method",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -567,6 +571,10 @@
           {
             "type": "body",
             "named": true
+          },
+          {
+            "type": "expression",
+            "named": true
           }
         ]
       },
@@ -575,11 +583,7 @@
         "required": true,
         "types": [
           {
-            "type": "fn_identifier",
-            "named": true
-          },
-          {
-            "type": "method_identifier",
+            "type": "identifier",
             "named": true
           },
           {
@@ -852,22 +856,77 @@
     }
   },
   {
-    "type": "method_identifier",
+    "type": "method",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "fn_identifier",
-          "named": true
-        },
-        {
-          "type": "type_identifier",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "body",
+            "named": true
+          },
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "static_identifier",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "param",
+            "named": true
+          }
+        ]
+      },
+      "returns": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "->",
+            "named": false
+          },
+          {
+            "type": "return_type",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -879,7 +938,7 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "var_identier",
           "named": true
         }
       ]
@@ -895,58 +954,6 @@
         "types": [
           {
             "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "object",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "fn",
-            "named": true
-          },
-          {
-            "type": "{",
-            "named": false
-          },
-          {
-            "type": "}",
-            "named": false
-          }
-        ]
-      },
-      "implements": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": ":",
-            "named": false
-          },
-          {
-            "type": "type_identifier",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_identifier",
             "named": true
           }
         ]
@@ -988,7 +995,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "var_identier",
             "named": true
           }
         ]
@@ -1097,24 +1104,6 @@
     "type": "record",
     "named": true,
     "fields": {
-      "fields": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "record_field",
-            "named": true
-          },
-          {
-            "type": "{",
-            "named": false
-          },
-          {
-            "type": "}",
-            "named": false
-          }
-        ]
-      },
       "generics": {
         "multiple": false,
         "required": false,
@@ -1153,6 +1142,20 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "method",
+          "named": true
+        },
+        {
+          "type": "record_field",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1244,10 +1247,6 @@
         },
         {
           "type": "module",
-          "named": true
-        },
-        {
-          "type": "object",
           "named": true
         },
         {
@@ -1447,15 +1446,15 @@
         "required": false,
         "types": [
           {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
             "type": ",",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
             "named": false
           },
           {
@@ -1707,7 +1706,11 @@
     "named": false
   },
   {
-    "type": "\\",
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
     "named": false
   },
   {
@@ -1763,6 +1766,10 @@
     "named": false
   },
   {
+    "type": "enum",
+    "named": false
+  },
+  {
     "type": "escape_interpolation",
     "named": true
   },
@@ -1815,10 +1822,6 @@
     "named": false
   },
   {
-    "type": "object",
-    "named": false
-  },
-  {
     "type": "return",
     "named": false
   },
@@ -1843,7 +1846,15 @@
     "named": false
   },
   {
+    "type": "type",
+    "named": false
+  },
+  {
     "type": "type_identifier",
+    "named": true
+  },
+  {
+    "type": "var_identier",
     "named": true
   },
   {

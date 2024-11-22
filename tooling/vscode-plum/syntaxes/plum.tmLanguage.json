@@ -26,7 +26,7 @@
       "patterns": [
         {
           "name": "keyword.control.plum",
-          "match": "\\b(do|in|this|return|continue|break|match|if|else|while|for|module|as|is|import|assert|todo|crash)\\b"
+          "match": "\\b(module|import|trait|type|enum|fn|in|this|return|continue|break|match|if|else|while|for|as|is|assert|crash|todo)\\b"
         },
         {
           "name": "keyword.operator.arrow.plum",
@@ -85,22 +85,7 @@
       "patterns": [
         {
           "name": "comment.line.plum",
-          "match": "#.*"
-        },
-        {
-          "begin": "```",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.begin.plum"
-            }
-          },
-          "end": "```",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.end.plum"
-            }
-          },
-          "name": "comment.block.plum"
+          "match": "`.*"
         }
       ]
     },

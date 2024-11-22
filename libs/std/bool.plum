@@ -1,26 +1,66 @@
 module std
 
-Bool =
+type Int =
+  add(b: Int) -> Int = this + b
+  sub(b: Int) -> Int = this - b
+
+
+enum Bool =
   | True
   | False
 
-# Might not be needed
-Bool\toStr() -> Str =
-  if this == True
-    "True"
-  else
-    "False"
+  and(other: Bool) -> Bool =
+    match this, other
+      True, True => True
+      True, False => False
+      False, True => False
+      False, False => False
 
-Bool\and(other: Bool) -> Bool =
-  match this, other is
-    True, True => True
-    True, False => False
-    False, True => False
-    False, False => False
+  or(other: Bool) -> Bool =
+    match this, other
+      True, True => True
+      True, False => True
+      False, True => True
+      False, False => False
 
-Bool\or(other: Bool) -> Bool =
-  match this, other is
-    True, True => True
-    True, False => True
-    False, True => True
-    False, False => False
+  toStr() -> Str =
+    match this
+      True => "True"
+      False => "False"
+
+  fromStr(s: Str) -> Result(Bool, Err) =
+    if s == "true"
+      True
+    else if s == "false"
+      False
+    else
+      Err("could not parse bool from '{s}'")
+
+type Result =
+  | Ok(a)
+  | Err(b)
+  
+
+type Option =
+  | Some(a)
+  | None
+
+readFile() -> Result(String, Err) =
+  return Err
+
+data = try readFile()
+
+if Ok(d) = readFile()
+  println(d)
+
+match readFile()
+  Ok(d) =>
+    printLn(d)
+  Err(e) =>
+    printErr(e)
+
+type List =
+  | Empty
+  | Node(a)
+
+  add() =

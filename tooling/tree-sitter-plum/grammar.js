@@ -65,13 +65,13 @@ module.exports = grammar({
       seq(
         optional(seq("module", $.module)),
         repeat($.import),
-        repeat(choice($.record, $.object, $.trait, $.enum, $.fn)),
+        repeat(choice($.record, $.trait, $.enum, $.fn)),
       ),
 
-    module: ($) => $.identifier,
+    module: ($) => $.var_identier,
 
     import: ($) => seq("import", $.url),
-    url: ($) => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, "/"),
+    url: () => sep1(/[a-zA-Z_][a-zA-Z_0-9]*/, "/"),
 
     generics: ($) => seq("(", commaSep1($.generic_type), ")"),
     generic_type: ($) =>
@@ -80,7 +80,7 @@ module.exports = grammar({
       choice(
         seq(
           $.type_identifier,
-          field("generics", optional(seq("(", commaSep1($.type), ")"))),
+          field("generics", optional(seq("[", commaSep1($.type), "]"))),
         ),
         $.generic,
       ),
@@ -88,24 +88,19 @@ module.exports = grammar({
 
     record: ($) =>
       seq(
+        "type",
         field("name", $.type_identifier),
         field("implements", optional(seq(":", sep1($.type_identifier, "+")))),
         field("generics", optional($.generics)),
         "=",
-        field("fields", seq("{", $._newline, sep1($.record_field, $._newline), $._newline, "}")),
+        $._indent,
+        optional(repeat($.record_field)),
+        optional(repeat($.method)),
+        $._dedent,
       ),
 
-    record_field: ($) =>
-      seq(field("name", $.identifier), ":", field("type", $.type)),
-
-    object: ($) =>
-      seq(
-        "object",
-        field("name", $.type_identifier),
-        field("implements", optional(seq(":", commaSep1($.type_identifier)))),
-        field("body", optional(seq("{", repeat($.fn), "}"))),
-      ),
-
+    record_field: ($) => seq(field("name", $.identifier), ":", field("type", $.type)),
+    method: ($) => alias($.fn, "method"),
     trait: ($) =>
       seq(
         "trait",
@@ -125,7 +120,7 @@ module.exports = grammar({
 
     param: ($) =>
       seq(
-        field("name", $.identifier),
+        field("name", $.var_identier),
         ":",
         field("type", choice($.type, $.variadic_type)),
         optional(seq("=", field("value", $.expression))),
@@ -136,10 +131,12 @@ module.exports = grammar({
 
     enum: ($) =>
       seq(
+        "enum",
         field("name", $.type_identifier),
         "=",
         $._indent,
-        field("fields", sep1($.enum_field, $._newline)),
+        optional(repeat($.enum_field)),
+        optional(repeat($.method)),
         $._dedent,
       ),
 
@@ -152,10 +149,10 @@ module.exports = grammar({
 
     fn: ($) =>
       seq(
-        field("name", choice($.fn_identifier, $.method_identifier, $.static_identifier)),
+        field("name", choice($.identifier, $.static_identifier)),
         field("params", seq("(", optional(commaSep1($.param)), ")")),
         field("returns", optional(seq("->", $.return_type))),
-        field("body", seq("=", $.body)),
+        field("body", seq("=", choice($.expression, $.body))),
       ),
 
     body: ($) => seq($._indent, repeat($._statement), $._dedent),
@@ -178,7 +175,7 @@ module.exports = grammar({
     assign: ($) =>
       prec.right(
         seq(
-          field("left", commaSep1($.identifier)),
+          field("left", commaSep1($.var_identier)),
           "=",
           field("right", $.expression),
         ),
@@ -207,11 +204,8 @@ module.exports = grammar({
     reference: ($) =>
       prec(
         PREC.call,
-        seq(choice($.identifier, $.type_identifier), optional(seq(".", $.identifier))),
+        seq(choice($.var_identier, $.type_identifier), optional(seq(".", $.identifier))),
       ),
-
-    method_identifier: ($) =>
-      seq($.type_identifier, "\\", $.fn_identifier),
 
     static_identifier: ($) =>
       seq($.type_identifier, "::", $.fn_identifier),

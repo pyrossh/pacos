@@ -1,176 +1,174 @@
 module std
 
-# A node stores the data in a list and contains pointers to the previous and next sibling nodes
-Node = {
-  value: V
-  prev: Node(a) | Nil
-  next: Node(a) | Nil
-}
+`A node stores the data in a list and contains pointers to the previous and next sibling nodes
+type Node =
+  value: a
+  prev: Option[Node]
+  next: Option[Node]
 
-# A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-# It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
-List = {
-  head: Node(a) | Nil
-  tail: Node(a) | Nil
+`A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+`It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
+class List
+  head: Option[Node]
+  tail: Option[Node]
   size: Int
-}
 
-List\init(values: ...a) -> List(a) =
-  List().add(values...)
+  init(values: ...a) -> List =
+    List().add(values...)
 
-# gets the element at i'th index of the list
-List\get(i: Int) -> a =
-  current = l.head
-  index = 0
-  while current != Nil
-    if index == i
-      current.value
-    else
+  `gets the element at i'th index of the list
+  get(i: Int) -> a =
+    current = this.head
+    index = 0
+    while current != Nil
+      if index == i
+        current.value
+      else
+        current = current.next
+        index += 1
+
+  `sets the element at i'th index of the list
+  set(i: Int, v: a) -> a =
+    todo
+
+  `returns the no of elements in the list
+  length() -> Int =
+    this.size
+
+  add(values: ...a) =
+    `adds the specified elements to the start of the list
+    for v in values
+      this.head = Node(value: v, prev: Nil, next: this.head)
+      this.head.next.prev = this.head
+      this.size += 1
+
+  `removes the element at i'th index of the list
+  removeAt(i: Int) =
+    this.tail?.prev?.next = Nil
+    `old tail node gets deallocated due to zero reference count
+    this.tail = list.tail?.prev
+    this.size -= 1
+
+  `removes the element v from list
+  remove(v: a) =
+    this.tail?.prev?.next = Nil
+    `old tail node gets deallocated due to zero reference count
+    this.tail = list.tail?.prev
+    this.size -= 1
+
+  `removes all objects from this list
+  clear() =
+    this.tail?.prev?.next = Nil
+    `old tail node gets deallocated due to zero reference count
+    this.tail = list.tail?.prev
+    this.size -= 1
+
+
+  `returns a new list with the elements in reverse order.
+  reverse(v: fn(v: a) -> Bool) -> List =
+      todo
+
+  `returns a new list with the elements sorted by sorter
+  sort(sorter: fn(v: a) -> Bool) -> List =
+      todo
+
+  `returns an item and index in the list if the item is is equal to search item
+  find(search: a): Option[a] =
+      todo
+
+  `returns the index of an item in the list if present and comparable otherwise Nil
+  contains(v: a) -> Bool =
+      todo
+
+  `calls f for each elem in the list
+  each(cb: fn(v: a)) -> Unit =
+    current := this.head
+    while current != Nil
+      cb(current.value)
       current = current.next
-      index += 1
 
-# sets the element at i'th index of the list
-List\set(i: Int, v: a) -> a =
-  todo
+  `returns a list made up of B elements for each elem in the list
+  map(cb: fn(v: a) -> b) -> List(b) =
+    nl := []
+    current := this.head
+    while current != Nil
+      item := cb(current.value)
+      nl.push(item)
+    nl
 
-# returns the no of elements in the list
-List\length() -> a =
-  self.size
+  `returns a new list with all elements shuffled`
+  flatMap() =
+    todo
 
-# adds the specified elements to the start of the list
-List\add(values: ...V) =
-  for v in values
-    l.head = Node(value: v, prev: Nil, next: l.head)
-    l.head.next.prev = l.head
-    l.size += 1
+  `returns a new list with the elements that matched the predicate
+  retain(predicate: fn(v: a) -> a) -> List =
+    todo
 
-# removes the element at i'th index of the list
-List\removeAt(i: Int) =
-  l.tail?.prev?.next = Nil
-  # old tail node gets deallocated due to zero reference count
-  l.tail = list.tail?.prev
-  l.size -= 1
+  `returns a new list with the elements that matched the predicate removed
+  reject(predicate: fn(v: a) -> a) -> List =
+    todo
 
-# removes the element v from list
-List\remove(v: a) =
-  l.tail?.prev?.next = Nil
-  # old tail node gets deallocated due to zero reference count
-  l.tail = list.tail?.prev
-  l.size -= 1
+  `returns true if any element in the list satisfies the predicate
+  any(predicate: fn(v: a) -> Bool) -> Bool =
+    todo
 
-# removes all objects from this list
-List\clear() =
-  l.tail?.prev?.next = Nil
-  # old tail node gets deallocated due to zero reference count
-  l.tail = list.tail?.prev
-  l.size -= 1
+  `returns true if all of the elements in the list satisfies the predicate
+  every(predicate: fn(v: a) -> Bool) -> Bool =
+    todo
 
+  `returns the accumulated value of all the elements in the list
+  reduce[B](acc: B, cb: fn(v: a) -> a): B =
+    todo
 
-# returns a new list with the elements in reverse order.
-List\reverse(v: fn(v: a) -> Bool) -> List[A] =
-  todo
+  `returns the first element in the list
+  first() -> Option[a] =
+    this.head?.value
 
-# returns a new list with the elements sorted by sorter
-List\sort(sorter: fn(v: a) -> Bool) -> List(A) =
-  todo
+  `returns the last element in the list
+  last() -> Option[a] =
+    this.tail?.value
 
-# returns an item and index in the list if the item is is equal to search item
-List\find(search: V): V | Nil =
-  todo
+  `returns a list containing the first n elements of the given list
+  sublist(start: int, end: int) -> List =
+    todo
 
-# returns the index of an item in the list if present and comparable otherwise Nil
-List\contains(v: a) -> Bool =
-  todo
+  `returns a list containing the first n elements of the given list
+  take(n: int) -> List =
+    todo
 
-# calls f for each elem in the list
-List\each(cb: fn(v: a)) -> Unit =
-  current := l.head
-  while current != Nil
-    cb(current.value)
-    current = current.next
+  `returns a list containing the first n elements of the given list
+  skip(n: int) -> List =
+    todo
 
-# returns a list made up of B elements for each elem in the list
-List\map(cb: fn(v: a) -> b) -> List(b) =
-  nl := []
-  current := l.head
-  while current != Nil
-    item := cb(current.value)
-    nl.push(item)
-  nl
+  `returns a list containing the first n elements of the given list
+  drop(n: int) -> List =
+    todo
 
-# returns a new list with all elements shuffled`
-List\flatMap() =
-  todo
+  `returns a new list with some of the elements taken randomly`
+  sample() =
+    todo
 
-# returns a new list with the elements that matched the predicate
-List\retain(predicate: fn(v: a) -> A) -> List(A) =
-  todo
+  `returns a new list with all elements shuffled`
+  shuffle() =
+    todo
 
-# returns a new list with the elements that matched the predicate removed
-List\reject(predicate: fn(v: a) -> A) -> List(A) =
-  todo
+  `returns a new list with all elements shuffled`
+  partition() =
+    todo
 
-# returns true if any element in the list satisfies the predicate
-List\any(predicate: fn(v: a) -> Bool) -> Bool =
-  todo
+  `returns a new list with all elements shuffled`
+  chunk() =
+    todo
 
-# returns true if all of the elements in the list satisfies the predicate
-List\every(predicate: fn(v: a) -> Bool) -> Bool =
-  todo
+  `returns a new list with all elements grouped`
+  groupBy() =
+    todo
 
-# returns the accumulated value of all the elements in the list
-List\reduce[B](acc: B, cb: fn(v: a) -> A): B =
-  todo
-
-# returns the first element in the list
-List\first() -> a | Nil =
-  l.head?.value
-
-# returns the last element in the list
-List\last() -> a | Nil =
-  l.tail?.value
-
-# returns a list containing the first n elements of the given list
-List\sublist(start: int, end: int) -> List(A) =
-  todo
-
-# returns a list containing the first n elements of the given list
-List\take(n: int) -> List(A) =
-  todo
-
-# returns a list containing the first n elements of the given list
-List\skip(n: int) -> List(A) =
-  todo
-
-`Returns a list containing the first n elements of the given list
-List\drop(n: int) -> List(A) =
-  todo
-
-# returns a new list with some of the elements taken randomly`
-List\sample() =
-  todo
-
-# returns a new list with all elements shuffled`
-List\shuffle() =
-  todo
-
-# returns a new list with all elements shuffled`
-List\partition() =
-  todo
-
-# returns a new list with all elements shuffled`
-List\chunk() =
-  todo
-
-# returns a new list with all elements grouped`
-List\groupBy() =
-  todo
-
-List\join(sep: Str = ",") -> Str =
-  res := Buffer()
-  l.each() |v|
-    if @HasTrait(V, ToStr)
-      res.write(v.to_str(), sep)
-    else
-      res.write(@TypeToString(v), sep)
-  res.to_str()
+  join(sep: Str = ",") -> Str =
+    res := Buffer()
+    this.each() |v|
+      if @HasTrait(V, ToStr)
+        res.write(v.to_str(), sep)
+      else
+        res.write(@TypeToString(v), sep)
+    res.to_str()

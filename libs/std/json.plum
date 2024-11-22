@@ -15,7 +15,7 @@ JsonParseError = {
   token: Char
 }
 
-Json\\parse(src: Str | Buffer | IO) -> Json | JsonParseError =
+Json::parse(src: Str | Buffer | IO) -> Json | JsonParseError =
   JsonParser.withSrc(src).parse()
 
 Json\parseNone() -> None | JsonParseError =
@@ -50,7 +50,7 @@ JsonParser::withSrc(src: Str | Buffer | IO) -> JsonParser =
 fn isSpace(c: U32): Bool => (c == ' ') or ((c >= '\t') and (c <= '\r'))
 
 fn isDelim(c: U32): Bool => 
-    (c == ',') or (c == '}') or (c == ':') or (c == ']') or (_is_space(c)) or (c == 0)
+    (c == ',') || (c == '}') || (c == ':') || (c == ']') || (_is_space(c)) || (c == 0)
 
 fn isDigit(c: U32) -> Bool {
   return (c >= '0') && (c <= '9')

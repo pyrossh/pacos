@@ -2,9 +2,12 @@
 enum
 ================================================================================
 
-Bool =
+enum Bool
   | True
   | False
+
+  toStr() -> Str =
+    "Bool"
 
 --------------------------------------------------------------------------------
 
@@ -14,4 +17,14 @@ Bool =
     (enum_field
       (type_identifier))
     (enum_field
-      (type_identifier))))
+      (type_identifier))
+    (method
+      (identifier)
+      (return_type
+        (type_identifier))
+      (body
+        (primary_expression
+          (string
+            (string_start)
+            (string_content)
+            (string_end)))))))

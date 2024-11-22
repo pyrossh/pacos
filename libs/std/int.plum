@@ -1,95 +1,91 @@
 module std/int
 
-Int: Comparable, ToStr = ByteArray
+type Int : Comparable, ToStr =
+  MIN_VALUE = -0x8000_0000_0000_0000 # Lowest value of Int
+  MAX_VALUE = 0x7FFF_FFFF_FFFF_FFFF  # Highest value of Int
+  LARGE = 1 << 28 # 2**28
 
-# Lowest value of Int
-Int::MIN_VALUE = -0x8000_0000_0000_0000
+  ::random() -> Float = # Return random number
+    todo
 
-# Highest value of Int
-Int::MAX_VALUE = 0x7FFF_FFFF_FFFF_FFFF
+  ::parseInt() -> Result(Int, Err) =
+    0
 
-# 2**28
-Int::LARGE = 1 << 28
+  # returns the absolute value of the Int
+  abs() -> Int =
+    this < 0 ? -this : this
 
-Int::random(): Float =
-  todo
+  ceil() -> Float =
+    todo
 
-# returns the absolute value of the Int
-Int\abs() -> Int =
-  this < 0 ? -this : this
+  floor() -> Float =
+    todo
 
-Int\ceil() -> Float =
-  todo
+  round() -> Float =
+    todo
 
-Int\floor() -> Float =
-  todo
+  trunc() -> Float =
+    todo
 
-Int\round() -> Float =
-  todo
+  log() -> Float =
+    todo
 
-Int\trunc() -> Float =
-  todo
+  log2() -> Float =
+    todo
 
-Int\log() -> Float =
-  todo
+  log10() -> Float =
+    todo
 
-Int\log2() -> Float =
-  todo
+  logb() -> Float =
+    todo
 
-Int\log10() -> Float =
-  todo
+  pow(y: Float) -> Float =
+    LibM.pow(this, y)
 
-Int\logb() -> Float =
-  todo
+  pow(y: Int) -> Float =
+    pow(y.toFloat())
 
-Int\pow(y: Float) -> Float =
-  LibM.pow(this, y)
-
-Int\pow(y: Int) -> Float =
-  pow(y.toFloat())
-
-Int\sqrt() -> Float =
-  if this < 0.0 then
-    _nan()
-  else
-    LibM.sqrt(this)
-  end
+  sqrt() -> Float =
+    if this < 0.0 then
+      _nan()
+    else
+      LibM.sqrt(this)
   
-Int\asin(v: Float) =
-  todo
+  asin(v: Float) =
+    todo
 
-Int\acos(v: Float) =
-  if v < 0.1
-    asin(v)
-  else
-    asin(-v)
+  acos(v: Float) =
+    if v < 0.1
+      asin(v)
+    else
+      asin(-v)
 
-Int\asinh(v: Float) =
-  todo
+  asinh(v: Float) =
+    todo
 
-Int\atan(v: Float) =
-  todo
+  atan(v: Float) =
+    todo
 
-Int\atan2(v: Float) =
-  todo
+  atan2(v: Float) =
+    todo
 
-Int\atanh(v: Float) =
-  todo
+  atanh(v: Float) =
+    todo
 
-Int\cbrt(v: Float) =
-  todo
+  cbrt(v: Float) =
+    todo
 
-Int\ceil(v: Float) =
-  todo
+  ceil(v: Float) =
+    todo
 
-Int\clz32(v: Float) =
-  todo
+  clz32(v: Float) =
+    todo
 
-Int\cos(v: Float) =
-  todo
+  cos(v: Float) =
+    todo
 
-Int\cosh(v: Float) =
-  todo
+  cosh(v: Float) =
+    todo
 
-Int\exp(v: Float) =
-  todo
+  exp(v: Float) =
+    todo

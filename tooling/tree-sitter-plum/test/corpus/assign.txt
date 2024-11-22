@@ -99,6 +99,8 @@ countriesList = listOf("US", "INDIA", "CANADA")
 a = list.of(1, 2, 3)
 b = list.of(list.of(1), list.of(2), list.of(3))
 c = list.of(1, 2, 3 * 4, 8, n)
+d = "{name} {age}"
+e = "Cat<{fullname()}, {age}>"
 
 --------------------------------------------------------------------------------
 
@@ -219,13 +221,13 @@ c = list.of(1, 2, 3 * 4, 8, n)
 assign - Call map
 ================================================================================
 
-countryCode = mapOf(
+countryCode = Map(
   "in" => "INDIA",
   "us" => "United States",
   "ca" => "Canada"
 )
-a = mapOf("a" => 1, "b" => 2)
-b = mapOf("a" => 1, "b" => map.of("c" => 3, "d" => 4))
+a = Map("a" => 1, "b" => 2)
+b = Map("a" => 1, "b" => Map("c" => 3, "d" => 4))
 
 --------------------------------------------------------------------------------
 

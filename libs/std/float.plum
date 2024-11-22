@@ -1,80 +1,52 @@
 module std/float
 
-# Euler's number, the base of natural logarithms, e, https://oeis.org/A001113
-E = 2.718f
+type Float =
+  E = 2.718f  # Euler's number, the base of natural logarithms, e, https://oeis.org/A001113
+  LN10 = 2.302f # The natural logarithm of 10, https://oeis.org/A002392
+  LN2 = 0.693f # The natural logarithm of 2 https://oeis.org/A002162
+  LOG10E = 0.434f # The base 10 logarithm of e # formula: 1 / LN10
+  LOG2E = 1.442f # The base 2 logarithm of e # formula: 1 / LN2
+  PI = 3.14159f # The ratio of the circumference of a circle to its diameter https://oeis.org/A000796
+  PHI = 1.6180f # https://oeis.org/A001622
+  SQRT1_2 = 0.707f # The square root of 1/2
+  SQRT2 = 1.414f # The square root of 2 https://oeis.org/A002193
+  SQRT_E = 1.64872f # https://oeis.org/A019774
+  SQRT_PI  = 1.77245f # https://oeis.org/A002161
+  SQRT_PHI = 1.27201f # https://oeis.org/A139339
+  EPSILON = 2.220446049250313e-16f # The difference between 1 and the smallest floating point number greater than 1 formula: 7/3 - 4/3 - 1
+  MIN_FLOAT_VALUE = 4.9406564584124654417656879286822137236505980e-324 # Lowest value of float
+  MAX_FLOAT_VALUE = 1.79769313486231570814527423731704356798070e+308   # Highest value of float
 
-# The natural logarithm of 10, https://oeis.org/A002392
-LN10 = 2.302f
 
-# The natural logarithm of 2 https://oeis.org/A002162
-LN2 = 0.693f
+  ::fromStr(s: Str) -> Result(Float, Err) =
+    todo
 
-# The base 10 logarithm of e # formula: 1 / LN10
-LOG10E = 0.434f
+  acosh(v: Float) -> Float =
+    match
+      x < 1 | IsNaN(x) => NaN() # first case is special case 
+      x == 1 => 0
+      x >= Large => x.log() + LN2 # x > 2**28
+      x > 2 => Log(2*x - 1/(x+Sqrt(x*x-1))) # 2**28 > x > 2
+      _ => 
+        t = 
+        ((2*t+t*t).sqrt() + t).log1p() 2 >= x > 1
 
-# The base 2 logarithm of e # formula: 1 / LN2
-LOG2E = 1.442f
+  # Check whether this number is finite, ie not +/-infinity and not NaN.
+  # True if exponent is not all 1s
+  isFinite() -> Bool =
+    (bits() && 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
 
-# The ratio of the circumference of a circle to its diameter https://oeis.org/A000796
-PI = 3.14159f
-
-# https://oeis.org/A001622
-PHI = 1.6180f
-
-# The square root of 1/2
-SQRT1_2 = 0.707f
-
-# The square root of 2 https://oeis.org/A002193
-SQRT2 = 1.414f
-
-# https://oeis.org/A019774
-SQRT_E = 1.64872f
-
-# https://oeis.org/A002161
-SQRT_PI  = 1.77245f
-
-# https://oeis.org/A139339
-SQRT_PHI = 1.27201f
-
-# The difference between 1 and the smallest floating point number greater than 1 formula: 7/3 - 4/3 - 1
-EPSILON = 2.220446049250313e-16f
-
-# Lowest value of float
-MIN_FLOAT_VALUE = 4.9406564584124654417656879286822137236505980e-324
-
-# Highest value of float
-MAX_FLOAT_VALUE = 1.79769313486231570814527423731704356798070e+308
-
-Float::PI=3.14
-
-fn acosh(v: float): float =
-  when
-    x < 1 | IsNaN(x) -> // first case is special case
-      NaN()
-    x == 1 ->
-      0
-    x >= Large ->
-      Log(x) + Ln2 // x > 2**28
-    x > 2 ->
-      Log(2*x - 1/(x+Sqrt(x*x-1))) // 2**28 > x > 2
-    _ -> 
-      t := x - 1
-      // ((2*t+t*t).sqrt() + t).log1p()
-      Log1p(t + Sqrt(2*t+t*t)) // 2 >= x > 1
-
-fn is_finite(): bool = true
-  ` Check whether this number is finite, ie not +/-infinity and not NaN.
-  ` True if exponent is not all 1s
-  (bits() and 0x7FF0_0000_0000_0000) != 0x7FF0_0000_0000_0000
-
-# Check whether this number is +/-infinity
-is_infinite:  Bool =>
+  # Check whether this number is +/-infinity
   # True if exponent is all 1s and mantissa is 0
-  ((bits() and 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) and  # exp
-  ((bits() and 0x000F_FFFF_FFFF_FFFF) == 0)  // mantissa
+  isInfinite() -> Bool =
+    ((bits() && 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) &&  # exp
+    ((bits() && 0x000F_FFFF_FFFF_FFFF) == 0)  # mantissa
 
-// Check whether this number is NaN.
-fn is_nan(): Bool =>
-  // True if exponent is all 1s and mantissa is non-0
-  ((bits() and 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) and  // exp
-  ((bits() and 0x000F_FFFF_FFFF_FFFF) != 0)  // mantissa
+  # Check whether this number is NaN.
+  # True if exponent is all 1s and mantissa is non-0
+  isNaN() -> Bool =
+    ((bits() && 0x7FF0_0000_0000_0000) == 0x7FF0_0000_0000_0000) &&  # exp
+    ((bits() && 0x000F_FFFF_FFFF_FFFF) != 0)  # mantissa
+
+  toStr() -> Str =
+    todo

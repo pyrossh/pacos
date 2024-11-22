@@ -27,6 +27,15 @@ Map\get(k: a) -> b | Nil =
       return v
   Nil
 
+# Get a value from the Map using key k
+Map\get(k: a) -> b | Nil =
+  found : Option(b) = None
+  for k, v in items do
+    if k == k
+      found = v
+      break
+  found
+
 # Put a value into the Map
 Map\set(k: a, v: b) =
   items.add(pair(k, v))
