@@ -1,4 +1,4 @@
-module std/float
+module std
 
 type Float =
   E = 2.718f  # Euler's number, the base of natural logarithms, e, https://oeis.org/A001113

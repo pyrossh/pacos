@@ -1,0 +1,6 @@
+module std
+
+type Result =
+  | Ok(a)
+  | Err(b)
+  

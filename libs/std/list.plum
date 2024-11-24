@@ -8,7 +8,7 @@ type Node =
 
 `A list is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
 `It contains the pointers to the start and end nodes (head, tail) and maintains the size as well
-class List
+type List is Stringable =
   head: Option[Node]
   tail: Option[Node]
   size: Int

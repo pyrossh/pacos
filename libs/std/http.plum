@@ -1,4 +1,4 @@
-module std/http
+module std
 
 import std/path
 import std/os

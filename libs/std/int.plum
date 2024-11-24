@@ -1,14 +1,16 @@
-module std/int
+module std
 
-type Int : Comparable, ToStr =
+type Int is Comparable, Stringable =
   MIN_VALUE = -0x8000_0000_0000_0000 # Lowest value of Int
   MAX_VALUE = 0x7FFF_FFFF_FFFF_FFFF  # Highest value of Int
   LARGE = 1 << 28 # 2**28
 
-  ::random() -> Float = # Return random number
+  `Return random number
+  ::random() -> Float =
     todo
 
-  ::parseInt() -> Result(Int, Err) =
+  `Get int from Str
+  ::fromStr() -> Result(Int, Err) =
     0
 
   # returns the absolute value of the Int
@@ -46,7 +48,7 @@ type Int : Comparable, ToStr =
     pow(y.toFloat())
 
   sqrt() -> Float =
-    if this < 0.0 then
+    if this < 0.0
       _nan()
     else
       LibM.sqrt(this)

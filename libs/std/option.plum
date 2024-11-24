@@ -1,0 +1,12 @@
+module std
+
+import std.{
+  Int,
+  Str,
+  Result,
+  Option
+}
+
+type Option =
+  | Some(a)
+  | None

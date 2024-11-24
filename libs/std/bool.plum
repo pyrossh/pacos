@@ -36,15 +36,6 @@ enum Bool =
     else
       Err("could not parse bool from '{s}'")
 
-type Result =
-  | Ok(a)
-  | Err(b)
-  
-
-type Option =
-  | Some(a)
-  | None
-
 readFile() -> Result(String, Err) =
   return Err
 
@@ -59,7 +50,7 @@ match readFile()
   Err(e) =>
     printErr(e)
 
-type List =
+enum List =
   | Empty
   | Node(a)
 

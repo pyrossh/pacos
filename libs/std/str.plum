@@ -1,6 +1,6 @@
 module std/str
 
-`ToStr defines any data that can be converted to a str
+`Any type that can be converted to a str needs to implement this trait
 trait Stringable =
   toStr() -> Str
 

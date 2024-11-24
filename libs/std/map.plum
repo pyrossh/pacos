@@ -1,48 +1,36 @@
 module std
 
-Pair(a, b) = (
+`A Pair can is a grouping of a key with a value
+type Pair(a, b) =
   key: a
   val: b
-)
 
-```
-A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
-A Map is not an array. A slice describes a piece of an array.
-```
-Map(a, b) = {
+`A Map is a data structure describing a contiguous section of an array stored separately from the slice variable itself.
+`A Map is not an array. A slice describes a piece of an array.
+type Map(a, b) =
   items: List(Pair(a, b))
-}
+  
+  init(kvs: ...Pair) =
+    Map(a, b)().add(kvs)
 
-mapOf(kvs: ...Pair) -> Map =
-  Map(a, b)().add(kvs)
+  `adds the specified elements to the start of the list
+  add(kvs: ...Pair) =
+    items.add(kvs)
 
-# adds the specified elements to the start of the list
-Map\add(kvs: ...Pair) =
-  items.add(kvs)
+  `Get a value from the Map using key k
+  get(k: a) -> Option(b) =
+    for k, v in items do
+      if k == k
+        return Some(v)
+    None
 
-# Get a value from the Map using key k
-Map\get(k: a) -> b | Nil =
-  for k, v in items do
-    if k == k
-      return v
-  Nil
+  `Put a value into the Map
+  set(k: a, v: b) =
+    items.add(pair(k, v))
 
-# Get a value from the Map using key k
-Map\get(k: a) -> b | Nil =
-  found : Option(b) = None
-  for k, v in items do
-    if k == k
-      found = v
-      break
-  found
+  `put a value into the Map if its not already present
+  putIfAbsent(k K, v V) =
+    todo
 
-# Put a value into the Map
-Map\set(k: a, v: b) =
-  items.add(pair(k, v))
-
-# `put a value into the Map if its not already present
-Map\putIfAbsent(k K, v V) =
-  todo
-
-Map\map(cb: (Pair(a, b)) -> Pair(c, d)) -> Map(c, d) =
-  items.map(cb)
+  map(cb: (Pair(a, b)) -> Pair(c, d)) -> Map(c, d) =
+    items.map(cb)
